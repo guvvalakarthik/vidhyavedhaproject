@@ -1,0 +1,91 @@
+/* Reset and Base styles */
+/* App.css */
+
+body,
+html,
+#root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.app-wrapper {
+  min-height: 100vh;
+  background-image: url("./assets/ruraldigi.webp");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  backdrop-filter: brightness(0.92); /* Optional: dims for readability */
+}
+
+.main-content {
+  padding: 2rem;
+}
+
+.main-content {
+  flex: 1;
+  padding: 20px;
+  max-width: 1000px;
+  margin: auto;
+}
+
+/* Headings */
+h2 {
+  color: #a8ff60;
+  font-size: 28px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+p {
+  color: #dddddd;
+  text-align: center;
+  max-width: 800px;
+  margin: auto;
+  font-size: 16px;
+  margin-bottom: 30px;
+}
+.section-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60px 20px;
+  background: #101010;
+  border-radius: 12px;
+  margin-top: 40px;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease-in-out;
+}
+
+.section-heading {
+  font-size: 36px;
+  color: #00ff9d;
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: 600;
+  border-bottom: 3px solid #00ff9d;
+  padding-bottom: 10px;
+  width: fit-content;
+}
+
+.section-paragraph {
+  font-size: 18px;
+  color: #cccccc;
+  max-width: 800px;
+  text-align: center;
+  line-height: 1.8;
+  padding: 0 10px;
+  margin-bottom: 20px;
+}
+.rural-background {
+  background-image: url("../assets/ruraldigi.webp");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white; /* optional */
+  text-align: center;
+}

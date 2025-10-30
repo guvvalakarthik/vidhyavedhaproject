@@ -1,0 +1,57 @@
+{
+  "education": [
+    {
+      "id": 1,
+      "name": "Alice Kumar",
+      "email": "alice@example.com",
+      "phone": "9876543210",
+      "exam": "UPSC",
+      "dob": "1995-05-10",
+      "qualification": "B.Tech",
+      "address": "Hyderabad",
+      "serviceType": "Apply for Competitive Exam"
+    },
+    {
+      "id": 2,
+      "name": "Bob Sharma",
+      "email": "bob@example.com",
+      "phone": "9876543211",
+      "country": "USA",
+      "university": "MIT",
+      "course": "Computer Science",
+      "qualification": "B.Sc",
+      "address": "Delhi",
+      "serviceType": "Apply to University"
+    },
+    {
+      "id": 3,
+      "name": "Carol Singh",
+      "email": "carol@example.com",
+      "phone": "9876543212",
+      "college": "IIT Bombay",
+      "program": "MBA",
+      "qualification": "B.Com",
+      "location": "Mumbai",
+      "serviceType": "Admission Support (India & Abroad)"
+    },
+    {
+      "id": 4,
+      "name": "David Verma",
+      "email": "david@example.com",
+      "phone": "9876543213",
+      "subject": "Mathematics",
+      "mode": "Online",
+      "class": "12th Grade",
+      "serviceType": "Apply for Coaching / Tutoring"
+    },
+    {
+      "id": 5,
+      "name": "Esha Khan",
+      "email": "esha@example.com",
+      "phone": "9876543214",
+      "status": "Graduate",
+      "interest": "Data Science",
+      "serviceType": "Career Counseling Registration"
+    }
+  ]
+}

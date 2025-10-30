@@ -1,0 +1,251 @@
+/* Footer Base Styling */
+.footer {
+  background-color: #f5f7ff;
+  padding: 40px 20px;
+  text-align: center;
+  border-top: 3px solid #1e40af;
+  font-family: Arial, sans-serif;
+}
+
+/* Footer Header */
+.footer-heading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.footer-logo {
+  width: 50px;
+  height: 50px;
+  margin-right: 12px;
+}
+
+.footer-title-text h2 {
+  margin: 0;
+  font-size: 24px;
+  color: #1e3a8a;
+}
+
+.footer-title-text p {
+  margin: 0;
+  font-size: 14px;
+  color: #4b5563;
+}
+
+/* Footer Buttons */
+.footer-buttons {
+  margin: 25px 0;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.suggestion-button {
+  background-color: #1e40af;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.suggestion-button:hover {
+  background-color: #1e3a8a;
+}
+
+/* Suggestion Form */
+.suggestion-form {
+  max-width: 400px;
+  margin: 20px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.suggestion-form input,
+.suggestion-form textarea {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.suggestion-form button {
+  background-color: #10b981;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.suggestion-form button:hover {
+  background-color: #059669;
+}
+
+.form-message {
+  color: #1e3a8a;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+/* Achievements */
+.footer-achievements {
+  list-style: none;
+  padding: 0;
+  margin: 20px auto;
+  max-width: 600px;
+  text-align: left;
+}
+
+.footer-achievements li {
+  background-color: #e0e7ff;
+  margin-bottom: 8px;
+  padding: 10px;
+  border-radius: 6px;
+}
+
+/* Image Gallery */
+.image-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.image-gallery img {
+  width: 180px;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+/* Contact Info */
+.footer-bottom {
+  margin-top: 30px;
+}
+
+.footer-bottom h3 {
+  margin-bottom: 10px;
+  color: #1e3a8a;
+}
+
+.footer-bottom p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #374151;
+}
+
+/* Footer WhatsApp CTA */
+.footer-whatsapp {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.footer-whatsapp a {
+  display: inline-flex;
+  align-items: center;
+  background-color: #25d366;
+  color: white;
+  padding: 10px 18px;
+  border-radius: 25px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 15px;
+  gap: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.footer-whatsapp a:hover {
+  background-color: #1ebe5d;
+}
+
+.whatsapp-icon {
+  font-size: 20px;
+}
+
+/* Floating Buttons */
+.whatsapp-float,
+.top-float-btn {
+  position: fixed;
+  z-index: 1000;
+  border: none;
+  border-radius: 50%;
+  padding: 12px;
+  cursor: pointer;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* WhatsApp Floating Button */
+.whatsapp-float {
+  bottom: 90px;
+  right: 30px;
+  background-color: #25d366;
+  color: white;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.whatsapp-float:hover {
+  transform: scale(1.1);
+  background-color: #1ebe5b;
+}
+
+/* Scroll to Top Floating Button */
+.top-float-btn {
+  bottom: 30px;
+  right: 30px;
+  background-color: #1e40af;
+  color: white;
+  font-size: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.top-float-btn:hover {
+  background-color: #1e3a8a;
+}
+
+/* Hide Floating Buttons When Needed */
+.whatsapp-float.hidden,
+.top-float-btn.hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.8);
+}
+/* Common Button Styles */
+.whatsapp-button,
+.scroll-top-button {
+  position: fixed;
+  right: 20px;
+  width: 55px;
+  height: 55px;
+  border: none;
+  border-radius: 50%;
+  font-size: 24px;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  display: none; /* Initially hidden */
+  z-index: 999;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* WhatsApp Button Style */
+.whatsapp-button {
+  background-color: #25d366;
+  bottom: 20px;
+}
+
+/* Scroll to Top Arrow Button Style */
+.scroll-top-button {
+  background-color: #007bff;
+  bottom: 90px; /* Positioned above WhatsApp */
+}

@@ -1,0 +1,93 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 25px;
+  background: linear-gradient(135deg, #195f85, #5698b3);
+  color: white;
+}
+
+.home-button .home-link {
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: white;
+  background-color: transparent;
+  border: 2px solid white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.home-button .home-link:hover {
+  background-color: white;
+  color: #003049;
+}
+
+.header-center {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  flex: 1;
+}
+
+.header-logo {
+  width: 60px;
+  height: auto;
+  margin-bottom: 5px;
+}
+
+.header-title {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.header-subtitle {
+  margin: 0;
+  font-size: 0.95rem;
+  font-style: italic;
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.auth-btn {
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: white;
+  border: 2px solid white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.auth-btn:hover {
+  background-color: white;
+  color: #003049;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .auth-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .home-button {
+    align-self: flex-start;
+  }
+
+  .header-center {
+    order: -1;
+  }
+}

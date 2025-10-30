@@ -1,0 +1,93 @@
+.healthcare-page {
+  padding: 40px;
+  font-family: "Segoe UI", sans-serif;
+  background: linear-gradient(to bottom right, #e6f7ff, #f0fff0);
+  min-height: 100vh;
+}
+
+.healthcare-header {
+  text-align: center;
+  font-size: 32px;
+  font-weight: bold;
+  color: #00796b;
+  margin-bottom: 30px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.healthcare-service {
+  background-color: #ffffff;
+  border-left: 5px solid #00acc1;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 15px auto;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 90%;
+  max-width: 700px;
+}
+
+.healthcare-service:hover {
+  transform: translateY(-3px);
+  background-color: #f1fdfd;
+}
+
+.healthcare-service h3 {
+  font-size: 20px;
+  color: #00796b;
+  margin: 0;
+}
+
+.healthcare-form {
+  margin-top: 15px;
+  background-color: #f9f9f9;
+  padding: 15px 20px;
+  border-radius: 8px;
+  border: 1px solid #cbe2e2;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.healthcare-form label {
+  display: block;
+  margin-bottom: 6px;
+  color: #444;
+  font-weight: 500;
+}
+
+.healthcare-form input,
+.healthcare-form select,
+.healthcare-form textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #b2dfdb;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.healthcare-form button {
+  background-color: #00796b;
+  color: #fff;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.healthcare-form button:hover {
+  background-color: #004d40;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scaleY(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}

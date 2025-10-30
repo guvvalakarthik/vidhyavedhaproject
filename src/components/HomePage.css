@@ -1,0 +1,117 @@
+/* Container holding both image and search bar */
+.homepage-container {
+  padding: 30px;
+  background-color: #f5f5f5;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.homepage-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 20px;
+}
+
+.homepage-image {
+  width: 60%;
+  height: 450px;
+}
+
+.homepage-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Right section: search form */
+.homepage-search {
+  width: 40%;
+  height: 400px;
+  background-color: #ffffff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Search form heading */
+.search-heading {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #2c3e50;
+  text-align: center;
+}
+
+/* Each input group */
+.search-group {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.search-group label {
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: #333;
+}
+
+.search-group select,
+.search-group input {
+  padding: 10px 12px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  outline: none;
+  transition: border 0.3s;
+}
+
+.search-group select:focus,
+.search-group input:focus {
+  border-color: #0077cc;
+}
+
+/* Submit button */
+.search-buttons {
+  display: flex;
+  justify-content: center;
+}
+
+.btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn.green {
+  background-color: #27ae60;
+  color: white;
+}
+
+.btn.green:hover {
+  background-color: #219150;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .homepage-flex {
+    flex-direction: column;
+  }
+
+  .homepage-image,
+  .homepage-search {
+    width: 100%;
+    height: 200px;
+  }
+
+  .homepage-search {
+    margin-top: 20px;
+  }
+}

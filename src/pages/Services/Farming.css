@@ -1,0 +1,206 @@
+/* Container */
+.farming-page {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Animated background */
+.animated-background {
+  background: linear-gradient(120deg, #f1f8e9, #ffffff);
+  background-size: 400% 400%;
+  animation: gradientMove 15s ease infinite;
+}
+
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Header */
+.farming-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.farming-header h2 {
+  font-size: 30px;
+  color: #2e7d32;
+  margin-bottom: 8px;
+}
+
+.farming-header p {
+  font-size: 16px;
+  color: #555;
+}
+
+/* Services layout */
+.farming-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Service Item */
+.farming-service-wrapper {
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 20px;
+}
+
+.farming-service {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px 20px;
+  background-color: #f9fdf7;
+  border: 1px solid #cddc39;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.farming-service:hover {
+  background-color: #e6f4ea;
+}
+
+.farming-service h3 {
+  font-size: 18px;
+  color: #33691e;
+  margin: 0;
+}
+
+/* Form + Info side by side */
+.form-with-info {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+  border: 1px solid #cfd8dc;
+  padding: 20px;
+  background-color: #f4fff4;
+  border-radius: 8px;
+}
+
+/* Info section */
+.form-info {
+  flex: 1;
+  min-width: 250px;
+}
+
+.form-img {
+  width: 100%;
+  max-width: 150px;
+  margin-bottom: 10px;
+}
+
+/* What's new section */
+.whats-new-section h4 {
+  margin-top: 20px;
+  font-size: 16px;
+  color: #558b2f;
+}
+
+.update-item {
+  margin-top: 10px;
+  background-color: #ffffff;
+  border: 1px solid #aed581;
+  border-radius: 4px;
+  padding: 10px;
+}
+
+.update-header {
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+  font-weight: 500;
+  color: #33691e;
+}
+
+.update-toggle-icon {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.update-details {
+  margin-top: 5px;
+  color: #4e4e4e;
+}
+
+/* Form section */
+.farming-form {
+  flex: 1;
+  min-width: 280px;
+  padding-top: 10px;
+}
+
+.farming-form h3 {
+  margin-bottom: 15px;
+  font-size: 20px;
+  color: #388e3c;
+}
+
+.farming-form label {
+  display: block;
+  margin-bottom: 12px;
+  color: #333;
+  font-weight: 500;
+}
+
+.farming-form input,
+.farming-form select,
+.farming-form textarea {
+  width: 100%;
+  padding: 8px 10px;
+  margin-top: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.farming-form button {
+  margin-top: 20px;
+  padding: 10px 18px;
+  font-size: 16px;
+  color: white;
+  background-color: #43a047;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.25s ease;
+}
+
+.farming-form button:hover {
+  background-color: #2e7d32;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .form-with-info {
+    flex-direction: column;
+  }
+
+  .farming-service {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .form-img {
+    max-width: 100px;
+  }
+
+  .farming-header h2 {
+    font-size: 24px;
+  }
+}
