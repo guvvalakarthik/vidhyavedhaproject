@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./Banking.css";
 import { FaUniversity } from "react-icons/fa";
+import api from "../../services/api.js";
 
 function Banking() {
   const [selectedService, setSelectedService] = useState(null);
@@ -15,6 +16,7 @@ function Banking() {
   });
 
   const [expandedUpdates, setExpandedUpdates] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const handleServiceClick = (service) => {
     setSelectedService(service === selectedService ? null : service);
@@ -26,19 +28,38 @@ function Banking() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert("Our team will contact you as soon as possible.");
-    setFormData({
-      fullName: "",
-      email: "",
-      phone: "",
-      amount: "",
-      tenure: "",
-      income: "",
-      nominee: "",
-    });
-    setSelectedService(null);
+    setLoading(true);
+    try {
+      const payload = {
+        ...formData,
+        name: formData.fullName,
+        serviceType: selectedService,
+      };
+      delete payload.fullName;
+      const { data } = await api.post("/banking/submit", payload);
+      alert(
+        `Application submitted! Application ID: ${data.applicationId}. Our team will contact you soon.`
+      );
+      setFormData({
+        fullName: "",
+        email: "",
+        phone: "",
+        amount: "",
+        tenure: "",
+        income: "",
+        nominee: "",
+      });
+      setSelectedService(null);
+    } catch (err) {
+      alert(
+        err.response?.data?.error ||
+          "Submission failed. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   const toggleUpdateExpansion = (index) => {

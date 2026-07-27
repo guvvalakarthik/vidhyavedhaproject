@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./Ecommerce.css";
 import { FaShoppingCart } from "react-icons/fa";
+import api from "../../services/api.js";
 
 function Ecommerce() {
   const [selectedService, setSelectedService] = useState(null);
@@ -14,6 +15,7 @@ function Ecommerce() {
     email: "",
   });
   const [expandedUpdates, setExpandedUpdates] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const handleServiceClick = (service) => {
     setSelectedService(service === selectedService ? null : service);
@@ -25,19 +27,38 @@ function Ecommerce() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert("Your request for " + selectedService + " has been submitted.");
-    setFormData({
-      name: "",
-      accountId: "",
-      amount: "",
-      mobile: "",
-      address: "",
-      platform: "",
-      email: "",
-    });
-    setSelectedService(null);
+    setLoading(true);
+    try {
+      const payload = {
+        ...formData,
+        name: formData.name,
+        phone: formData.mobile || "N/A",
+        serviceType: selectedService,
+      };
+      const { data } = await api.post("/ecommerce/submit", payload);
+      alert(
+        `Request for ${selectedService} submitted! Application ID: ${data.applicationId}`
+      );
+      setFormData({
+        name: "",
+        accountId: "",
+        amount: "",
+        mobile: "",
+        address: "",
+        platform: "",
+        email: "",
+      });
+      setSelectedService(null);
+    } catch (err) {
+      alert(
+        err.response?.data?.error ||
+          "Submission failed. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   const toggleUpdateExpansion = (index) => {

@@ -2,8 +2,11 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "./Header.css";
 import logo from "../assets/logo.png";
+import { useAuth } from "../context/AuthContext.js";
 
 function Header() {
+  const { user, logout } = useAuth();
+
   return (
     <header className="header">
       <div className="home-button">
@@ -21,12 +24,23 @@ function Header() {
       </div>
 
       <div className="auth-buttons">
-        <Link to="/login" className="auth-btn">
-          Login
-        </Link>
-        <Link to="/register" className="auth-btn">
-          Register
-        </Link>
+        {user ? (
+          <>
+            <span className="user-name">Hi, {user.name}</span>
+            <button className="auth-btn" onClick={logout}>
+              Logout
+            </button>
+          </>
+        ) : (
+          <>
+            <Link to="/login" className="auth-btn">
+              Login
+            </Link>
+            <Link to="/register" className="auth-btn">
+              Register
+            </Link>
+          </>
+        )}
       </div>
     </header>
   );

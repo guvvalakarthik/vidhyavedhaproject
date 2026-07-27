@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./HomeMaintenance.css";
+import api from "../../services/api.js";
 
 const servicesList = [
   "Electrical Repairs",
@@ -45,11 +46,33 @@ function HomeMaintenance() {
   const [popup, setPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
 
-  const handleSubmit = (e) => {
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setPopupMessage(`Request for '${activeService}' submitted successfully!`);
-    setPopup(true);
-    setFormData({});
+    setLoading(true);
+    const payload = {
+      ...formData,
+      name: formData.name,
+      phone: formData.phone || "N/A",
+      serviceType: activeService,
+    };
+
+    try {
+      const { data } = await api.post("/home-maintenance/submit", payload);
+      setPopupMessage(
+        `Request for '${activeService}' submitted! Application ID: ${data.applicationId}`
+      );
+      setPopup(true);
+      setFormData({});
+    } catch (err) {
+      setPopupMessage(
+        err.response?.data?.error || "Submission failed. Please try again."
+      );
+      setPopup(true);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleInputChange = (e) => {

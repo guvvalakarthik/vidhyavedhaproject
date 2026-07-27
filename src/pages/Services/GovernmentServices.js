@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./Ecommerce.css"; // Reusing Ecommerce styling
 import { FaUniversity } from "react-icons/fa";
+import api from "../../services/api.js";
 
 function GovtServices() {
   const [selectedService, setSelectedService] = useState(null);
@@ -12,6 +13,7 @@ function GovtServices() {
     mobile: "",
     email: "",
   });
+  const [loading, setLoading] = useState(false);
 
   const handleServiceClick = (service) => {
     setSelectedService(service === selectedService ? null : service);
@@ -23,17 +25,36 @@ function GovtServices() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert(`Your request for ${selectedService} has been submitted.`);
-    setFormData({
-      name: "",
-      idNumber: "",
-      address: "",
-      mobile: "",
-      email: "",
-    });
-    setSelectedService(null);
+    setLoading(true);
+    try {
+      const payload = {
+        ...formData,
+        name: formData.name,
+        phone: formData.mobile || "N/A",
+        serviceType: selectedService,
+      };
+      const { data } = await api.post("/government/submit", payload);
+      alert(
+        `Request for ${selectedService} submitted! Application ID: ${data.applicationId}`
+      );
+      setFormData({
+        name: "",
+        idNumber: "",
+        address: "",
+        mobile: "",
+        email: "",
+      });
+      setSelectedService(null);
+    } catch (err) {
+      alert(
+        err.response?.data?.error ||
+          "Submission failed. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   const toggleUpdateExpansion = (index) => {

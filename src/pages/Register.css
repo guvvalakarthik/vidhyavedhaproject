@@ -59,3 +59,35 @@
 .register-form button:hover {
   background-color: #00337f;
 }
+
+.register-form button:disabled {
+  background-color: #7fa8d8;
+  cursor: not-allowed;
+}
+
+.register-error {
+  background-color: #fed7d7;
+  color: #c53030;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.register-footer {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.register-footer a {
+  color: #004aad;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.register-footer a:hover {
+  text-decoration: underline;
+}

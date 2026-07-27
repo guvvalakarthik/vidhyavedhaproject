@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext.js";
 import "./Register.css";
 
 function Register() {
@@ -8,25 +10,41 @@ function Register() {
     password: "",
     confirmPassword: "",
   });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const { register } = useAuth();
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+
     if (form.password !== form.confirmPassword) {
-      alert("Passwords do not match");
+      setError("Passwords do not match");
       return;
     }
-    console.log("Registered with:", form);
-    alert("Registration successful (placeholder)!");
+
+    setLoading(true);
+    try {
+      await register(form.name, form.email, form.password, form.confirmPassword);
+      navigate("/");
+    } catch (err) {
+      setError(err.response?.data?.error || "Registration failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="register-page">
       <form className="register-form" onSubmit={handleSubmit}>
         <h2>Create an Account</h2>
+        {error && <p className="register-error">{error}</p>}
 
         <label>Name</label>
         <input
@@ -64,7 +82,13 @@ function Register() {
           required
         />
 
-        <button type="submit">Register</button>
+        <button type="submit" disabled={loading}>
+          {loading ? "Registering…" : "Register"}
+        </button>
+
+        <p className="register-footer">
+          Already have an account? <Link to="/login">Login here</Link>
+        </p>
       </form>
     </div>
   );

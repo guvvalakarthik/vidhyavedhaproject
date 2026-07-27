@@ -1,31 +1,43 @@
 import express from "express";
+import cors from "cors";
 import dotenv from "dotenv";
-import path from "path";
-import { fileURLToPath } from "url";
-
-import emergencyRoutes from "./routes/emergencyRoutes.js";
-import educationRoutes from "./routes/educationRoutes.js";
+import connectDB from "./config.js";
+import authRoutes from "./routes/authRoutes.js";
+import applicationRoutes from "./routes/applicationRoutes.js";
 
 dotenv.config();
 
 const app = express();
 
-// Middleware to parse JSON body
+app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-app.use((req, res, next) => {
-  req.dbFilePath = path.join(__dirname, "db.json");
-  next();
+app.get("/", (req, res) => {
+  res.json({ message: "Vidhya Vedha API Running", version: "1.0.0" });
 });
 
-// Routes must be registered after express.json()
-app.use("/api/emergency", emergencyRoutes);
-app.use("/api/education", educationRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api", applicationRoutes);
+
+app.use((req, res) => {
+  res.status(404).json({ error: "Route not found" });
+});
+
+app.use((err, req, res, next) => {
+  console.error("Unhandled error:", err);
+  res.status(500).json({ error: "Internal server error" });
+});
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+
+connectDB()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("Failed to start server:", err);
+    process.exit(1);
+  });

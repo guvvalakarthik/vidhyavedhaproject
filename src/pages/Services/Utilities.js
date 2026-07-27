@@ -1,17 +1,47 @@
 import React, { useState } from "react";
 import "./Utilities.css";
 import { FaBolt, FaMobileAlt, FaUniversity } from "react-icons/fa";
+import api from "../../services/api.js";
 
 const Utilities = () => {
   const [activeService, setActiveService] = useState(null);
   const [popup, setPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
   const [expandedIndex, setExpandedIndex] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setPopupMessage("Your request was submitted successfully!");
-    setPopup(true);
+    setLoading(true);
+    const formData = new FormData(e.target);
+    const payload = {};
+    formData.forEach((value, key) => {
+      payload[key] = value;
+    });
+
+    const serviceMap = {
+      1: "Electricity Bill Payments",
+      2: "Net Banking Assistance",
+      3: "Mobile Recharge & Internet Setup",
+    };
+    payload.serviceType = serviceMap[activeService] || "Utilities";
+    payload.name = payload["Account Holder Name"] || payload["Consumer Number"] || "N/A";
+    payload.phone = payload["Mobile Number"] || "N/A";
+
+    try {
+      const { data } = await api.post("/utilities/submit", payload);
+      setPopupMessage(
+        `Request submitted! Application ID: ${data.applicationId}`
+      );
+      setPopup(true);
+    } catch (err) {
+      setPopupMessage(
+        err.response?.data?.error || "Submission failed. Please try again."
+      );
+      setPopup(true);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const toggleService = (id) => {

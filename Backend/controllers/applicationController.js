@@ -1,0 +1,125 @@
+import Application from "../models/Application.js";
+
+const VALID_CATEGORIES = [
+  "education",
+  "emergency",
+  "banking",
+  "healthcare",
+  "farming",
+  "utilities",
+  "ecommerce",
+  "home-maintenance",
+  "government",
+  "contact",
+];
+
+export const submitApplication = async (req, res) => {
+  try {
+    const { category } = req.params;
+    const { name, phone, serviceType, ...details } = req.body;
+
+    if (!VALID_CATEGORIES.includes(category)) {
+      return res.status(400).json({ error: `Invalid category: ${category}` });
+    }
+
+    if (!name || !phone || !serviceType) {
+      return res.status(400).json({ error: "Name, phone, and serviceType are required." });
+    }
+
+    const application = await Application.create({
+      category,
+      serviceType,
+      name,
+      email: details.email || undefined,
+      phone,
+      details,
+    });
+
+    res.status(201).json({
+      message: "Application submitted successfully",
+      applicationId: application.applicationId,
+      application,
+    });
+  } catch (err) {
+    console.error("Submit application error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const getApplicationsByCategory = async (req, res) => {
+  try {
+    const { category } = req.params;
+
+    if (!VALID_CATEGORIES.includes(category)) {
+      return res.status(400).json({ error: `Invalid category: ${category}` });
+    }
+
+    const applications = await Application.find({ category }).sort({ createdAt: -1 });
+    res.json(applications);
+  } catch (err) {
+    console.error("Get applications error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const getApplicationStatus = async (req, res) => {
+  try {
+    const { applicationId } = req.params;
+
+    const application = await Application.findOne({ applicationId });
+    if (!application) {
+      return res.status(404).json({ error: "Application not found." });
+    }
+
+    res.json({
+      applicationId: application.applicationId,
+      category: application.category,
+      serviceType: application.serviceType,
+      status: application.status,
+      submittedAt: application.createdAt,
+    });
+  } catch (err) {
+    console.error("Get status error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const updateApplicationStatus = async (req, res) => {
+  try {
+    const { applicationId } = req.params;
+    const { status } = req.body;
+
+    const validStatuses = ["pending", "under-review", "approved", "rejected"];
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({ error: "Invalid status value." });
+    }
+
+    const application = await Application.findOneAndUpdate(
+      { applicationId },
+      { status },
+      { new: true }
+    );
+
+    if (!application) {
+      return res.status(404).json({ error: "Application not found." });
+    }
+
+    res.json({
+      message: "Status updated successfully",
+      application,
+    });
+  } catch (err) {
+    console.error("Update status error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const getAllApplications = async (req, res) => {
+  try {
+    const applications = await Application.find().sort({ createdAt: -1 });
+    res.json(applications);
+  } catch (err) {
+    console.error("Get all applications error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};

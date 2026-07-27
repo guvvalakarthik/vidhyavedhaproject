@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import Header from "./components/Header.js";
 import Navbar from "./components/Navbar.js";
 import Footer from "./components/Footer.js";
+import { AuthProvider } from "./context/AuthContext.js";
 
 // Import HomePage
 import HomePage from "./components/HomePage.js";
@@ -22,39 +23,49 @@ import GovernmentServices from "./pages/Services/GovernmentServices.js";
 import Login from "./pages/Login.js";
 import Register from "./pages/Register.js";
 
+// Info Pages
+import About from "./pages/About.js";
+import Contact from "./pages/Contact.js";
+
 function App() {
   return (
-    <div className="app-wrapper">
-      <Header />
-      <Navbar />
+    <AuthProvider>
+      <div className="app-wrapper">
+        <Header />
+        <Navbar />
 
-      <main className="main-content">
-        <Routes>
-          {/* Home Page */}
-          <Route path="/" element={<HomePage />} />
+        <main className="main-content">
+          <Routes>
+            {/* Home Page */}
+            <Route path="/" element={<HomePage />} />
 
-          {/* Service Routes */}
-          <Route path="/services/banking" element={<Banking />} />
-          <Route path="/services/education" element={<Education />} />
-          <Route path="/services/farming" element={<Farming />} />
-          <Route path="/services/healthcare" element={<Healthcare />} />
-          <Route path="/services/emergency" element={<Emergency />} />
-          <Route path="/services/utilities" element={<Utilities />} />
-          <Route path="/services/ecommerce" element={<Ecommerce />} />
-          <Route
-            path="/services/home-maintenance"
-            element={<HomeMaintenance />}
-          />
-          <Route path="/services/government" element={<GovernmentServices />} />
+            {/* Service Routes */}
+            <Route path="/services/banking" element={<Banking />} />
+            <Route path="/services/education" element={<Education />} />
+            <Route path="/services/farming" element={<Farming />} />
+            <Route path="/services/healthcare" element={<Healthcare />} />
+            <Route path="/services/emergency" element={<Emergency />} />
+            <Route path="/services/utilities" element={<Utilities />} />
+            <Route path="/services/ecommerce" element={<Ecommerce />} />
+            <Route
+              path="/services/home-maintenance"
+              element={<HomeMaintenance />}
+            />
+            <Route path="/services/government" element={<GovernmentServices />} />
 
-          {/* Auth Routes */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-        </Routes>
-      </main>
+            {/* Auth Routes */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
 
-      <Footer />
-    </div>
+            {/* Info Routes */}
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+          </Routes>
+        </main>
+
+        <Footer />
+      </div>
+    </AuthProvider>
   );
 }
 

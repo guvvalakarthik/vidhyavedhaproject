@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./Farming.css";
+import api from "../../services/api.js";
 
 const services = [
   {
@@ -148,6 +149,7 @@ const services = [
 function Farming() {
   const [activeService, setActiveService] = useState(null);
   const [expanded, setExpanded] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const toggleForm = (id) => {
     setActiveService(activeService === id ? null : id);
@@ -158,10 +160,34 @@ function Farming() {
     setExpanded(expanded === index ? null : index);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert("Your request has been submitted successfully!");
-    e.target.reset();
+    setLoading(true);
+    const formData = new FormData(e.target);
+    const payload = {};
+    formData.forEach((value, key) => {
+      payload[key] = value;
+    });
+    const service = services.find((s) => s.id === activeService);
+    payload.serviceType = service ? service.title : "";
+    payload.name = payload.location || payload.farmer_name || payload.farmer_id || "N/A";
+    payload.phone = payload.contact_number || payload.mobile_number || "N/A";
+
+    try {
+      const { data } = await api.post("/farming/submit", payload);
+      alert(
+        `Request submitted! Application ID: ${data.applicationId}`
+      );
+      e.target.reset();
+      setActiveService(null);
+    } catch (err) {
+      alert(
+        err.response?.data?.error ||
+          "Submission failed. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

@@ -1,10 +1,12 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "main": "app.js",
+  "type": "module",
+  "main": "Server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node Server.js",
+    "dev": "node --watch Server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
@@ -17,5 +19,5 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.17.0"
   },
-  "description": ""
+  "description": "Vidhya Vedha backend — auth + multi-service application API"
 }

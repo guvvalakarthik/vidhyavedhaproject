@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import "./Healthcare.css";
+import api from "../../services/api.js";
 
 function Healthcare() {
   const [activeService, setActiveService] = useState(null);
   const [expandedUpdate, setExpandedUpdate] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const toggleForm = (id) => {
     setActiveService(activeService === id ? null : id);
@@ -13,12 +15,36 @@ function Healthcare() {
     setExpandedUpdate(expandedUpdate === index ? null : index);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert(
-      "Your healthcare request has been submitted. Our team will contact you shortly."
-    );
-    e.target.reset();
+    setLoading(true);
+    const formData = new FormData(e.target);
+    const payload = {};
+    formData.forEach((value, key) => {
+      payload[key] = value;
+    });
+    const service = services.find((s) => s.id === activeService);
+    payload.serviceType = service ? service.title : "";
+    payload.name = payload["Full Name"] || payload.name || "";
+    payload.phone = payload["Phone Number"] || payload.phone || "";
+    delete payload["Full Name"];
+    delete payload["Phone Number"];
+
+    try {
+      const { data } = await api.post("/healthcare/submit", payload);
+      alert(
+        `Request submitted! Application ID: ${data.applicationId}. Our team will contact you shortly.`
+      );
+      e.target.reset();
+      setActiveService(null);
+    } catch (err) {
+      alert(
+        err.response?.data?.error ||
+          "Submission failed. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   const services = [

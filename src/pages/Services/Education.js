@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from "react";
 import "./Education.css";
-import axios from "axios";
+import api from "../../services/api.js";
 
 function Education() {
   const [data, setData] = useState([]);
 
   const [activeService, setActiveService] = useState(null);
   const [expanded, setExpanded] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/education")
+    api
+      .get("/education")
       .then((res) => setData(res.data))
       .catch((err) => console.error(err));
   }, []);
@@ -36,35 +37,25 @@ function Education() {
     payload["serviceType"] = e.target.getAttribute("data-service");
 
     try {
-      const response = await fetch(
-        "http://localhost:5000/api/education/submit",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        }
-      );
+      const response = await api.post("/education/submit", payload);
+      const result = response.data;
 
-      if (!response.ok) {
-        throw new Error(`Server error: ${response.status}`);
-      }
-
-      const result = await response.json();
-
-      // ✅ Update UI instantly
       setData((prev) => [...prev, result]);
 
-      // ✅ Reset form & close
       e.target.reset();
       setActiveService(null);
       setExpanded(null);
 
       alert(
-        "Your application has been submitted. Our team will contact you soon."
+        "Your application has been submitted. Application ID: " +
+          (result.applicationId || "N/A")
       );
     } catch (err) {
-      console.error("❌ Error submitting form:", err);
-      alert("There was a problem submitting your form. Please try again.");
+      console.error("Error submitting form:", err);
+      alert(
+        err.response?.data?.error ||
+          "There was a problem submitting your form. Please try again."
+      );
     }
   };
 

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./Emergency.css";
+import api from "../../services/api.js";
 
 const emergencyServices = [
   "24x7 Towing Service",
@@ -17,6 +18,7 @@ const emergencyServices = [
 const Emergency = () => {
   const [selectedService, setSelectedService] = useState("");
   const [showForm, setShowForm] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleServiceClick = (service) => {
     if (selectedService === service && showForm) {
@@ -28,9 +30,34 @@ const Emergency = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert("Form submitted successfully!");
+    setLoading(true);
+    const formData = new FormData(e.target);
+    const payload = {};
+    formData.forEach((value, key) => {
+      payload[key] = value;
+    });
+    payload.serviceType = selectedService;
+    payload.name = payload["Vehicle Type"] || payload["Issue Description"] || "N/A";
+    payload.phone =
+      payload["Contact Number"] ||
+      payload["Emergency Contact Number"] ||
+      "N/A";
+
+    try {
+      const { data } = await api.post("/emergency/submit", payload);
+      alert(
+        `Emergency request submitted! Application ID: ${data.applicationId}`
+      );
+    } catch (err) {
+      alert(
+        err.response?.data?.error ||
+          "Submission failed. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   const renderFormInputs = (service) => {

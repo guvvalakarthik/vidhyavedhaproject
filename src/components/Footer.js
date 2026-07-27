@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { FaWhatsapp, FaArrowUp } from "react-icons/fa";
 import "./Footer.css";
 import logo from "../assets/logo.png";
+import api from "../services/api.js";
 
 const Footer = () => {
   const [showForm, setShowForm] = useState(false);
@@ -13,17 +15,32 @@ const Footer = () => {
   const [email, setEmail] = useState("");
   const [suggestion, setSuggestion] = useState("");
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!name || !email || !suggestion) {
       setMessage("Please fill all fields.");
       return;
     }
-    setMessage("Thank you for your suggestion!");
-    setName("");
-    setEmail("");
-    setSuggestion("");
+    setLoading(true);
+    try {
+      await api.post("/contact/submit", {
+        name,
+        email,
+        message: suggestion,
+        serviceType: "Suggestion Form",
+        phone: "N/A",
+      });
+      setMessage("Thank you for your suggestion!");
+      setName("");
+      setEmail("");
+      setSuggestion("");
+    } catch {
+      setMessage("Failed to submit. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const scrollToTop = () => {
@@ -139,6 +156,14 @@ const Footer = () => {
           <h3>📬 Contact Us</h3>
           <p>📧 vidhyavedha@gmail.com</p>
           <p>📞 +91-6305224771</p>
+          <div className="footer-links" style={{ marginTop: "10px", display: "flex", gap: "20px" }}>
+            <Link to="/about" style={{ color: "#fff", textDecoration: "none" }}>
+              About Us
+            </Link>
+            <Link to="/contact" style={{ color: "#fff", textDecoration: "none" }}>
+              Contact
+            </Link>
+          </div>
         </div>
       </footer>
 
