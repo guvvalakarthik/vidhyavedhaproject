@@ -26,6 +26,8 @@ import Register from "./pages/Register.js";
 // Info Pages
 import About from "./pages/About.js";
 import Contact from "./pages/Contact.js";
+import UserDashboard from "./pages/UserDashboard.js";
+import AdminPanel from "./pages/AdminPanel.js";
 
 function App() {
   return (
@@ -60,6 +62,10 @@ function App() {
             {/* Info Routes */}
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
+
+            {/* Dashboard & Admin */}
+            <Route path="/dashboard" element={<UserDashboard />} />
+            <Route path="/admin" element={<AdminPanel />} />
           </Routes>
         </main>
 
