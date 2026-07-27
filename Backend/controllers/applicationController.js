@@ -123,3 +123,16 @@ export const getAllApplications = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+export const getMyApplications = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const applications = await Application.find({
+      $or: [{ userId }, { email: req.user.email }],
+    }).sort({ createdAt: -1 });
+    res.json(applications);
+  } catch (err) {
+    console.error("Get my applications error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};

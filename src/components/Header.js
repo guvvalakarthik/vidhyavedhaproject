@@ -26,6 +26,9 @@ function Header() {
       <div className="auth-buttons">
         {user ? (
           <>
+            <Link to="/dashboard" className="auth-btn" style={{ textDecoration: "none" }}>
+              My Dashboard
+            </Link>
             <span className="user-name">Hi, {user.name}</span>
             <button className="auth-btn" onClick={logout}>
               Logout
