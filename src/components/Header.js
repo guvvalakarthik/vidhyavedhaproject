@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import "./Header.css";
 import logo from "../assets/logo.png";
 import { useAuth } from "../context/AuthContext.js";
+import NotificationBell from "./NotificationBell.js";
 
 function Header() {
   const { user, logout } = useAuth();
@@ -26,6 +27,7 @@ function Header() {
       <div className="auth-buttons">
         {user ? (
           <>
+            <NotificationBell />
             <Link to="/dashboard" className="auth-btn" style={{ textDecoration: "none" }}>
               My Dashboard
             </Link>
