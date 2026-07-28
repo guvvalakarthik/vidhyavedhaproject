@@ -11,11 +11,8 @@ function Header() {
   return (
     <header className="header">
       <div className="home-button">
-        <Link to="/" className="home-link">
-          Home
-        </Link>
+        <Link to="/" className="home-link">Home</Link>
       </div>
-
       <div className="header-center">
         <img src={logo} alt="Vidhya Vedha Logo" className="header-logo" />
         <div className="header-text">
@@ -23,27 +20,19 @@ function Header() {
           <p className="header-subtitle">Empowering Rural India, Digitally</p>
         </div>
       </div>
-
       <div className="auth-buttons">
         {user ? (
           <>
             <NotificationBell />
-            <Link to="/dashboard" className="auth-btn" style={{ textDecoration: "none" }}>
-              My Dashboard
-            </Link>
+            <Link to="/dashboard" className="auth-btn">My Dashboard</Link>
+            {user.role === "admin" && <Link to="/admin" className="auth-btn">Administration</Link>}
             <span className="user-name">Hi, {user.name}</span>
-            <button className="auth-btn" onClick={logout}>
-              Logout
-            </button>
+            <button className="auth-btn" type="button" onClick={logout}>Logout</button>
           </>
         ) : (
           <>
-            <Link to="/login" className="auth-btn">
-              Login
-            </Link>
-            <Link to="/register" className="auth-btn">
-              Register
-            </Link>
+            <Link to="/login" className="auth-btn">Login</Link>
+            <Link to="/register" className="auth-btn">Register</Link>
           </>
         )}
       </div>

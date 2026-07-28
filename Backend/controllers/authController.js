@@ -1,67 +1,59 @@
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
-const generateToken = (userId, email) =>
-  jwt.sign({ userId, email }, process.env.JWT_SECRET, { expiresIn: "7d" });
+const publicUser = (user) => ({
+  id: user._id,
+  name: user.name,
+  email: user.email,
+  role: user.role || "citizen",
+});
+
+const generateToken = (user) => jwt.sign(
+  { userId: user._id, email: user.email, role: user.role || "citizen" },
+  process.env.JWT_SECRET,
+  { algorithm: "HS256", expiresIn: "2h", issuer: "vidhya-vedha-api", audience: "vidhya-vedha-web" },
+);
 
 export const register = async (req, res) => {
   try {
-    const { name, email, password, confirmPassword } = req.body;
-
-    if (!name || !email || !password) {
-      return res.status(400).json({ error: "Name, email, and password are required." });
-    }
-
-    if (confirmPassword !== undefined && password !== confirmPassword) {
-      return res.status(400).json({ error: "Passwords do not match." });
-    }
-
-    const existing = await User.findOne({ email: email.toLowerCase() });
-    if (existing) {
+    const { name, email, password } = req.body;
+    if (await User.exists({ email })) {
       return res.status(409).json({ error: "Email already registered." });
     }
 
-    const user = await User.create({ name, email, password });
-    const token = generateToken(user._id, user.email);
-
-    res.status(201).json({
+    const user = await User.create({ name, email, password, role: "citizen" });
+    return res.status(201).json({
       message: "Registration successful",
-      token,
-      user: { id: user._id, name: user.name, email: user.email },
+      token: generateToken(user),
+      user: publicUser(user),
     });
   } catch (err) {
     console.error("Register error:", err);
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error." });
   }
 };
 
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-
-    if (!email || !password) {
-      return res.status(400).json({ error: "Email and password are required." });
-    }
-
-    const user = await User.findOne({ email: email.toLowerCase() });
-    if (!user) {
+    const user = await User.findOne({ email }).select("+password");
+    if (!user || !(await user.matchPassword(password))) {
       return res.status(401).json({ error: "Invalid email or password." });
     }
 
-    const isMatch = await user.matchPassword(password);
-    if (!isMatch) {
-      return res.status(401).json({ error: "Invalid email or password." });
-    }
-
-    const token = generateToken(user._id, user.email);
-
-    res.json({
+    return res.json({
       message: "Login successful",
-      token,
-      user: { id: user._id, name: user.name, email: user.email },
+      token: generateToken(user),
+      user: publicUser(user),
     });
   } catch (err) {
     console.error("Login error:", err);
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error." });
   }
+};
+
+export const getMe = async (req, res) => {
+  const user = await User.findById(req.user.userId);
+  if (!user) return res.status(404).json({ error: "User not found." });
+  return res.json({ user: publicUser(user) });
 };
