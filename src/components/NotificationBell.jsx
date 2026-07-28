@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { FaBell, FaCheckCircle, FaTimesCircle, FaHourglass, FaClock, FaCheckDouble } from "react-icons/fa";
-import { useAuth } from "../context/AuthContext.js";
+import { useAuth } from "../context/AuthContext.jsx";
 import api from "../services/api.js";
 import "./NotificationBell.css";
 

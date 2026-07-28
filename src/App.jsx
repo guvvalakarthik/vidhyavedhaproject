@@ -1,35 +1,35 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import Header from "./components/Header.js";
-import Navbar from "./components/Navbar.js";
-import Footer from "./components/Footer.js";
-import { AuthProvider } from "./context/AuthContext.js";
+import Header from "./components/Header.jsx";
+import Navbar from "./components/Navbar.jsx";
+import Footer from "./components/Footer.jsx";
+import { AuthProvider } from "./context/AuthContext.jsx";
 
 // Import LandingPage
-import LandingPage from "./components/LandingPage.js";
+import LandingPage from "./components/LandingPage.jsx";
 
 // Service Pages
-import Banking from "./pages/Services/Banking.js";
-import Education from "./pages/Services/Education.js";
-import Farming from "./pages/Services/Farming.js";
-import Healthcare from "./pages/Services/Healthcare.js";
-import Emergency from "./pages/Services/Emergency.js";
-import Utilities from "./pages/Services/Utilities.js";
-import Ecommerce from "./pages/Services/Ecommerce.js";
-import HomeMaintenance from "./pages/Services/HomeMaintenance.js";
-import GovernmentServices from "./pages/Services/GovernmentServices.js";
+import Banking from "./pages/Services/Banking.jsx";
+import Education from "./pages/Services/Education.jsx";
+import Farming from "./pages/Services/Farming.jsx";
+import Healthcare from "./pages/Services/Healthcare.jsx";
+import Emergency from "./pages/Services/Emergency.jsx";
+import Utilities from "./pages/Services/Utilities.jsx";
+import Ecommerce from "./pages/Services/Ecommerce.jsx";
+import HomeMaintenance from "./pages/Services/HomeMaintenance.jsx";
+import GovernmentServices from "./pages/Services/GovernmentServices.jsx";
 
 // Auth Pages
-import Login from "./pages/Login.js";
-import Register from "./pages/Register.js";
+import Login from "./pages/Login.jsx";
+import Register from "./pages/Register.jsx";
 
 // Info Pages
-import About from "./pages/About.js";
-import Contact from "./pages/Contact.js";
-import UserDashboard from "./pages/UserDashboard.js";
-import AdminPanel from "./pages/AdminPanel.js";
-import Analytics from "./pages/Analytics.js";
-import Notifications from "./pages/Notifications.js";
+import About from "./pages/About.jsx";
+import Contact from "./pages/Contact.jsx";
+import UserDashboard from "./pages/UserDashboard.jsx";
+import AdminPanel from "./pages/AdminPanel.jsx";
+import Analytics from "./pages/Analytics.jsx";
+import Notifications from "./pages/Notifications.jsx";
 
 function App() {
   return (

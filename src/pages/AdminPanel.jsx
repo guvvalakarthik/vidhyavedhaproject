@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaFileAlt, FaClock, FaCheckCircle, FaTimesCircle, FaHourglass, FaSearch, FaFilter, FaChartBar } from "react-icons/fa";
-import { useAuth } from "../context/AuthContext.js";
+import { useAuth } from "../context/AuthContext.jsx";
 import api from "../services/api.js";
 import "./AdminPanel.css";
 
