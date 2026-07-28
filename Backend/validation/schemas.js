@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { GOVERNMENT_SERVICE_CODES } from "../data/governmentServices.js";
 
 export const roles = ["citizen", "provider", "dispatcher", "admin"];
 export const categories = [
@@ -64,4 +65,16 @@ export const appointmentBookingSchema = z.object({
 });
 export const appointmentRescheduleSchema = z.object({
   startTime: z.string().datetime({ offset: true }),
+});
+export const governmentServiceParamsSchema = z.object({
+  serviceCode: z.enum(GOVERNMENT_SERVICE_CODES),
+});
+export const governmentAssistanceSchema = z.object({
+  serviceCode: z.enum(GOVERNMENT_SERVICE_CODES),
+  supportMode: z.enum(["digital-guidance", "phone-guidance", "centre-visit-guidance"]),
+  district: z.string().trim().min(2).max(100),
+  preferredLanguage: z.enum(["English", "Hindi", "Telugu", "Tamil", "Kannada", "Malayalam", "Marathi", "Other"]),
+  phone,
+  notes: z.string().trim().max(500).optional().default(""),
+  consent: z.literal(true),
 });

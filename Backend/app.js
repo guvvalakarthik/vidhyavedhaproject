@@ -4,6 +4,7 @@ import helmet from "helmet";
 import { rateLimit } from "express-rate-limit";
 import authRoutes from "./routes/authRoutes.js";
 import applicationRoutes from "./routes/applicationRoutes.js";
+import governmentRoutes from "./routes/governmentRoutes.js";
 import healthcareRoutes from "./routes/healthcareRoutes.js";
 import notificationRoutes from "./routes/notificationRoutes.js";
 import { sanitizePayload } from "./middleware/sanitizePayload.js";
@@ -40,9 +41,10 @@ const authLimiter = rateLimit({
 });
 
 app.get("/", (_req, res) => {
-  res.json({ message: "Vidhya Vedha API Running", version: "2.1.0" });
+  res.json({ message: "Vidhya Vedha API Running", version: "2.2.0" });
 });
 app.use("/api/auth", authLimiter, authRoutes);
+app.use("/api/government", apiLimiter, governmentRoutes);
 app.use("/api/healthcare", apiLimiter, healthcareRoutes);
 app.use("/api/notifications", apiLimiter, notificationRoutes);
 app.use("/api", apiLimiter, applicationRoutes);

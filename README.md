@@ -74,6 +74,12 @@ npm run seed:healthcare
 
 See [Healthcare scheduling](docs/healthcare-scheduling.md) for the API routes, booking rules, and production considerations.
 
+## Government service guidance
+
+Government services now use a searchable, task-focused guidance journey instead of generic identity forms. Residents can review the responsible authority, official steps, likely documents, fees and processing caveats before continuing to an official portal. Signed-in residents can request minimum-data assisted guidance and track that support separately from the official application.
+
+See [Government service journeys](docs/government-service-journeys.md) for trust boundaries, API routes, source references and production follow-up.
+
 ## Environment variables
 
 Frontend (`.env`):
