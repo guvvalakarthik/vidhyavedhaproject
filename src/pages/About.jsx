@@ -56,7 +56,7 @@ function About() {
           paddingLeft: "20px",
         }}
       >
-        <li>Banking & Insurance services (loans, insurance applications)</li>
+        <li>Financial guidance (official routes, loan-cost estimates and preparation plans)</li>
         <li>Education services (exam applications, university admissions, coaching)</li>
         <li>Healthcare services (telemedicine, lab tests, ambulance booking)</li>
         <li>Farming support (soil testing, fertilizer distribution, crop insurance)</li>

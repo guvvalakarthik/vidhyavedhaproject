@@ -1,6 +1,6 @@
 {
   "name": "vidhya-vedha-api",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "private": true,
   "type": "module",
   "main": "Server.js",
@@ -26,7 +26,7 @@
     "mongoose": "^9.8.1",
     "zod": "^4.4.3"
   },
-  "description": "Vidhya Vedha civic guidance, healthcare scheduling, roadside dispatch, and education planning API",
+  "description": "Vidhya Vedha civic guidance, healthcare scheduling, roadside dispatch, education planning, and financial guidance API",
   "devDependencies": {
     "supertest": "^7.2.2",
     "vitest": "^4.1.10"

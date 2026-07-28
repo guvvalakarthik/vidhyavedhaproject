@@ -5,6 +5,7 @@ import {
   EDUCATION_LEARNER_STAGES,
   EDUCATION_PATHWAY_CODES,
 } from "../data/educationPathways.js";
+import { FINANCIAL_PATHWAY_CODES } from "../data/financialPathways.js";
 
 export const roles = ["citizen", "provider", "dispatcher", "admin"];
 export const categories = [
@@ -131,3 +132,20 @@ export const educationPlanSchema = z.object({
 export const educationTaskUpdateSchema = z.object({
   completed: z.boolean(),
 });
+export const financialPathwayParamsSchema = z.object({
+  pathwayCode: z.enum(FINANCIAL_PATHWAY_CODES),
+});
+export const financialPlanParamsSchema = z.object({
+  planId: z.string().trim().regex(/^FIN-[A-Z0-9]{8}$/i).transform((value) => value.toUpperCase()),
+});
+export const financialPlanTaskParamsSchema = financialPlanParamsSchema.extend({
+  taskId: z.string().trim().min(3).max(80).regex(/^[a-z0-9-]+$/),
+});
+export const financialPlanSchema = z.object({
+  pathwayCode: z.enum(FINANCIAL_PATHWAY_CODES),
+  target: z.string().trim().max(120).optional().default(""),
+  planningHorizon: z.enum(["now", "within-three-months", "researching"]),
+}).strict();
+export const financialTaskUpdateSchema = z.object({
+  completed: z.boolean(),
+}).strict();

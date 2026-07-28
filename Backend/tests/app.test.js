@@ -13,7 +13,7 @@ describe("API shell", () => {
   it("reports health and applies security headers", async () => {
     const response = await request(app).get("/");
     expect(response.status).toBe(200);
-    expect(response.body.version).toBe("2.4.0");
+    expect(response.body.version).toBe("2.5.0");
     expect(response.headers["x-content-type-options"]).toBe("nosniff");
     expect(response.headers["x-powered-by"]).toBeUndefined();
   });
@@ -64,6 +64,19 @@ describe("API shell", () => {
       .get("/api/emergency/dispatch/queue")
       .set("Authorization", `Bearer ${citizenToken}`);
     expect(forbidden.status).toBe(403);
+  });
+
+  it("publishes financial pathways while protecting preparation plans", async () => {
+    const pathways = await request(app).get("/api/finance/pathways");
+    expect(pathways.status).toBe(200);
+    expect(pathways.body.pathways).toHaveLength(6);
+    expect(pathways.body.pathways[0]).not.toHaveProperty("searchTags");
+
+    const plan = await request(app).post("/api/finance/plans").send({});
+    expect(plan.status).toBe(401);
+
+    const invalidPathway = await request(app).get("/api/finance/pathways/not-a-pathway");
+    expect(invalidPathway.status).toBe(422);
   });
 
   it("publishes education pathways while protecting personal plans", async () => {

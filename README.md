@@ -85,6 +85,12 @@ See [Government service journeys](docs/government-service-journeys.md) for trust
 Education now uses official-pathway discovery and a saved preparation checklist instead of generic exam, university and counselling application forms. Visitors can compare responsible authorities and continue to their official platforms. Signed-in learners can save an owner-scoped action plan, track each preparation step and archive completed or superseded plans without uploading marks, certificates or identity records.
 
 See [Education pathway planning](docs/education-planning.md) for supported official routes, API endpoints and data boundaries.
+
+## Financial guidance
+
+Money and banking now uses verified official handoffs, a browser-only loan-cost calculator and owner-scoped preparation plans instead of collecting generic loan and insurance applications. It covers government credit, education finance, basic bank accounts, banking complaints, insurer checks and insurance grievances while keeping application, KYC, payment and evidence data with the responsible organisation.
+
+See [Financial guidance and preparation plans](docs/financial-guidance.md) for the supported routes, calculator assumptions, API endpoints, data boundary and official references.
 ## Environment variables
 
 Frontend (`.env`):

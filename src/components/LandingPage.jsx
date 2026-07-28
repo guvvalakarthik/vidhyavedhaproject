@@ -55,7 +55,7 @@ const services = [
   {
     icon: FaUniversity,
     title: "Money and banking",
-    description: "Explore banking assistance, loans, insurance and account services.",
+    description: "Find official financial routes, estimate loan cost and prepare complaint or application checklists.",
     examples: "Accounts, loans, financial support",
     route: "banking",
     keywords: "bank banking money loan account insurance finance",
