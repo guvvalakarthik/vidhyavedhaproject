@@ -1,4 +1,5 @@
 import Application from "../models/Application.js";
+import { createNotification } from "./notificationController.js";
 
 const VALID_CATEGORIES = [
   "education",
@@ -94,14 +95,28 @@ export const updateApplicationStatus = async (req, res) => {
       return res.status(400).json({ error: "Invalid status value." });
     }
 
+    const existing = await Application.findOne({ applicationId });
+    if (!existing) {
+      return res.status(404).json({ error: "Application not found." });
+    }
+
+    const oldStatus = existing.status;
+
     const application = await Application.findOneAndUpdate(
       { applicationId },
       { status },
       { new: true }
     );
 
-    if (!application) {
-      return res.status(404).json({ error: "Application not found." });
+    if (application.userId && oldStatus !== status) {
+      await createNotification(
+        application.userId,
+        application.applicationId,
+        application.category,
+        application.serviceType,
+        oldStatus,
+        status
+      );
     }
 
     res.json({
