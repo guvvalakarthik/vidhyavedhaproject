@@ -5,8 +5,8 @@ import Navbar from "./components/Navbar.js";
 import Footer from "./components/Footer.js";
 import { AuthProvider } from "./context/AuthContext.js";
 
-// Import HomePage
-import HomePage from "./components/HomePage.js";
+// Import LandingPage
+import LandingPage from "./components/LandingPage.js";
 
 // Service Pages
 import Banking from "./pages/Services/Banking.js";
@@ -39,8 +39,8 @@ function App() {
 
         <main className="main-content">
           <Routes>
-            {/* Home Page */}
-            <Route path="/" element={<HomePage />} />
+            {/* Landing Page */}
+            <Route path="/" element={<LandingPage />} />
 
             {/* Service Routes */}
             <Route path="/services/banking" element={<Banking />} />
