@@ -5,11 +5,13 @@ import {
   getApplicationStatus,
   updateApplicationStatus,
   getAllApplications,
+  getMyApplications,
 } from "../controllers/applicationController.js";
 import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
+router.get("/my-applications", protect, getMyApplications);
 router.get("/", protect, getAllApplications);
 router.get("/status/:applicationId", getApplicationStatus);
 router.patch("/status/:applicationId", protect, updateApplicationStatus);

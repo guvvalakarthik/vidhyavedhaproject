@@ -3,10 +3,11 @@ import mongoose from "mongoose";
 const applicationSchema = new mongoose.Schema(
   {
     applicationId: { type: String, unique: true, index: true },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
     category: { type: String, required: true, index: true },
     serviceType: { type: String, required: true },
     name: { type: String, required: true },
-    email: { type: String, trim: true },
+    email: { type: String, trim: true, index: true },
     phone: { type: String, required: true },
     details: { type: mongoose.Schema.Types.Mixed, default: {} },
     status: {

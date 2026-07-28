@@ -5,8 +5,8 @@ import Navbar from "./components/Navbar.js";
 import Footer from "./components/Footer.js";
 import { AuthProvider } from "./context/AuthContext.js";
 
-// Import HomePage
-import HomePage from "./components/HomePage.js";
+// Import LandingPage
+import LandingPage from "./components/LandingPage.js";
 
 // Service Pages
 import Banking from "./pages/Services/Banking.js";
@@ -28,6 +28,7 @@ import About from "./pages/About.js";
 import Contact from "./pages/Contact.js";
 import UserDashboard from "./pages/UserDashboard.js";
 import AdminPanel from "./pages/AdminPanel.js";
+import Analytics from "./pages/Analytics.js";
 
 function App() {
   return (
@@ -38,8 +39,8 @@ function App() {
 
         <main className="main-content">
           <Routes>
-            {/* Home Page */}
-            <Route path="/" element={<HomePage />} />
+            {/* Landing Page */}
+            <Route path="/" element={<LandingPage />} />
 
             {/* Service Routes */}
             <Route path="/services/banking" element={<Banking />} />
@@ -63,9 +64,10 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
 
-            {/* Dashboard & Admin */}
+            {/* Dashboard, Admin & Analytics */}
             <Route path="/dashboard" element={<UserDashboard />} />
             <Route path="/admin" element={<AdminPanel />} />
+            <Route path="/analytics" element={<Analytics />} />
           </Routes>
         </main>
 

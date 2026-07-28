@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
-const generateToken = (userId) =>
-  jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: "7d" });
+const generateToken = (userId, email) =>
+  jwt.sign({ userId, email }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
 export const register = async (req, res) => {
   try {
@@ -22,7 +22,7 @@ export const register = async (req, res) => {
     }
 
     const user = await User.create({ name, email, password });
-    const token = generateToken(user._id);
+    const token = generateToken(user._id, user.email);
 
     res.status(201).json({
       message: "Registration successful",
@@ -53,7 +53,7 @@ export const login = async (req, res) => {
       return res.status(401).json({ error: "Invalid email or password." });
     }
 
-    const token = generateToken(user._id);
+    const token = generateToken(user._id, user.email);
 
     res.json({
       message: "Login successful",
