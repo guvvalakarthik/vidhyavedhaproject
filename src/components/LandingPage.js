@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./LandingPage.css";
-import { FaSearch, FaMapMarkerAlt, FaUniversity, FaBook, FaTractor, FaHeartbeat, FaBolt, FaShoppingCart, FaTools, FaBuilding, FaShieldAlt, FaClock, FaUsers, FaFileAlt, FaArrowRight } from "react-icons/fa";
+import { FaSearch, FaMapMarkerAlt, FaUniversity, FaBook, FaTractor, FaHeartbeat, FaBolt, FaShoppingCart, FaTools, FaBuilding, FaShieldAlt, FaClock, FaUsers, FaFileAlt, FaArrowRight, FaStar, FaQuoteLeft } from "react-icons/fa";
 import api from "../services/api.js";
 import { useAuth } from "../context/AuthContext.js";
 
@@ -30,11 +30,32 @@ const steps = [
   { num: "4", title: "Track Your Status", desc: "Use your Application ID to check status anytime, anywhere." },
 ];
 
+const testimonials = [
+  { name: "Ramesh Patel", role: "Farmer, Maharashtra", text: "I applied for crop insurance through Vidhya Vedha and got approved in 3 days. The process was so simple!", rating: 5, avatar: "RP" },
+  { name: "Lakshmi Devi", role: "Student, Andhra Pradesh", text: "Got my university admission application submitted without traveling 40km to the city. Saved me a whole day.", rating: 5, avatar: "LD" },
+  { name: "Suresh Kumar", role: "Small Business Owner, UP", text: "The banking loan application was straightforward. I could track my status without calling the bank repeatedly.", rating: 4, avatar: "SK" },
+  { name: "Priya Sharma", role: "Teacher, Rajasthan", text: "Applied for my Aadhaar update and PAN card from the same platform. One place for all government services!", rating: 5, avatar: "PS" },
+  { name: "Gangadhar Rao", role: "Pensioner, Telangana", text: "At my age, traveling to offices is difficult. Vidhya Vedha brought all services to my phone.", rating: 5, avatar: "GR" },
+  { name: "Anjali Reddy", role: "Healthcare Worker, Karnataka", text: "Booked a lab test and ambulance through the platform. Quick, reliable, and the tracking feature is great.", rating: 4, avatar: "AR" },
+];
+
+const serviceRoutes = {
+  "Banking & Loans": "banking",
+  "Education": "education",
+  "Healthcare": "healthcare",
+  "Farming": "farming",
+  "Emergency": "emergency",
+  "E-Commerce": "ecommerce",
+  "Home Services": "home-maintenance",
+  "Government": "government",
+};
+
 const LandingPage = () => {
   const [applicationId, setApplicationId] = useState("");
   const [statusResult, setStatusResult] = useState(null);
   const [statusError, setStatusError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const { user } = useAuth();
 
   const handleStatusCheck = async () => {
@@ -97,30 +118,53 @@ const LandingPage = () => {
         ))}
       </section>
 
-      {/* Services Grid */}
+      {/* Services Grid with Search */}
       <section className="services-section" id="services">
         <div className="section-header">
           <h2>Our Services</h2>
           <p>Nine categories covering everything you need, all in one place</p>
         </div>
+        <div className="service-search-bar">
+          <FaSearch className="search-icon" />
+          <input
+            type="text"
+            placeholder="Search services... (e.g. banking, healthcare, farming)"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
         <div className="services-grid">
-          {services.map((service, i) => (
-            <Link
-              to={`/services/${service.title.toLowerCase().split(" ")[0] === "home" ? "home-maintenance" : service.title.toLowerCase().split(" ")[0] === "e-commerce" ? "ecommerce" : service.title.toLowerCase().split(" ")[0] === "government" ? "government" : service.title.toLowerCase().split(" ")[0]}`}
-              className="service-card"
-              key={i}
-              style={{ "--card-color": service.color }}
-            >
-              <div className="service-icon-wrapper" style={{ background: `${service.color}15`, color: service.color }}>
-                {service.icon}
-              </div>
-              <h3>{service.title}</h3>
-              <p>{service.desc}</p>
-              <span className="service-link" style={{ color: service.color }}>
-                Learn more <FaArrowRight />
-              </span>
-            </Link>
-          ))}
+          {services
+            .filter((s) => {
+              const q = searchQuery.toLowerCase();
+              return !q || s.title.toLowerCase().includes(q) || s.desc.toLowerCase().includes(q);
+            })
+            .map((service, i) => (
+              <Link
+                to={`/services/${serviceRoutes[service.title] || "banking"}`}
+                className="service-card"
+                key={i}
+                style={{ "--card-color": service.color }}
+              >
+                <div className="service-icon-wrapper" style={{ background: `${service.color}15`, color: service.color }}>
+                  {service.icon}
+                </div>
+                <h3>{service.title}</h3>
+                <p>{service.desc}</p>
+                <span className="service-link" style={{ color: service.color }}>
+                  Learn more <FaArrowRight />
+                </span>
+              </Link>
+            ))}
+          {searchQuery && services.filter((s) => {
+            const q = searchQuery.toLowerCase();
+            return s.title.toLowerCase().includes(q) || s.desc.toLowerCase().includes(q);
+          }).length === 0 && (
+            <div className="no-search-results">
+              <FaSearch className="no-results-icon" />
+              <p>No services found for "{searchQuery}"</p>
+            </div>
+          )}
         </div>
       </section>
 
@@ -194,6 +238,34 @@ const LandingPage = () => {
               </div>
             </div>
           )}
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="testimonials-section" id="testimonials">
+        <div className="section-header">
+          <h2>What Our Users Say</h2>
+          <p>Real stories from people who simplified their lives with Vidhya Vedha</p>
+        </div>
+        <div className="testimonials-grid">
+          {testimonials.map((t, i) => (
+            <div className="testimonial-card" key={i}>
+              <FaQuoteLeft className="testimonial-quote-icon" />
+              <div className="testimonial-stars">
+                {Array.from({ length: 5 }).map((_, idx) => (
+                  <FaStar key={idx} className={idx < t.rating ? "star-filled" : "star-empty"} />
+                ))}
+              </div>
+              <p className="testimonial-text">{t.text}</p>
+              <div className="testimonial-author">
+                <div className="testimonial-avatar">{t.avatar}</div>
+                <div>
+                  <span className="testimonial-name">{t.name}</span>
+                  <span className="testimonial-role">{t.role}</span>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
