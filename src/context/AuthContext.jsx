@@ -1,29 +1,51 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import api from "../services/api.js";
 
-const AuthContext = createContext();
+const AuthContext = createContext(null);
 
 export const useAuth = () => useContext(AuthContext);
+
+const normalizeUser = (user) => ({ ...user, role: user?.role || "citizen" });
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const storedUser = localStorage.getItem("user");
-    if (token && storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-    setLoading(false);
+    const restoreSession = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const { data } = await api.get("/auth/me");
+        const nextUser = normalizeUser(data.user);
+        localStorage.setItem("user", JSON.stringify(nextUser));
+        setUser(nextUser);
+      } catch {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    restoreSession();
   }, []);
+
+  const persistSession = (data) => {
+    const nextUser = normalizeUser(data.user);
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("user", JSON.stringify(nextUser));
+    setUser(nextUser);
+    return { ...data, user: nextUser };
+  };
 
   const login = async (email, password) => {
     const { data } = await api.post("/auth/login", { email, password });
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("user", JSON.stringify(data.user));
-    setUser(data.user);
-    return data;
+    return persistSession(data);
   };
 
   const register = async (name, email, password, confirmPassword) => {
@@ -33,10 +55,7 @@ export const AuthProvider = ({ children }) => {
       password,
       confirmPassword,
     });
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("user", JSON.stringify(data.user));
-    setUser(data.user);
-    return data;
+    return persistSession(data);
   };
 
   const logout = () => {

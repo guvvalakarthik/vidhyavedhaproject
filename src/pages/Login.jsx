@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 import "./Login.css";
 
@@ -11,6 +11,7 @@ function Login() {
 
   const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,7 +19,7 @@ function Login() {
     setLoading(true);
     try {
       await login(email, password);
-      navigate("/");
+      navigate(location.state?.from?.pathname || "/", { replace: true });
     } catch (err) {
       setError(err.response?.data?.error || "Login failed. Please try again.");
     } finally {
