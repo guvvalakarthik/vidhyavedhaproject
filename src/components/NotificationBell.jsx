@@ -73,7 +73,7 @@ const NotificationBell = () => {
 
   return (
     <div className="notification-bell-wrapper" ref={dropdownRef}>
-      <button className="notification-bell-btn" onClick={() => setOpen(!open)}>
+      <button className="notification-bell-btn" type="button" aria-label="Notifications" aria-expanded={open} onClick={() => setOpen(!open)}>
         <FaBell />
         {unreadCount > 0 && <span className="notification-badge">{unreadCount}</span>}
       </button>

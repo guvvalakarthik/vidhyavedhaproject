@@ -1,251 +1,104 @@
-/* Footer Base Styling */
-.footer {
-  background-color: #f5f7ff;
-  padding: 40px 20px;
-  text-align: center;
-  border-top: 3px solid #1e40af;
-  font-family: Arial, sans-serif;
+.site-footer {
+  margin-top: auto;
+  background: #132e3f;
+  color: #dbe5e9;
+  border-top: 7px solid #f4b942;
 }
 
-/* Footer Header */
-.footer-heading {
+.site-footer__grid {
+  display: grid;
+  grid-template-columns: 1.25fr 0.75fr 0.9fr;
+  gap: 70px;
+  padding-block: 52px;
+}
+
+.site-footer__brand {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 20px;
+  align-items: flex-start;
+  gap: 15px;
 }
 
-.footer-logo {
-  width: 50px;
-  height: 50px;
-  margin-right: 12px;
+.site-footer__brand img {
+  width: 48px;
+  height: 48px;
+  flex: 0 0 auto;
 }
 
-.footer-title-text h2 {
-  margin: 0;
-  font-size: 24px;
-  color: #1e3a8a;
+.site-footer__brand strong {
+  color: #fff;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.45rem;
 }
 
-.footer-title-text p {
-  margin: 0;
-  font-size: 14px;
-  color: #4b5563;
+.site-footer__brand p,
+.site-footer__note p {
+  max-width: 410px;
+  margin: 9px 0 0;
+  color: #bfd0d7;
+  font-size: 0.9rem;
+  line-height: 1.65;
 }
 
-/* Footer Buttons */
-.footer-buttons {
-  margin: 25px 0;
-  display: flex;
-  justify-content: center;
-  gap: 16px;
-  flex-wrap: wrap;
+.site-footer h2 {
+  margin: 0 0 15px;
+  color: #fff;
+  font-size: 0.9rem;
+  letter-spacing: 0.02em;
 }
 
-.suggestion-button {
-  background-color: #1e40af;
-  color: white;
-  padding: 10px 16px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: background-color 0.3s ease;
+.site-footer__links a {
+  display: block;
+  width: fit-content;
+  margin: 9px 0;
+  color: #fff;
+  font-size: 0.9rem;
+  text-underline-offset: 3px;
 }
 
-.suggestion-button:hover {
-  background-color: #1e3a8a;
+.site-footer__links a:hover {
+  color: #ffd16a;
 }
 
-/* Suggestion Form */
-.suggestion-form {
-  max-width: 400px;
-  margin: 20px auto;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+.site-footer__bottom {
+  border-top: 1px solid #365463;
+  background: #0d2431;
 }
 
-.suggestion-form input,
-.suggestion-form textarea {
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 14px;
-}
-
-.suggestion-form button {
-  background-color: #10b981;
-  color: white;
-  border: none;
-  padding: 10px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.suggestion-form button:hover {
-  background-color: #059669;
-}
-
-.form-message {
-  color: #1e3a8a;
-  font-weight: bold;
-  margin-top: 5px;
-}
-
-/* Achievements */
-.footer-achievements {
-  list-style: none;
-  padding: 0;
-  margin: 20px auto;
-  max-width: 600px;
-  text-align: left;
-}
-
-.footer-achievements li {
-  background-color: #e0e7ff;
-  margin-bottom: 8px;
-  padding: 10px;
-  border-radius: 6px;
-}
-
-/* Image Gallery */
-.image-gallery {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 16px;
-  margin: 20px 0;
-}
-
-.image-gallery img {
-  width: 180px;
-  height: auto;
-  border-radius: 8px;
-  object-fit: cover;
-}
-
-/* Contact Info */
-.footer-bottom {
-  margin-top: 30px;
-}
-
-.footer-bottom h3 {
-  margin-bottom: 10px;
-  color: #1e3a8a;
-}
-
-.footer-bottom p {
-  margin: 5px 0;
-  font-size: 14px;
-  color: #374151;
-}
-
-/* Footer WhatsApp CTA */
-.footer-whatsapp {
-  margin-top: 15px;
-  text-align: center;
-}
-
-.footer-whatsapp a {
-  display: inline-flex;
-  align-items: center;
-  background-color: #25d366;
-  color: white;
-  padding: 10px 18px;
-  border-radius: 25px;
-  text-decoration: none;
-  font-weight: 500;
-  font-size: 15px;
-  gap: 10px;
-  transition: background-color 0.3s ease;
-}
-
-.footer-whatsapp a:hover {
-  background-color: #1ebe5d;
-}
-
-.whatsapp-icon {
-  font-size: 20px;
-}
-
-/* Floating Buttons */
-.whatsapp-float,
-.top-float-btn {
-  position: fixed;
-  z-index: 1000;
-  border: none;
-  border-radius: 50%;
-  padding: 12px;
-  cursor: pointer;
-  transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-/* WhatsApp Floating Button */
-.whatsapp-float {
-  bottom: 90px;
-  right: 30px;
-  background-color: #25d366;
-  color: white;
-  font-size: 22px;
+.site-footer__bottom > div {
+  min-height: 54px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  justify-content: space-between;
+  gap: 20px;
+  color: #aebfc7;
+  font-size: 0.78rem;
 }
 
-.whatsapp-float:hover {
-  transform: scale(1.1);
-  background-color: #1ebe5b;
+@media (max-width: 840px) {
+  .site-footer__grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 38px;
+  }
+
+  .site-footer__brand {
+    grid-column: 1 / -1;
+  }
 }
 
-/* Scroll to Top Floating Button */
-.top-float-btn {
-  bottom: 30px;
-  right: 30px;
-  background-color: #1e40af;
-  color: white;
-  font-size: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
+@media (max-width: 560px) {
+  .site-footer__grid {
+    grid-template-columns: 1fr;
+    padding-block: 42px;
+  }
 
-.top-float-btn:hover {
-  background-color: #1e3a8a;
-}
+  .site-footer__brand {
+    grid-column: auto;
+  }
 
-/* Hide Floating Buttons When Needed */
-.whatsapp-float.hidden,
-.top-float-btn.hidden {
-  opacity: 0;
-  pointer-events: none;
-  transform: scale(0.8);
-}
-/* Common Button Styles */
-.whatsapp-button,
-.scroll-top-button {
-  position: fixed;
-  right: 20px;
-  width: 55px;
-  height: 55px;
-  border: none;
-  border-radius: 50%;
-  font-size: 24px;
-  color: white;
-  cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-  display: none; /* Initially hidden */
-  z-index: 999;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
-}
-
-/* WhatsApp Button Style */
-.whatsapp-button {
-  background-color: #25d366;
-  bottom: 20px;
-}
-
-/* Scroll to Top Arrow Button Style */
-.scroll-top-button {
-  background-color: #007bff;
-  bottom: 90px; /* Positioned above WhatsApp */
+  .site-footer__bottom > div {
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+    padding-block: 14px;
+  }
 }
