@@ -2,8 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "./Header.css";
 import logo from "../assets/logo.png";
-import { useAuth } from "../context/AuthContext.js";
-import NotificationBell from "./NotificationBell.js";
+import { useAuth } from "../context/AuthContext.jsx";
+import NotificationBell from "./NotificationBell.jsx";
 
 function Header() {
   const { user, logout } = useAuth();

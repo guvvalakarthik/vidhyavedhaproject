@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import "./LandingPage.css";
 import { FaSearch, FaMapMarkerAlt, FaUniversity, FaBook, FaTractor, FaHeartbeat, FaBolt, FaShoppingCart, FaTools, FaBuilding, FaShieldAlt, FaClock, FaUsers, FaFileAlt, FaArrowRight, FaStar, FaQuoteLeft } from "react-icons/fa";
 import api from "../services/api.js";
-import { useAuth } from "../context/AuthContext.js";
+import { useAuth } from "../context/AuthContext.jsx";
 
 const services = [
   { icon: <FaUniversity />, title: "Banking & Loans", desc: "Apply for loans, insurance, and banking assistance", color: "#3b82f6" },

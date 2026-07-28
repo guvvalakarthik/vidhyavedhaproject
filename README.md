@@ -1,70 +1,75 @@
-# Getting Started with Create React App
+# Vidhya Vedha
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Vidhya Vedha is a full-stack civic and local-services platform for rural communities. The current rebuild is moving the product from generic request forms toward task-specific journeys such as appointment scheduling, assisted government-service handoffs, bookings, dispatch, and status tracking.
 
-## Available Scripts
+## Technology
 
-In the project directory, you can run:
+- Frontend: React 19, Vite 8, React Router, Axios
+- Frontend tests: Vitest, Testing Library, jsdom
+- Backend: Express 5, MongoDB, Mongoose
+- Authentication: JWT-based API authentication (scheduled for hardening in the next platform branch)
 
-### `npm start`
+## Requirements
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- Node.js 22.12 or newer
+- MongoDB running locally or an accessible MongoDB connection string
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Local setup
 
-### `npm test`
+Install frontend dependencies:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```powershell
+npm install
+```
 
-### `npm run build`
+Create the frontend environment file:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```powershell
+Copy-Item .env.example .env
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Start the frontend at `http://localhost:3000`:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```powershell
+npm run dev
+```
 
-### `npm run eject`
+In a second terminal, install and start the API:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```powershell
+Set-Location Backend
+npm install
+Copy-Item .env.example .env
+npm run dev
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+The API listens on `http://localhost:5000` by default.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Validation
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```powershell
+npm test
+npm run build
+npm audit --omit=dev
+```
 
-## Learn More
+Backend checks:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```powershell
+Set-Location Backend
+npm audit --omit=dev
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Environment variables
 
-### Code Splitting
+Frontend (`.env`):
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- `VITE_API_URL`: API base URL, defaulting to `http://localhost:5000/api`.
 
-### Analyzing the Bundle Size
+Backend (`Backend/.env`):
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+- `MONGO_URI`: MongoDB connection string.
+- `JWT_SECRET`: signing secret for authentication tokens.
+- `PORT`: API port, defaulting to `5000`.
 
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Never commit real credentials or personal service data.
