@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import HealthcareAppointment from "../models/HealthcareAppointment.js";
 import HealthcareProvider from "../models/HealthcareProvider.js";
 import User from "../models/User.js";
@@ -13,6 +14,9 @@ const duplicateBookingResponse = (res) => res.status(409).json({
   error: "That appointment time has just been booked. Please choose another available slot.",
   code: "SLOT_UNAVAILABLE",
 });
+
+export const trustedHealthcareDateRange = (firstStart, lastStart) =>
+  mongoose.trusted({ $gte: firstStart, $lte: lastStart });
 
 const publicProvider = (provider) => ({
   providerCode: provider.providerCode,
@@ -65,7 +69,7 @@ export const getProviderAvailability = async (req, res) => {
   const booked = await HealthcareAppointment.find({
     providerCode,
     status: "booked",
-    startTime: { $gte: firstStart, $lte: lastStart },
+    startTime: trustedHealthcareDateRange(firstStart, lastStart),
   }).select("startTime").lean();
   const bookedStarts = new Set(booked.map((appointment) => new Date(appointment.startTime).getTime()));
   const slots = buildAvailableSlots({ provider, fromDate: from, days, bookedStarts });
