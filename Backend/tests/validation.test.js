@@ -3,7 +3,7 @@ import request from "supertest";
 import { describe, expect, it } from "vitest";
 import { sanitizePayload } from "../middleware/sanitizePayload.js";
 import { validateRequest } from "../middleware/validateRequest.js";
-import { applicationSchema } from "../validation/schemas.js";
+import { applicationSchema, availabilityQuerySchema } from "../validation/schemas.js";
 
 const app = express();
 app.use(express.json());
@@ -12,6 +12,12 @@ app.post(
   "/applications",
   validateRequest({ body: applicationSchema }),
   (req, res) => res.status(201).json(req.body),
+);
+
+app.get(
+  "/availability",
+  validateRequest({ query: availabilityQuerySchema }),
+  (req, res) => res.json(req.validated.query),
 );
 
 describe("request validation", () => {
@@ -37,6 +43,12 @@ describe("request validation", () => {
 
     expect(response.status).toBe(422);
     expect(response.body.issues.map((issue) => issue.field)).toContain("body.name");
+  });
+
+  it("coerces validated query values without assigning Express query", async () => {
+    const response = await request(app).get("/availability?from=2030-01-01&days=10");
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({ from: "2030-01-01", days: 10 });
   });
 
   it("blocks database operator keys before validation", async () => {

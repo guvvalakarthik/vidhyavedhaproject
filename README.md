@@ -7,7 +7,7 @@ Vidhya Vedha is a full-stack civic and local-services platform for rural communi
 - Frontend: React 19, Vite 8, React Router, Axios
 - Frontend tests: Vitest, Testing Library, jsdom
 - Backend: Express 5, MongoDB, Mongoose
-- Authentication: JWT-based API authentication (scheduled for hardening in the next platform branch)
+- Authentication: JWT-based API authentication with request validation, role-based authorization, and ownership checks
 
 ## Requirements
 
@@ -57,8 +57,22 @@ Backend checks:
 
 ```powershell
 Set-Location Backend
+npm test
 npm audit --omit=dev
 ```
+
+## Healthcare appointment scheduling
+
+Healthcare now uses a task-specific scheduling journey instead of a generic service form. Residents can browse doctors and live availability, reserve a precise time, review upcoming appointments, reschedule, and cancel. The API prevents two users from taking the same provider slot.
+
+Four sample providers are inserted automatically when the API starts. To reset the sample provider catalogue manually:
+
+```powershell
+Set-Location Backend
+npm run seed:healthcare
+```
+
+See [Healthcare scheduling](docs/healthcare-scheduling.md) for the API routes, booking rules, and production considerations.
 
 ## Environment variables
 

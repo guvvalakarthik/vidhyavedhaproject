@@ -24,6 +24,11 @@ export const validateRequest = ({ body, params, query } = {}) => (req, res, next
 
   if (body) req.body = parsedBody.data;
   if (params) req.params = parsedParams.data;
-  if (query) req.query = parsedQuery.data;
+  req.validated = {
+    ...(req.validated || {}),
+    ...(body ? { body: parsedBody.data } : {}),
+    ...(params ? { params: parsedParams.data } : {}),
+    ...(query ? { query: parsedQuery.data } : {}),
+  };
   return next();
 };

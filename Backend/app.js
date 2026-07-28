@@ -4,6 +4,7 @@ import helmet from "helmet";
 import { rateLimit } from "express-rate-limit";
 import authRoutes from "./routes/authRoutes.js";
 import applicationRoutes from "./routes/applicationRoutes.js";
+import healthcareRoutes from "./routes/healthcareRoutes.js";
 import notificationRoutes from "./routes/notificationRoutes.js";
 import { sanitizePayload } from "./middleware/sanitizePayload.js";
 
@@ -38,15 +39,16 @@ const authLimiter = rateLimit({
   legacyHeaders: false,
 });
 
-app.get("/", (req, res) => {
-  res.json({ message: "Vidhya Vedha API Running", version: "2.0.0" });
+app.get("/", (_req, res) => {
+  res.json({ message: "Vidhya Vedha API Running", version: "2.1.0" });
 });
 app.use("/api/auth", authLimiter, authRoutes);
+app.use("/api/healthcare", apiLimiter, healthcareRoutes);
 app.use("/api/notifications", apiLimiter, notificationRoutes);
 app.use("/api", apiLimiter, applicationRoutes);
 
-app.use((req, res) => res.status(404).json({ error: "Route not found." }));
-app.use((err, req, res, next) => {
+app.use((_req, res) => res.status(404).json({ error: "Route not found." }));
+app.use((err, _req, res, _next) => {
   if (err.message === "Origin is not allowed by CORS.") {
     return res.status(403).json({ error: err.message });
   }
