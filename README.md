@@ -80,6 +80,11 @@ Government services now use a searchable, task-focused guidance journey instead 
 
 See [Government service journeys](docs/government-service-journeys.md) for trust boundaries, API routes, source references and production follow-up.
 
+## Education action planning
+
+Education now uses official-pathway discovery and a saved preparation checklist instead of generic exam, university and counselling application forms. Visitors can compare responsible authorities and continue to their official platforms. Signed-in learners can save an owner-scoped action plan, track each preparation step and archive completed or superseded plans without uploading marks, certificates or identity records.
+
+See [Education pathway planning](docs/education-planning.md) for supported official routes, API endpoints and data boundaries.
 ## Environment variables
 
 Frontend (`.env`):

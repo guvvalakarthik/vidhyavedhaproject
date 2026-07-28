@@ -1,6 +1,10 @@
 import { z } from "zod";
 import { GOVERNMENT_SERVICE_CODES } from "../data/governmentServices.js";
 import { EMERGENCY_SERVICE_CODES } from "../data/emergencyServices.js";
+import {
+  EDUCATION_LEARNER_STAGES,
+  EDUCATION_PATHWAY_CODES,
+} from "../data/educationPathways.js";
 
 export const roles = ["citizen", "provider", "dispatcher", "admin"];
 export const categories = [
@@ -108,4 +112,22 @@ export const emergencyAssignmentSchema = z.object({
 });
 export const emergencyStatusSchema = z.object({
   status: z.enum(["en-route", "arrived", "completed"]),
+});
+export const educationPathwayParamsSchema = z.object({
+  pathwayCode: z.enum(EDUCATION_PATHWAY_CODES),
+});
+export const educationPlanParamsSchema = z.object({
+  planId: z.string().trim().regex(/^EDU-[A-Z0-9]{8}$/i).transform((value) => value.toUpperCase()),
+});
+export const educationPlanTaskParamsSchema = educationPlanParamsSchema.extend({
+  taskId: z.string().trim().min(3).max(80).regex(/^[a-z0-9-]+$/),
+});
+export const educationPlanSchema = z.object({
+  pathwayCode: z.enum(EDUCATION_PATHWAY_CODES),
+  learnerStage: z.enum(EDUCATION_LEARNER_STAGES),
+  target: z.string().trim().max(160).optional().default(""),
+  targetCycle: z.enum(["current-cycle", "next-cycle", "exploring"]),
+});
+export const educationTaskUpdateSchema = z.object({
+  completed: z.boolean(),
 });
