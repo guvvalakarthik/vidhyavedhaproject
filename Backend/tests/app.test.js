@@ -1,5 +1,6 @@
 import request from "supertest";
 import { beforeAll, describe, expect, it } from "vitest";
+import jwt from "jsonwebtoken";
 
 let app;
 
@@ -12,7 +13,7 @@ describe("API shell", () => {
   it("reports health and applies security headers", async () => {
     const response = await request(app).get("/");
     expect(response.status).toBe(200);
-    expect(response.body.version).toBe("2.2.0");
+    expect(response.body.version).toBe("2.3.0");
     expect(response.headers["x-content-type-options"]).toBe("nosniff");
     expect(response.headers["x-powered-by"]).toBeUndefined();
   });
@@ -41,5 +42,27 @@ describe("API shell", () => {
 
     const unknown = await request(app).get("/api/government/services/not-a-service");
     expect(unknown.status).toBe(422);
+  });
+
+  it("publishes roadside services while protecting requests and dispatch", async () => {
+    const services = await request(app).get("/api/emergency/services");
+    expect(services.status).toBe(200);
+    expect(services.body.services).toHaveLength(6);
+
+    const roadsideRequest = await request(app).post("/api/emergency/requests").send({});
+    expect(roadsideRequest.status).toBe(401);
+
+    const dispatchQueue = await request(app).get("/api/emergency/dispatch/queue");
+    expect(dispatchQueue.status).toBe(401);
+
+    const citizenToken = jwt.sign(
+      { userId: "507f1f77bcf86cd799439011", email: "citizen@example.gov", role: "citizen" },
+      process.env.JWT_SECRET,
+      { algorithm: "HS256", issuer: "vidhya-vedha-api", audience: "vidhya-vedha-web", expiresIn: "5m" },
+    );
+    const forbidden = await request(app)
+      .get("/api/emergency/dispatch/queue")
+      .set("Authorization", `Bearer ${citizenToken}`);
+    expect(forbidden.status).toBe(403);
   });
 });
