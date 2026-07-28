@@ -1,292 +1,341 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import "./LandingPage.css";
-import { FaSearch, FaMapMarkerAlt, FaUniversity, FaBook, FaTractor, FaHeartbeat, FaBolt, FaShoppingCart, FaTools, FaBuilding, FaShieldAlt, FaClock, FaUsers, FaFileAlt, FaArrowRight, FaStar, FaQuoteLeft } from "react-icons/fa";
+import {
+  FaArrowRight,
+  FaBolt,
+  FaBook,
+  FaBuilding,
+  FaCheckCircle,
+  FaFileAlt,
+  FaHeartbeat,
+  FaSearch,
+  FaShieldAlt,
+  FaShoppingCart,
+  FaTools,
+  FaTractor,
+  FaUniversity,
+} from "react-icons/fa";
 import api from "../services/api.js";
 import { useAuth } from "../context/AuthContext.jsx";
+import "./LandingPage.css";
 
 const services = [
-  { icon: <FaUniversity />, title: "Banking & Loans", desc: "Apply for loans, insurance, and banking assistance", color: "#3b82f6" },
-  { icon: <FaBook />, title: "Education", desc: "Exam applications, university admissions, coaching", color: "#8b5cf6" },
-  { icon: <FaHeartbeat />, title: "Healthcare", desc: "Telemedicine, lab tests, ambulance booking", color: "#ef4444" },
-  { icon: <FaTractor />, title: "Farming", desc: "Soil testing, fertilizer, crop insurance, equipment", color: "#22c55e" },
-  { icon: <FaBolt />, title: "Emergency", desc: "24x7 towing, mechanic dispatch, roadside assistance", color: "#f59e0b" },
-  { icon: <FaShoppingCart />, title: "E-Commerce", desc: "Bill payments, UPI setup, courier services", color: "#ec4899" },
-  { icon: <FaTools />, title: "Home Services", desc: "Electrician, plumber, pest control, repairs", color: "#14b8a6" },
-  { icon: <FaBuilding />, title: "Government", desc: "Aadhaar, PAN, Voter ID, certificates, pensions", color: "#6366f1" },
+  {
+    icon: FaBuilding,
+    title: "Government documents",
+    description: "Certificates, identity documents, pensions and public schemes.",
+    examples: "Aadhaar support, PAN, voter services",
+    route: "government",
+    keywords: "government aadhaar pan voter pension certificate",
+  },
+  {
+    icon: FaHeartbeat,
+    title: "Health and care",
+    description: "Find consultations, diagnostics, vaccination and ambulance support.",
+    examples: "Appointments, lab tests, medicine",
+    route: "healthcare",
+    keywords: "health doctor hospital medicine ambulance vaccination lab",
+  },
+  {
+    icon: FaTractor,
+    title: "Agriculture and farming",
+    description: "Access crop, soil, equipment, insurance and advisory services.",
+    examples: "Crop insurance, soil testing, equipment",
+    route: "farming",
+    keywords: "farmer farming agriculture crop soil fertilizer insurance",
+  },
+  {
+    icon: FaBook,
+    title: "Education and learning",
+    description: "Get support for admissions, examinations and learning services.",
+    examples: "Admissions, exams, scholarships",
+    route: "education",
+    keywords: "education student school college exam admission scholarship",
+  },
+  {
+    icon: FaUniversity,
+    title: "Money and banking",
+    description: "Explore banking assistance, loans, insurance and account services.",
+    examples: "Accounts, loans, financial support",
+    route: "banking",
+    keywords: "bank banking money loan account insurance finance",
+  },
+  {
+    icon: FaBolt,
+    title: "Electricity and utilities",
+    description: "Request support for electricity, water and essential connections.",
+    examples: "Bill support, connections, complaints",
+    route: "utilities",
+    keywords: "electricity power water utilities bill connection complaint",
+  },
+  {
+    icon: FaTools,
+    title: "Home maintenance",
+    description: "Arrange trusted assistance for common household repair needs.",
+    examples: "Plumbing, electrical, repairs",
+    route: "home-maintenance",
+    keywords: "home plumber electrician repair maintenance pest",
+  },
+  {
+    icon: FaShoppingCart,
+    title: "Digital and commerce help",
+    description: "Get help with payments, online purchases and delivery services.",
+    examples: "UPI, bill payment, courier support",
+    route: "ecommerce",
+    keywords: "online ecommerce upi payment courier shopping digital",
+  },
+  {
+    icon: FaShieldAlt,
+    title: "Roadside assistance",
+    description: "Request vehicle recovery and roadside support when you need it.",
+    examples: "Towing, tyre repair, mechanic dispatch",
+    route: "emergency",
+    keywords: "emergency roadside towing mechanic tyre vehicle recovery",
+  },
 ];
 
-const stats = [
-  { icon: <FaUsers />, value: "10,000+", label: "Users Served" },
-  { icon: <FaFileAlt />, value: "5,000+", label: "Applications Processed" },
-  { icon: <FaShieldAlt />, value: "9", label: "Service Categories" },
-  { icon: <FaClock />, value: "24x7", label: "Support Available" },
+const popularTasks = [
+  { label: "Apply for government document support", route: "government" },
+  { label: "Find healthcare services", route: "healthcare" },
+  { label: "Request farming assistance", route: "farming" },
+  { label: "Get electricity or utility help", route: "utilities" },
 ];
 
-const steps = [
-  { num: "1", title: "Register & Login", desc: "Create your free account in seconds to access all services." },
-  { num: "2", title: "Choose a Service", desc: "Browse 9 categories of essential services and pick what you need." },
-  { num: "3", title: "Submit Application", desc: "Fill out a simple form and get a unique Application ID instantly." },
-  { num: "4", title: "Track Your Status", desc: "Use your Application ID to check status anytime, anywhere." },
-];
-
-const testimonials = [
-  { name: "Ramesh Patel", role: "Farmer, Maharashtra", text: "I applied for crop insurance through Vidhya Vedha and got approved in 3 days. The process was so simple!", rating: 5, avatar: "RP" },
-  { name: "Lakshmi Devi", role: "Student, Andhra Pradesh", text: "Got my university admission application submitted without traveling 40km to the city. Saved me a whole day.", rating: 5, avatar: "LD" },
-  { name: "Suresh Kumar", role: "Small Business Owner, UP", text: "The banking loan application was straightforward. I could track my status without calling the bank repeatedly.", rating: 4, avatar: "SK" },
-  { name: "Priya Sharma", role: "Teacher, Rajasthan", text: "Applied for my Aadhaar update and PAN card from the same platform. One place for all government services!", rating: 5, avatar: "PS" },
-  { name: "Gangadhar Rao", role: "Pensioner, Telangana", text: "At my age, traveling to offices is difficult. Vidhya Vedha brought all services to my phone.", rating: 5, avatar: "GR" },
-  { name: "Anjali Reddy", role: "Healthcare Worker, Karnataka", text: "Booked a lab test and ambulance through the platform. Quick, reliable, and the tracking feature is great.", rating: 4, avatar: "AR" },
-];
-
-const serviceRoutes = {
-  "Banking & Loans": "banking",
-  "Education": "education",
-  "Healthcare": "healthcare",
-  "Farming": "farming",
-  "Emergency": "emergency",
-  "E-Commerce": "ecommerce",
-  "Home Services": "home-maintenance",
-  "Government": "government",
-};
-
-const LandingPage = () => {
+function LandingPage() {
+  const [searchQuery, setSearchQuery] = useState("");
   const [applicationId, setApplicationId] = useState("");
   const [statusResult, setStatusResult] = useState(null);
   const [statusError, setStatusError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
   const { user } = useAuth();
 
-  const handleStatusCheck = async () => {
-    if (!applicationId.trim()) {
-      setStatusError("Please enter an Application ID.");
+  const filteredServices = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return services;
+    return services.filter((service) =>
+      `${service.title} ${service.description} ${service.examples} ${service.keywords}`
+        .toLowerCase()
+        .includes(query),
+    );
+  }, [searchQuery]);
+
+  const handleServiceSearch = (event) => {
+    event.preventDefault();
+    document.getElementById("services")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const handleStatusCheck = async (event) => {
+    event.preventDefault();
+    const cleanId = applicationId.trim();
+    if (!cleanId) {
+      setStatusError("Enter your application ID.");
       return;
     }
+
     setLoading(true);
     setStatusError("");
     setStatusResult(null);
     try {
-      const { data } = await api.get(`/status/${applicationId.trim()}`);
+      const { data } = await api.get(`/status/${cleanId}`);
       setStatusResult(data);
-    } catch (err) {
-      setStatusError(err.response?.data?.error || "Application not found.");
+    } catch (error) {
+      setStatusError(error.response?.data?.error || "We could not find that application.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="landing-page">
-      {/* Hero Section */}
-      <section className="hero">
-        <div className="hero-content">
-          <h1 className="hero-title">
-            Empowering Rural India, <span className="gradient-text">Digitally</span>
-          </h1>
-          <p className="hero-subtitle">
-            One platform for all your essential services — banking, education,
-            healthcare, farming, government services, and more.
+    <div className="civic-home">
+      <section className="civic-hero" aria-labelledby="home-title">
+        <div className="shell-container civic-hero__grid">
+          <div className="civic-hero__content">
+            <p className="eyebrow">Services for everyday needs</p>
+            <h1 id="home-title">Find and access essential services</h1>
+            <p className="civic-hero__lead">
+              Search government, health, education, farming, banking and local support services from one place.
+            </p>
+
+            <form className="service-finder" role="search" onSubmit={handleServiceSearch}>
+              <label htmlFor="service-search">What do you need help with?</label>
+              <div className="service-finder__controls">
+                <input
+                  id="service-search"
+                  type="search"
+                  value={searchQuery}
+                  onChange={(event) => setSearchQuery(event.target.value)}
+                  placeholder="For example, crop insurance or doctor"
+                />
+                <button type="submit"><FaSearch aria-hidden="true" /> Search services</button>
+              </div>
+            </form>
+
+            <div className="civic-hero__actions">
+              {user ? (
+                <Link to="/dashboard" className="civic-button civic-button--light">
+                  View my applications <FaArrowRight aria-hidden="true" />
+                </Link>
+              ) : (
+                <>
+                  <Link to="/register" className="civic-button civic-button--gold">
+                    Create an account <FaArrowRight aria-hidden="true" />
+                  </Link>
+                  <span>Already registered? <Link to="/login">Sign in</Link></span>
+                </>
+              )}
+            </div>
+          </div>
+
+          <aside className="popular-panel" aria-labelledby="popular-title">
+            <h2 id="popular-title">Popular tasks</h2>
+            <ul>
+              {popularTasks.map((task) => (
+                <li key={task.route}>
+                  <Link to={`/services/${task.route}`}>
+                    {task.label}<FaArrowRight aria-hidden="true" />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </aside>
+        </div>
+      </section>
+
+      {user && (
+        <section className="account-strip" aria-label="Your account summary">
+          <div className="shell-container account-strip__inner">
+            <div>
+              <span className="account-strip__kicker">Signed in</span>
+              <h2>Welcome back, {user.name}</h2>
+              <p>Continue an application or check an update from your account.</p>
+            </div>
+            <div className="account-strip__links">
+              <Link to="/dashboard">My applications</Link>
+              <Link to="/notifications">Notifications</Link>
+            </div>
+          </div>
+        </section>
+      )}
+
+      <main>
+        <section className="service-directory shell-container" id="services" aria-labelledby="services-title">
+          <div className="section-heading section-heading--left">
+            <p className="eyebrow">Browse by topic</p>
+            <h2 id="services-title">Services</h2>
+            <p>Choose a topic to see the help available and what you will need.</p>
+          </div>
+
+          <p className="result-count" aria-live="polite">
+            {filteredServices.length === services.length
+              ? `${services.length} service topics`
+              : `${filteredServices.length} result${filteredServices.length === 1 ? "" : "s"} for “${searchQuery.trim()}”`}
           </p>
-          <div className="hero-actions">
-            {user ? (
-              <Link to="/services/banking" className="btn-primary">
-                Explore Services <FaArrowRight />
-              </Link>
-            ) : (
-              <>
-                <Link to="/register" className="btn-primary">
-                  Get Started Free <FaArrowRight />
-                </Link>
-                <Link to="/login" className="btn-secondary">
-                  Login
-                </Link>
-              </>
-            )}
-          </div>
-        </div>
-      </section>
 
-      {/* Stats Bar */}
-      <section className="stats-bar">
-        {stats.map((stat, i) => (
-          <div className="stat-item" key={i}>
-            <div className="stat-icon">{stat.icon}</div>
-            <div className="stat-value">{stat.value}</div>
-            <div className="stat-label">{stat.label}</div>
-          </div>
-        ))}
-      </section>
-
-      {/* Services Grid with Search */}
-      <section className="services-section" id="services">
-        <div className="section-header">
-          <h2>Our Services</h2>
-          <p>Nine categories covering everything you need, all in one place</p>
-        </div>
-        <div className="service-search-bar">
-          <FaSearch className="search-icon" />
-          <input
-            type="text"
-            placeholder="Search services... (e.g. banking, healthcare, farming)"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
-        <div className="services-grid">
-          {services
-            .filter((s) => {
-              const q = searchQuery.toLowerCase();
-              return !q || s.title.toLowerCase().includes(q) || s.desc.toLowerCase().includes(q);
-            })
-            .map((service, i) => (
-              <Link
-                to={`/services/${serviceRoutes[service.title] || "banking"}`}
-                className="service-card"
-                key={i}
-                style={{ "--card-color": service.color }}
-              >
-                <div className="service-icon-wrapper" style={{ background: `${service.color}15`, color: service.color }}>
-                  {service.icon}
-                </div>
-                <h3>{service.title}</h3>
-                <p>{service.desc}</p>
-                <span className="service-link" style={{ color: service.color }}>
-                  Learn more <FaArrowRight />
-                </span>
-              </Link>
-            ))}
-          {searchQuery && services.filter((s) => {
-            const q = searchQuery.toLowerCase();
-            return s.title.toLowerCase().includes(q) || s.desc.toLowerCase().includes(q);
-          }).length === 0 && (
-            <div className="no-search-results">
-              <FaSearch className="no-results-icon" />
-              <p>No services found for "{searchQuery}"</p>
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* How It Works */}
-      <section className="how-it-works" id="how-it-works">
-        <div className="section-header">
-          <h2>How It Works</h2>
-          <p>Get your application submitted in 4 simple steps</p>
-        </div>
-        <div className="steps-container">
-          {steps.map((step, i) => (
-            <div className="step-card" key={i}>
-              <div className="step-number">{step.num}</div>
-              <h3>{step.title}</h3>
-              <p>{step.desc}</p>
-              {i < steps.length - 1 && <div className="step-arrow"><FaArrowRight /></div>}
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Application Status Tracker */}
-      <section className="status-tracker" id="track">
-        <div className="section-header">
-          <h2>Track Your Application</h2>
-          <p>Enter your Application ID to check the current status</p>
-        </div>
-        <div className="status-tracker-card">
-          <div className="status-input-row">
-            <input
-              type="text"
-              placeholder="Enter your Application ID (e.g. EDU-XXXXX)"
-              value={applicationId}
-              onChange={(e) => setApplicationId(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleStatusCheck()}
-            />
-            <button onClick={handleStatusCheck} disabled={loading}>
-              {loading ? "Checking…" : <><FaSearch /> Check Status</>}
-            </button>
-          </div>
-
-          {statusError && <div className="status-error-msg">{statusError}</div>}
-
-          {statusResult && (
-            <div className="status-success-msg">
-              <div className="status-row">
-                <span className="status-label">Application ID</span>
-                <span className="status-value">{statusResult.applicationId}</span>
-              </div>
-              <div className="status-row">
-                <span className="status-label">Service</span>
-                <span className="status-value">{statusResult.serviceType}</span>
-              </div>
-              <div className="status-row">
-                <span className="status-label">Category</span>
-                <span className="status-value">{statusResult.category}</span>
-              </div>
-              <div className="status-row">
-                <span className="status-label">Status</span>
-                <span
-                  className={`status-badge status-${statusResult.status}`}
-                >
-                  {statusResult.status.toUpperCase()}
-                </span>
-              </div>
-              <div className="status-row">
-                <span className="status-label">Submitted</span>
-                <span className="status-value">
-                  {new Date(statusResult.submittedAt).toLocaleDateString()}
-                </span>
-              </div>
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="testimonials-section" id="testimonials">
-        <div className="section-header">
-          <h2>What Our Users Say</h2>
-          <p>Real stories from people who simplified their lives with Vidhya Vedha</p>
-        </div>
-        <div className="testimonials-grid">
-          {testimonials.map((t, i) => (
-            <div className="testimonial-card" key={i}>
-              <FaQuoteLeft className="testimonial-quote-icon" />
-              <div className="testimonial-stars">
-                {Array.from({ length: 5 }).map((_, idx) => (
-                  <FaStar key={idx} className={idx < t.rating ? "star-filled" : "star-empty"} />
-                ))}
-              </div>
-              <p className="testimonial-text">{t.text}</p>
-              <div className="testimonial-author">
-                <div className="testimonial-avatar">{t.avatar}</div>
-                <div>
-                  <span className="testimonial-name">{t.name}</span>
-                  <span className="testimonial-role">{t.role}</span>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="cta-section">
-        <div className="cta-content">
-          <h2>Ready to Get Started?</h2>
-          <p>Join thousands of users who've simplified their service access with Vidhya Vedha</p>
-          {user ? (
-            <Link to="/services/banking" className="btn-primary">
-              Explore Services <FaArrowRight />
-            </Link>
+          {filteredServices.length > 0 ? (
+            <ul className="service-directory__grid">
+              {filteredServices.map((service) => {
+                const Icon = service.icon;
+                return (
+                  <li key={service.route}>
+                    <Link to={`/services/${service.route}`} className="directory-card">
+                      <span className="directory-card__icon" aria-hidden="true"><Icon /></span>
+                      <span className="directory-card__body">
+                        <strong>{service.title}</strong>
+                        <span>{service.description}</span>
+                        <small>{service.examples}</small>
+                      </span>
+                      <FaArrowRight className="directory-card__arrow" aria-hidden="true" />
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
           ) : (
-            <Link to="/register" className="btn-primary">
-              Create Free Account <FaArrowRight />
-            </Link>
+            <div className="empty-results" role="status">
+              <h3>No matching services</h3>
+              <p>Try a shorter search, such as “health”, “loan” or “certificate”.</p>
+              <button type="button" onClick={() => setSearchQuery("")}>Show all services</button>
+            </div>
           )}
-        </div>
-      </section>
+        </section>
+
+        <section className="process-section">
+          <div className="shell-container process-grid">
+            <div>
+              <div className="section-heading section-heading--left">
+                <p className="eyebrow">A clear process</p>
+                <h2>How an application works</h2>
+              </div>
+              <ol className="process-list">
+                <li>
+                  <span>1</span>
+                  <div><h3>Choose the right service</h3><p>Read the service details before you begin.</p></div>
+                </li>
+                <li>
+                  <span>2</span>
+                  <div><h3>Provide only what is needed</h3><p>Complete the guided request and review your information.</p></div>
+                </li>
+                <li>
+                  <span>3</span>
+                  <div><h3>Follow progress in your account</h3><p>Your applications and status updates stay together.</p></div>
+                </li>
+              </ol>
+            </div>
+
+            <aside className="before-you-start" aria-labelledby="before-title">
+              <FaFileAlt aria-hidden="true" />
+              <h2 id="before-title">Before you start</h2>
+              <p>Requirements differ by service. A service page should explain eligibility, documents, timing and next steps before asking for details.</p>
+              <Link to="/#services">Browse service topics</Link>
+            </aside>
+          </div>
+        </section>
+
+        <section className="tracking-section shell-container" aria-labelledby="tracking-title">
+          <div className="tracking-section__intro">
+            <p className="eyebrow">Application updates</p>
+            <h2 id="tracking-title">Track an application</h2>
+            <p>For privacy, application progress is available only after you sign in.</p>
+          </div>
+
+          {user ? (
+            <form className="tracking-card" onSubmit={handleStatusCheck}>
+              <label htmlFor="application-id">Application ID</label>
+              <div className="tracking-card__controls">
+                <input
+                  id="application-id"
+                  value={applicationId}
+                  onChange={(event) => setApplicationId(event.target.value)}
+                  placeholder="For example, GOV-12AB34CD"
+                />
+                <button type="submit" disabled={loading}>{loading ? "Checking..." : "Check status"}</button>
+              </div>
+              {statusError && <div className="notice notice--error" role="alert">{statusError}</div>}
+              {statusResult && (
+                <div className="status-summary" role="status">
+                  <FaCheckCircle aria-hidden="true" />
+                  <div>
+                    <strong>{statusResult.serviceType}</strong>
+                    <span>{statusResult.applicationId} · {statusResult.status.replace("-", " ")}</span>
+                  </div>
+                  <Link to="/dashboard">View details</Link>
+                </div>
+              )}
+            </form>
+          ) : (
+            <div className="tracking-card tracking-card--signin">
+              <FaShieldAlt aria-hidden="true" />
+              <div>
+                <h3>Sign in to see your applications</h3>
+                <p>We use your account to prevent other people from viewing your status.</p>
+              </div>
+              <Link to="/login" className="civic-button civic-button--green">Sign in</Link>
+            </div>
+          )}
+        </section>
+      </main>
     </div>
   );
-};
+}
 
 export default LandingPage;

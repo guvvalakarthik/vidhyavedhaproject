@@ -1,4 +1,5 @@
 import React from "react";
+import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import Header from "./components/Header.jsx";
 import Navbar from "./components/Navbar.jsx";
@@ -31,9 +32,10 @@ function App() {
   return (
     <AuthProvider>
       <div className="app-wrapper">
+        <a className="skip-link" href="#main-content">Skip to main content</a>
         <Header />
         <Navbar />
-        <main className="main-content">
+        <main className="main-content" id="main-content">
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/services/banking" element={<Banking />} />
