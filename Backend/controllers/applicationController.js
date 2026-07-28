@@ -136,3 +136,69 @@ export const getMyApplications = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+export const editApplication = async (req, res) => {
+  try {
+    const { applicationId } = req.params;
+    const { name, phone, serviceType, ...details } = req.body;
+
+    const application = await Application.findOne({ applicationId });
+    if (!application) {
+      return res.status(404).json({ error: "Application not found." });
+    }
+
+    if (application.status !== "pending") {
+      return res.status(400).json({ error: "Only pending applications can be edited." });
+    }
+
+    const userId = req.user.userId;
+    const isOwner = application.userId?.toString() === userId || application.email === req.user.email;
+    if (!isOwner) {
+      return res.status(403).json({ error: "Not authorized to edit this application." });
+    }
+
+    if (name) application.name = name;
+    if (phone) application.phone = phone;
+    if (serviceType) application.serviceType = serviceType;
+    application.details = { ...application.details, ...details };
+    application.markModified("details");
+
+    await application.save();
+
+    res.json({
+      message: "Application updated successfully",
+      application,
+    });
+  } catch (err) {
+    console.error("Edit application error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const deleteApplication = async (req, res) => {
+  try {
+    const { applicationId } = req.params;
+
+    const application = await Application.findOne({ applicationId });
+    if (!application) {
+      return res.status(404).json({ error: "Application not found." });
+    }
+
+    const userId = req.user.userId;
+    const isOwner = application.userId?.toString() === userId || application.email === req.user.email;
+    if (!isOwner) {
+      return res.status(403).json({ error: "Not authorized to cancel this application." });
+    }
+
+    if (application.status === "approved") {
+      return res.status(400).json({ error: "Approved applications cannot be cancelled." });
+    }
+
+    await Application.deleteOne({ applicationId });
+
+    res.json({ message: "Application cancelled successfully" });
+  } catch (err) {
+    console.error("Delete application error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
