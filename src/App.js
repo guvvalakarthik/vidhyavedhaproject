@@ -29,6 +29,7 @@ import Contact from "./pages/Contact.js";
 import UserDashboard from "./pages/UserDashboard.js";
 import AdminPanel from "./pages/AdminPanel.js";
 import Analytics from "./pages/Analytics.js";
+import Profile from "./pages/Profile.js";
 
 function App() {
   return (
@@ -68,6 +69,7 @@ function App() {
             <Route path="/dashboard" element={<UserDashboard />} />
             <Route path="/admin" element={<AdminPanel />} />
             <Route path="/analytics" element={<Analytics />} />
+            <Route path="/profile" element={<Profile />} />
           </Routes>
         </main>
 
