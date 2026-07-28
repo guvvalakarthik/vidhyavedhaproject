@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
+import mongoose from "mongoose";
 import HealthcareAppointment from "../models/HealthcareAppointment.js";
+import { trustedHealthcareDateRange } from "../controllers/healthcareController.js";
 import {
   addDays,
   buildAvailableSlots,
@@ -50,5 +52,16 @@ describe("healthcare scheduling", () => {
     const patientIndex = indexes.find(([fields]) => fields.userId === 1 && fields.startTime === 1);
     expect(providerIndex?.[1]).toMatchObject({ unique: true, partialFilterExpression: { status: "booked" } });
     expect(patientIndex?.[1]).toMatchObject({ unique: true, partialFilterExpression: { status: "booked" } });
+  });
+
+  it("preserves the internal availability range when query sanitization is enabled", () => {
+    const firstStart = new Date("2030-01-01T03:30:00.000Z");
+    const lastStart = new Date("2030-01-01T10:30:00.000Z");
+    const filter = { startTime: trustedHealthcareDateRange(firstStart, lastStart) };
+
+    mongoose.sanitizeFilter(filter);
+
+    expect(filter.startTime).toMatchObject({ $gte: firstStart, $lte: lastStart });
+    expect(filter.startTime.$eq).toBeUndefined();
   });
 });
