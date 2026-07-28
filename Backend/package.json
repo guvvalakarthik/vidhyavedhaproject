@@ -1,6 +1,6 @@
 {
   "name": "vidhya-vedha-api",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "private": true,
   "type": "module",
   "main": "Server.js",
@@ -9,7 +9,8 @@
     "dev": "node --watch Server.js",
     "test": "vitest run",
     "test:watch": "vitest",
-    "set-role": "node scripts/setUserRole.js"
+    "set-role": "node scripts/setUserRole.js",
+    "seed:healthcare": "node scripts/seedHealthcareProviders.js"
   },
   "keywords": [],
   "author": "",
@@ -25,7 +26,7 @@
     "mongoose": "^9.8.1",
     "zod": "^4.4.3"
   },
-  "description": "Vidhya Vedha authentication and multi-service application API",
+  "description": "Vidhya Vedha authentication, service application, and healthcare scheduling API",
   "devDependencies": {
     "supertest": "^7.2.2",
     "vitest": "^4.1.10"
