@@ -7,6 +7,7 @@ import applicationRoutes from "./routes/applicationRoutes.js";
 import governmentRoutes from "./routes/governmentRoutes.js";
 import healthcareRoutes from "./routes/healthcareRoutes.js";
 import notificationRoutes from "./routes/notificationRoutes.js";
+import emergencyRoutes from "./routes/emergencyRoutes.js";
 import { sanitizePayload } from "./middleware/sanitizePayload.js";
 
 const app = express();
@@ -41,11 +42,12 @@ const authLimiter = rateLimit({
 });
 
 app.get("/", (_req, res) => {
-  res.json({ message: "Vidhya Vedha API Running", version: "2.2.0" });
+  res.json({ message: "Vidhya Vedha API Running", version: "2.3.0" });
 });
 app.use("/api/auth", authLimiter, authRoutes);
 app.use("/api/government", apiLimiter, governmentRoutes);
 app.use("/api/healthcare", apiLimiter, healthcareRoutes);
+app.use("/api/emergency", apiLimiter, emergencyRoutes);
 app.use("/api/notifications", apiLimiter, notificationRoutes);
 app.use("/api", apiLimiter, applicationRoutes);
 

@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { GOVERNMENT_SERVICE_CODES } from "../data/governmentServices.js";
+import { EMERGENCY_SERVICE_CODES } from "../data/emergencyServices.js";
 
 export const roles = ["citizen", "provider", "dispatcher", "admin"];
 export const categories = [
@@ -77,4 +78,34 @@ export const governmentAssistanceSchema = z.object({
   phone,
   notes: z.string().trim().max(500).optional().default(""),
   consent: z.literal(true),
+});
+
+const coordinates = z.object({
+  description: z.string().trim().min(5).max(300),
+  latitude: z.number().min(-90).max(90).optional(),
+  longitude: z.number().min(-180).max(180).optional(),
+}).refine(
+  (value) => (value.latitude === undefined) === (value.longitude === undefined),
+  { message: "Latitude and longitude must be provided together." },
+);
+
+export const emergencyRequestIdParamsSchema = z.object({
+  requestId: z.string().trim().regex(/^EMR-[A-Z0-9]{8}$/i).transform((value) => value.toUpperCase()),
+});
+export const emergencyRequestSchema = z.object({
+  serviceCode: z.enum(EMERGENCY_SERVICE_CODES),
+  contactPhone: phone,
+  vehicleType: z.enum(["car", "motorcycle", "auto-rickshaw", "van", "commercial", "other"]),
+  vehicleDescription: z.string().trim().max(160).optional().default(""),
+  location: coordinates,
+  safetyStatus: z.enum(["safe", "roadside-risk"]),
+  notes: z.string().trim().max(500).optional().default(""),
+});
+export const emergencyAssignmentSchema = z.object({
+  unitName: z.string().trim().min(2).max(120),
+  unitPhone: phone,
+  etaMinutes: z.coerce.number().int().min(1).max(240),
+});
+export const emergencyStatusSchema = z.object({
+  status: z.enum(["en-route", "arrived", "completed"]),
 });
