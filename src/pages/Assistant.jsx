@@ -9,6 +9,7 @@ const services = [
   ["finance", "Money and banking"],
   ["farming", "Farming"],
   ["utilities", "Utilities"],
+  ["ecommerce", "Ecommerce"],
   ["healthcare", "Healthcare"],
   ["emergency", "Roadside assistance"],
 ];

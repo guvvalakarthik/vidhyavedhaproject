@@ -102,6 +102,11 @@ See [Farming pathway planning](docs/farming-planning.md) for the supported offic
 Utilities now replaces generic bill-payment, net-banking and recharge forms with reviewed electricity, telecom, LPG and consumer complaint routes. Signed-in residents can create an owner-scoped tracker using only safe labels, complete escalation steps, mark the issue resolved and archive it without sharing full account numbers, payments, passwords, PINs or OTPs.
 
 See [Utility issue guidance and tracking](docs/utility-issue-tracking.md) for the official-route model, API and data boundary.
+## Commerce consumer resolution
+
+Ecommerce now provides reviewed resolution routes for marketplace refunds and non-delivery, suspicious digital payments, India Post issues and formal consumer escalation. Signed-in residents can save a minimal owner-scoped case, complete action steps, mark it resolved and archive it without sharing full order numbers, addresses, payment data, credentials or evidence.
+
+See [Commerce consumer-resolution cases](docs/commerce-resolution.md) for the route catalogue, API and data boundary.
 ## Grounded AI assistant
 
 Signed-in residents can use Ask Vidhya for grounded guidance across government, education, finance, healthcare and roadside services. The assistant retrieves matching entries from the reviewed local catalogue, shows official sources and uses the OpenAI Responses API when a key is configured. Without a key it remains usable in verified catalogue mode. Owner-scoped conversation history preserves context across secure sessions, tightly scoped plan-task actions require explicit approval, and supported browsers offer multilingual speech input and answer playback.
