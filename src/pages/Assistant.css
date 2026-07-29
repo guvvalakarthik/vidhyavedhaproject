@@ -111,3 +111,16 @@
 .assistant-controls__delete { width: 100%; margin-bottom: 14px; border: 1px solid #d92d20; border-radius: 9px; padding: 9px; background: #fff; color: #b42318; cursor: pointer; font-weight: 800; }
 .assistant-controls__delete:hover { background: #fff1f0; }
 .assistant-loading { color: #657982; }
+.assistant-action { align-self: stretch; padding: 16px; border: 1px solid #e3c66f; border-radius: 14px; background: #fff9e8; color: #493b14; }
+.assistant-action > span { display: block; margin-bottom: 5px; color: #795f15; font-size: .7rem; font-weight: 900; letter-spacing: .06em; text-transform: uppercase; }
+.assistant-action > strong { display: block; line-height: 1.45; }
+.assistant-action > small { display: block; margin-top: 6px; color: #776a43; }
+.assistant-action > div { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 13px; }
+.assistant-action button { border: 1px solid #176b4d; border-radius: 8px; padding: 9px 12px; background: #176b4d; color: #fff; cursor: pointer; font-weight: 800; }
+.assistant-action button + button { background: #fff; color: #176b4d; }
+.assistant-action button:disabled { cursor: not-allowed; opacity: .55; }
+.assistant-action--confirmed { border-color: #a9d9c6; background: #edf9f4; color: #17523e; }
+.assistant-action--cancelled,
+.assistant-action--expired,
+.assistant-action--failed { border-color: #d7dee1; background: #f5f7f8; color: #53646c; }
+.assistant-action__result { margin: 9px 0 0; font-size: .86rem; }

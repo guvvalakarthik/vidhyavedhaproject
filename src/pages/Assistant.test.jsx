@@ -55,3 +55,34 @@ test("persists a new conversation and shows its official sources", async () => {
     { message: "How do I renew my passport?" },
   );
 });
+
+test("requires explicit approval before applying an agent action", async () => {
+  const conversation = {
+    conversationId: "507f1f77bcf86cd799439011",
+    title: "Update my plan",
+    service: "education",
+    language: "English",
+  };
+  const pendingAction = {
+    actionId: "ACT-12345678",
+    planType: "education",
+    planId: "EDU-12345678",
+    taskId: "collect-documents",
+    summary: 'Mark "Collect documents" as completed in Scholarship preparation.',
+    status: "pending",
+  };
+  api.get.mockImplementation((url) => {
+    if (url === "/ai/conversations") return Promise.resolve({ data: { conversations: [conversation] } });
+    return Promise.resolve({ data: { conversation, messages: [], actions: [pendingAction] } });
+  });
+  api.post.mockResolvedValue({
+    data: { action: { ...pendingAction, status: "confirmed", result: "Collect documents is now completed." } },
+  });
+
+  render(<Assistant />);
+  expect(await screen.findByText(/mark "collect documents" as completed/i)).toBeInTheDocument();
+  fireEvent.click(screen.getByRole("button", { name: /approve exact change/i }));
+
+  await waitFor(() => expect(api.post).toHaveBeenCalledWith("/ai/actions/ACT-12345678/confirm", {}));
+  expect(await screen.findByText(/is now completed/i)).toBeInTheDocument();
+});
