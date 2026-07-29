@@ -9,6 +9,7 @@ import { FINANCIAL_PATHWAY_CODES } from "../data/financialPathways.js";
 import { FARMING_PATHWAY_CODES, FARMING_SEASONS } from "../data/farmingPathways.js";
 import { UTILITY_GUIDE_CODES } from "../data/utilityGuides.js";
 import { COMMERCE_GUIDE_CODES, COMMERCE_OUTCOMES } from "../data/commerceGuides.js";
+import { HOME_PROVIDER_CODES } from "../data/homeServiceProviders.js";
 
 export const roles = ["citizen", "provider", "dispatcher", "admin"];
 export const categories = [
@@ -191,15 +192,17 @@ export const commerceCaseTaskParamsSchema = commerceCaseParamsSchema.extend({ ta
 export const commerceCaseSchema = z.object({ guideCode: z.enum(COMMERCE_GUIDE_CODES), merchantLabel: z.string().trim().max(80).optional().default(""), orderLabel: z.string().trim().max(60).optional().default(""), incidentDate: dateText, desiredOutcome: z.enum(COMMERCE_OUTCOMES) }).strict();
 export const commerceTaskUpdateSchema = z.object({ completed: z.boolean() }).strict();
 export const commerceCaseStatusSchema = z.object({ status: z.enum(["open", "resolved", "archived"]) }).strict();
+export const homeBookingCodeParamsSchema = z.object({ bookingCode: z.string().trim().regex(/^HOM-[A-Z0-9]{8}$/i).transform((value) => value.toUpperCase()) });
+export const homeBookingSchema = z.object({ providerCode: z.enum(HOME_PROVIDER_CODES), startTime: z.string().datetime({ offset: true }), serviceArea: z.string().trim().min(2).max(100), contactPhone: phone, issueSummary: z.string().trim().min(5).max(400) }).strict();
 export const aiAskSchema = z.object({
   message: z.string().trim().min(2).max(1200),
-  service: z.enum(["all", "government", "education", "finance", "farming", "utilities", "ecommerce", "healthcare", "emergency"]).default("all"),
+  service: z.enum(["all", "government", "education", "finance", "farming", "utilities", "ecommerce", "home-maintenance", "healthcare", "emergency"]).default("all"),
   language: z.enum(["English", "Hindi", "Telugu", "Tamil", "Kannada", "Malayalam", "Marathi"]).default("English"),
 }).strict();
 
 export const aiConversationSchema = z.object({
   title: z.string().trim().min(2).max(100).optional(),
-  service: z.enum(["all", "government", "education", "finance", "farming", "utilities", "ecommerce", "healthcare", "emergency"]).default("all"),
+  service: z.enum(["all", "government", "education", "finance", "farming", "utilities", "ecommerce", "home-maintenance", "healthcare", "emergency"]).default("all"),
   language: z.enum(["English", "Hindi", "Telugu", "Tamil", "Kannada", "Malayalam", "Marathi"]).default("English"),
 }).strict();
 

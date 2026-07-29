@@ -13,6 +13,7 @@ import financialRoutes from "./routes/financialRoutes.js";
 import farmingRoutes from "./routes/farmingRoutes.js";
 import utilityIssueRoutes from "./routes/utilityIssueRoutes.js";
 import commerceCaseRoutes from "./routes/commerceCaseRoutes.js";
+import homeServiceRoutes from "./routes/homeServiceRoutes.js";
 import aiRoutes from "./routes/aiRoutes.js";
 import { sanitizePayload } from "./middleware/sanitizePayload.js";
 import { optionalSession, requireCsrf } from "./services/authSessionService.js";
@@ -70,6 +71,7 @@ app.use("/api/finance", apiLimiter, financialRoutes);
 app.use("/api/farming", apiLimiter, farmingRoutes);
 app.use("/api/utilities", apiLimiter, utilityIssueRoutes);
 app.use("/api/ecommerce", apiLimiter, commerceCaseRoutes);
+app.use("/api/home-maintenance", apiLimiter, homeServiceRoutes);
 app.use("/api/notifications", apiLimiter, notificationRoutes);
 app.use("/api", apiLimiter, applicationRoutes);
 
