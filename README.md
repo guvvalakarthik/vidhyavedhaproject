@@ -7,7 +7,7 @@ Vidhya Vedha is a full-stack civic and local-services platform for rural communi
 - Frontend: React 19, Vite 8, React Router, Axios
 - Frontend tests: Vitest, Testing Library, jsdom
 - Backend: Express 5, MongoDB, Mongoose
-- Authentication: JWT-based API authentication with request validation, role-based authorization, and ownership checks
+- Authentication: MongoDB-backed opaque cookie sessions with CSRF protection, role-based authorization, and ownership checks
 
 ## Requirements
 
@@ -100,7 +100,10 @@ Frontend (`.env`):
 Backend (`Backend/.env`):
 
 - `MONGO_URI`: MongoDB connection string.
-- `JWT_SECRET`: signing secret for authentication tokens.
+- `SESSION_SECRET`: server-side session secret with at least 32 characters.
+- `SESSION_IDLE_MINUTES`: inactivity timeout, defaulting to `30`.
+- `SESSION_ABSOLUTE_HOURS`: maximum session lifetime, defaulting to `168`.
+- `MAX_SESSIONS_PER_USER`: active device limit, defaulting to `5`.
 - `PORT`: API port, defaulting to `5000`.
 
 Never commit real credentials or personal service data.

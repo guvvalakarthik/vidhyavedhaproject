@@ -11,6 +11,7 @@ import emergencyRoutes from "./routes/emergencyRoutes.js";
 import educationRoutes from "./routes/educationRoutes.js";
 import financialRoutes from "./routes/financialRoutes.js";
 import { sanitizePayload } from "./middleware/sanitizePayload.js";
+import { optionalSession, requireCsrf } from "./services/authSessionService.js";
 
 const app = express();
 const allowedOrigins = (process.env.CLIENT_ORIGINS || "http://localhost:3000,http://127.0.0.1:3000")
@@ -21,6 +22,7 @@ const allowedOrigins = (process.env.CLIENT_ORIGINS || "http://localhost:3000,htt
 app.disable("x-powered-by");
 app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
 app.use(cors({
+  credentials: true,
   origin(origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
     return callback(new Error("Origin is not allowed by CORS."));
@@ -29,6 +31,8 @@ app.use(cors({
 app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: false, limit: "1mb" }));
 app.use(sanitizePayload);
+app.use(optionalSession);
+app.use(requireCsrf);
 
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,

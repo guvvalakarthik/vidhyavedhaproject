@@ -15,6 +15,7 @@ function Navbar() {
         <NavLink to="/dashboard" className={navClass}>My applications</NavLink>
         <NavLink to="/about" className={navClass}>About</NavLink>
         <NavLink to="/contact" className={navClass}>Help and contact</NavLink>
+        {user && <NavLink to="/account/sessions" className={navClass}>Security</NavLink>}
         {user?.role === "admin" && <NavLink to="/admin" className={navClass}>Administration</NavLink>}
       </div>
     </nav>
