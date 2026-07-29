@@ -1,49 +1,53 @@
 import express from "express";
-import jwt from "jsonwebtoken";
 import request from "supertest";
 import { beforeAll, describe, expect, it } from "vitest";
 import { authorize, protect } from "../middleware/authMiddleware.js";
+import { requireCsrf } from "../services/authSessionService.js";
 
-const secret = "test-secret-that-is-longer-than-thirty-two-characters";
-
-const tokenFor = (role) => jwt.sign(
-  { userId: "user-1", email: "person@example.gov", role },
-  secret,
-  {
-    algorithm: "HS256",
-    expiresIn: "10m",
-    issuer: "vidhya-vedha-api",
-    audience: "vidhya-vedha-web",
-  },
-);
-
-describe("authentication and role middleware", () => {
+describe("authentication, CSRF, and role middleware", () => {
   let app;
 
   beforeAll(() => {
-    process.env.JWT_SECRET = secret;
     app = express();
+    app.use(express.json());
+    app.use((req, _res, next) => {
+      const role = req.get("x-test-role");
+      if (role) {
+        req.user = { userId: "user-1", email: "person@example.gov", role };
+        req.authSession = { csrfToken: "known-csrf-token" };
+      }
+      next();
+    });
+    app.use(requireCsrf);
     app.get("/account", protect, (req, res) => res.json({ user: req.user }));
     app.get("/admin", protect, authorize("admin"), (_req, res) => res.json({ ok: true }));
+    app.post("/account", protect, (_req, res) => res.json({ ok: true }));
   });
 
-  it("rejects a request without a bearer token", async () => {
+  it("rejects a request without a server session", async () => {
     const response = await request(app).get("/account");
     expect(response.status).toBe(401);
   });
 
   it("rejects a citizen from an administrator endpoint", async () => {
-    const response = await request(app)
-      .get("/admin")
-      .set("Authorization", `Bearer ${tokenFor("citizen")}`);
+    const response = await request(app).get("/admin").set("x-test-role", "citizen");
     expect(response.status).toBe(403);
   });
 
   it("allows an administrator through the role guard", async () => {
-    const response = await request(app)
-      .get("/admin")
-      .set("Authorization", `Bearer ${tokenFor("admin")}`);
+    const response = await request(app).get("/admin").set("x-test-role", "admin");
     expect(response.status).toBe(200);
     expect(response.body).toEqual({ ok: true });
+  });
+
+  it("requires the session CSRF token for state-changing requests", async () => {
+    const rejected = await request(app).post("/account").set("x-test-role", "citizen");
+    expect(rejected.status).toBe(403);
+
+    const accepted = await request(app)
+      .post("/account")
+      .set("x-test-role", "citizen")
+      .set("x-csrf-token", "known-csrf-token");
+    expect(accepted.status).toBe(200);
   });
 });

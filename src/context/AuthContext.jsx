@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import api from "../services/api.js";
+import api, { setCsrfToken } from "../services/api.js";
 
 const AuthContext = createContext(null);
 
@@ -13,20 +13,15 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const restoreSession = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        setLoading(false);
-        return;
-      }
-
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
       try {
         const { data } = await api.get("/auth/me");
-        const nextUser = normalizeUser(data.user);
-        localStorage.setItem("user", JSON.stringify(nextUser));
-        setUser(nextUser);
+        setCsrfToken(data.csrfToken);
+        setUser(normalizeUser(data.user));
       } catch {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
+        setCsrfToken(null);
+        setUser(null);
       } finally {
         setLoading(false);
       }
@@ -37,8 +32,7 @@ export const AuthProvider = ({ children }) => {
 
   const persistSession = (data) => {
     const nextUser = normalizeUser(data.user);
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("user", JSON.stringify(nextUser));
+    setCsrfToken(data.csrfToken);
     setUser(nextUser);
     return { ...data, user: nextUser };
   };
@@ -58,10 +52,13 @@ export const AuthProvider = ({ children }) => {
     return persistSession(data);
   };
 
-  const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    setUser(null);
+  const logout = async () => {
+    try {
+      await api.post("/auth/logout");
+    } finally {
+      setCsrfToken(null);
+      setUser(null);
+    }
   };
 
   return (
