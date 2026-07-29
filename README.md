@@ -160,3 +160,7 @@ See [`docs/agentic-reminders.md`](docs/agentic-reminders.md).
 ## Status connectors
 
 Residents can track owned Vidhya records through working internal connectors. External authorities are shown as not connected until a reviewed official API adapter is registered, preventing fabricated status claims.
+
+## Verified human handoff
+
+Residents can request consent-based phone or centre guidance from the reviewed assisted-service directory. Provider and admin roles manage a separate assignment queue.
