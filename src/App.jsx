@@ -21,8 +21,6 @@ import Register from "./pages/Register.jsx";
 import About from "./pages/About.jsx";
 import Contact from "./pages/Contact.jsx";
 import UserDashboard from "./pages/UserDashboard.jsx";
-import AdminPanel from "./pages/AdminPanel.jsx";
-import Analytics from "./pages/Analytics.jsx";
 import SessionManagement from "./pages/SessionManagement.jsx";
 import Assistant from "./pages/Assistant.jsx";
 const Companion = lazy(() => import("./pages/Companion.jsx"));
@@ -36,6 +34,8 @@ const DocumentVault = lazy(() => import("./pages/DocumentVault.jsx"));
 const ProviderOperations = lazy(() => import("./pages/ProviderOperations.jsx"));
 const ReportBlocker = lazy(() => import("./pages/ReportBlocker.jsx"));
 const BlockerAnalytics = lazy(() => import("./pages/BlockerAnalytics.jsx"));
+const AdminPanel = lazy(() => import("./pages/AdminPanel.jsx"));
+const Analytics = lazy(() => import("./pages/Analytics.jsx"));
 
 const authenticated = (element) => <ProtectedRoute>{element}</ProtectedRoute>;
 const adminOnly = (element) => <ProtectedRoute roles={["admin"]}>{element}</ProtectedRoute>;
@@ -77,8 +77,8 @@ function App() {
             <Route path="/provider/operations" element={<ProtectedRoute roles={["provider","admin"]}><Suspense fallback={<p>Loading provider operations...</p>}><ProviderOperations /></Suspense></ProtectedRoute>} />
             <Route path="/report-blocker" element={authenticated(<Suspense fallback={<p>Loading feedback...</p>}><ReportBlocker /></Suspense>)} />
             <Route path="/analytics/blockers" element={adminOnly(<Suspense fallback={<p>Loading blocker analytics...</p>}><BlockerAnalytics /></Suspense>)} />
-            <Route path="/admin" element={adminOnly(<AdminPanel />)} />
-            <Route path="/analytics" element={adminOnly(<Analytics />)} />
+            <Route path="/admin" element={adminOnly(<Suspense fallback={<p>Loading administration...</p>}><AdminPanel /></Suspense>)} />
+            <Route path="/analytics" element={adminOnly(<Suspense fallback={<p>Loading analytics...</p>}><Analytics /></Suspense>)} />
           </Routes>
         </main>
         <Footer />
