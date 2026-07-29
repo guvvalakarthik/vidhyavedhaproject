@@ -15,7 +15,7 @@ const fallbackAnswer = (question, sources) => {
   const guidance = sources.slice(0, 3).map((source, index) =>
     `${index + 1}. ${source.title}: ${source.summary}${source.boundary ? ` Important: ${source.boundary}` : ""}`,
   ).join("\n\n");
-  return `Here is the closest verified guidance for ?${question}?:\n\n${guidance}\n\nUse the official links below to confirm current requirements before submitting documents or making a payment.`;
+  return `Here is the closest verified guidance for "${question}":\n\n${guidance}\n\nUse the official links below to confirm current requirements before submitting documents or making a payment.`;
 };
 
 const systemInstructions = `You are the Vidhya Vedha citizen-services guide for India.
@@ -25,7 +25,7 @@ Do not diagnose illness, decide emergency priority, approve credit, provide lega
 Never ask for Aadhaar numbers, passwords, OTPs, banking credentials, complete medical records, or identity-document uploads.
 Reply in the requested language using clear, respectful language. Include the responsible authority, practical next steps, an important boundary, and the official handoff when available.`;
 
-export const answerWithGrounding = async ({ question, service = "all", language = "English", userId }) => {
+export const answerWithGrounding = async ({ question, service = "all", language = "English", userId, history = [] }) => {
   const sources = searchKnowledge({ query: question, service, limit: 5 });
   const citations = sources.map(({ sourceId, title, authority, officialUrl, service: sourceService }) => ({
     sourceId,
@@ -47,7 +47,7 @@ export const answerWithGrounding = async ({ question, service = "all", language 
       text: { verbosity: "medium" },
       safety_identifier: safetyIdentifier(userId),
       instructions: systemInstructions,
-      input: `Requested language: ${language}\nUser question: ${question}\n\nTrusted context:\n${JSON.stringify(sources)}`,
+      input: `Requested language: ${language}\nRecent conversation: ${JSON.stringify(history.slice(-10))}\nUser question: ${question}\n\nTrusted context:\n${JSON.stringify(sources)}`,
     });
     const answer = response.output_text?.trim();
     if (!answer) throw new Error("The model returned no text.");

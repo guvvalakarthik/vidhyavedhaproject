@@ -94,7 +94,7 @@ See [Financial guidance and preparation plans](docs/financial-guidance.md) for t
 
 ## Grounded AI assistant
 
-Signed-in residents can use Ask Vidhya for read-only guidance across government, education, finance, healthcare and roadside services. The assistant retrieves matching entries from the reviewed local catalogue, shows official sources and uses the OpenAI Responses API when a key is configured. Without a key it remains usable in verified catalogue mode.
+Signed-in residents can use Ask Vidhya for read-only guidance across government, education, finance, healthcare and roadside services. The assistant retrieves matching entries from the reviewed local catalogue, shows official sources and uses the OpenAI Responses API when a key is configured. Without a key it remains usable in verified catalogue mode. Owner-scoped conversation history preserves context across secure sessions and can be deleted at any time.
 
 See [Grounded AI assistant](docs/ai-assistant.md) for architecture, safety boundaries and configuration.
 ## Environment variables
@@ -112,6 +112,7 @@ Backend (`Backend/.env`):
 - MAX_SESSIONS_PER_USER: active device limit, defaulting to 5.
 - OPENAI_API_KEY: optional API key that enables generated multilingual answers.
 - OPENAI_MODEL: Responses API model, defaulting to gpt-5.6-sol.
+- `AI_CONVERSATION_RETENTION_DAYS`: owner conversation retention, defaulting to `90` days.
 - `PORT`: API port, defaulting to `5000`.
 
 Never commit real credentials or personal service data.
