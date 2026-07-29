@@ -165,3 +165,7 @@ export const aiConversationSchema = z.object({
 export const aiMessageSchema = z.object({
   message: z.string().trim().min(2).max(1200),
 }).strict();
+
+export const agentActionParamsSchema = z.object({
+  actionId: z.string().trim().regex(/^ACT-[A-Z0-9]{8}$/i).transform((value) => value.toUpperCase()),
+});

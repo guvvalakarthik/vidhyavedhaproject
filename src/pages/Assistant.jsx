@@ -23,10 +23,12 @@ function Assistant() {
   const [language, setLanguage] = useState("English");
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([welcomeMessage]);
+  const [actions, setActions] = useState([]);
   const [conversations, setConversations] = useState([]);
   const [conversation, setConversation] = useState(null);
   const [loadingHistory, setLoadingHistory] = useState(true);
   const [sending, setSending] = useState(false);
+  const [resolvingAction, setResolvingAction] = useState("");
   const [error, setError] = useState("");
 
   const openConversation = useCallback(async (conversationId) => {
@@ -38,6 +40,7 @@ function Assistant() {
       setService(data.conversation.service);
       setLanguage(data.conversation.language);
       setMessages(data.messages.length ? data.messages : [welcomeMessage]);
+      setActions(data.actions || []);
     } catch (requestError) {
       setError(requestError.response?.data?.error || "Could not open that conversation.");
     } finally {
@@ -63,6 +66,7 @@ function Assistant() {
   const startNew = () => {
     setConversation(null);
     setMessages([welcomeMessage]);
+    setActions([]);
     setMessage("");
     setService("all");
     setLanguage("English");
@@ -73,6 +77,13 @@ function Assistant() {
     setConversations((current) => [
       nextConversation,
       ...current.filter(({ conversationId }) => conversationId !== nextConversation.conversationId),
+    ]);
+  };
+
+  const upsertAction = (nextAction) => {
+    setActions((current) => [
+      ...current.filter(({ actionId }) => actionId !== nextAction.actionId),
+      nextAction,
     ]);
   };
 
@@ -105,6 +116,7 @@ function Assistant() {
       );
       setConversation(data.conversation);
       upsertConversation(data.conversation);
+      if (data.pendingAction) upsertAction(data.pendingAction);
       setMessages((current) => [
         ...current.filter(({ messageId }) => messageId !== optimisticId),
         data.userMessage,
@@ -115,6 +127,19 @@ function Assistant() {
       setError(requestError.response?.data?.error || "The assistant could not answer right now. Please try again.");
     } finally {
       setSending(false);
+    }
+  };
+
+  const resolveAction = async (actionId, decision) => {
+    setResolvingAction(actionId);
+    setError("");
+    try {
+      const { data } = await api.post(`/ai/actions/${actionId}/${decision}`, {});
+      upsertAction(data.action);
+    } catch (requestError) {
+      setError(requestError.response?.data?.error || "That action could not be updated. Refresh and try again.");
+    } finally {
+      setResolvingAction("");
     }
   };
 
@@ -176,8 +201,8 @@ function Assistant() {
             </select>
             {conversation && <button type="button" className="assistant-controls__delete" onClick={removeConversation}>Delete conversation</button>}
             <div className="assistant-controls__boundary">
-              <strong>What this assistant will not do</strong>
-              <p>It will not diagnose illness, approve credit, decide emergency priority, or ask for passwords, OTPs, identity numbers, or document uploads.</p>
+              <strong>Approval boundary</strong>
+              <p>Vidhya may prepare a plan-task change, but it cannot apply one until you approve the exact action. It will not diagnose illness, approve credit, or decide emergency priority.</p>
             </div>
           </aside>
         </div>
@@ -203,6 +228,19 @@ function Assistant() {
                   </div>
                 )}
               </article>
+            ))}
+            {actions.map((action) => (
+              <section className={`assistant-action assistant-action--${action.status}`} key={action.actionId} aria-label="Proposed assistant action">
+                <span>Plan action ? {action.planType}</span>
+                <strong>{action.summary}</strong>
+                <small>{action.planId} ? {action.taskId}</small>
+                {action.status === "pending" ? (
+                  <div>
+                    <button type="button" onClick={() => resolveAction(action.actionId, "confirm")} disabled={resolvingAction === action.actionId}>Approve exact change</button>
+                    <button type="button" onClick={() => resolveAction(action.actionId, "cancel")} disabled={resolvingAction === action.actionId}>Cancel</button>
+                  </div>
+                ) : <p className="assistant-action__result">{action.result || `Action ${action.status}.`}</p>}
+              </section>
             ))}
             {sending && <div className="assistant-typing" role="status"><span /><span /><span /> Checking trusted guidance...</div>}
           </div>

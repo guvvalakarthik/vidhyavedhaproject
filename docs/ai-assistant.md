@@ -1,6 +1,6 @@
 # Grounded AI assistant
 
-Ask Vidhya is a read-only citizen-services assistant. It retrieves trusted entries from the existing government, education, finance, healthcare and roadside catalogues before producing an answer.
+Ask Vidhya is a guidance-first citizen-services assistant. It retrieves trusted entries from the existing government, education, finance, healthcare and roadside catalogues before producing an answer, and limits write access to explicitly approved plan-task changes.
 
 ## Request flow
 
@@ -57,7 +57,19 @@ All conversation routes require an authenticated session and only return records
 
 Only the most recent ten messages are supplied as bounded model context. Conversation data expires automatically after the configured retention period; each new message extends the conversation and message expiry together. Users can delete a conversation immediately from the history panel.
 
+## Controlled agent actions
+
+Ask Vidhya can propose one allowlisted write action: changing the status of an existing task in an education or financial plan. The model receives a compact list of the signed-in user's active plans and may call only `propose_plan_task_update` with a plan ID, task ID and target status.
+
+A proposal does not mutate a plan. The server validates the model arguments against owner-scoped records, stores the exact pending action and requires a second authenticated request from the UI:
+
+- `GET /api/ai/actions/pending` lists pending approvals.
+- `POST /api/ai/actions/:actionId/confirm` claims and executes the exact stored action once.
+- `POST /api/ai/actions/:actionId/cancel` records the rejection without changing a plan.
+
+Approvals expire after 15 minutes. Execution rechecks ownership, active-plan status and task existence, and atomically moves the action out of `pending` before the update. Action audit records follow the conversation retention period. Deterministic matching can prepare the same bounded proposal when no API key is configured, but ambiguous requests are ignored.
 ## Configuration
+
 
 ```dotenv
 OPENAI_API_KEY=
