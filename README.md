@@ -92,6 +92,11 @@ Money and banking now uses verified official handoffs, a browser-only loan-cost 
 
 See [Financial guidance and preparation plans](docs/financial-guidance.md) for the supported routes, calculator assumptions, API endpoints, data boundary and official references.
 
+## Farming action planning
+
+Farming now provides reviewed official pathways and private, owner-scoped preparation plans instead of generic benefit and market forms. Residents can explore Soil Health Card, PMFBY, e-NAM and PM-KISAN routes, save only optional crop and district labels plus a season, track checklist steps and archive finished plans. Identity, land, beneficiary, bank, claim and payment data stay with the responsible authority.
+
+See [Farming pathway planning](docs/farming-planning.md) for the supported official routes, API endpoints, ownership controls and data boundary.
 ## Grounded AI assistant
 
 Signed-in residents can use Ask Vidhya for grounded guidance across government, education, finance, healthcare and roadside services. The assistant retrieves matching entries from the reviewed local catalogue, shows official sources and uses the OpenAI Responses API when a key is configured. Without a key it remains usable in verified catalogue mode. Owner-scoped conversation history preserves context across secure sessions, tightly scoped plan-task actions require explicit approval, and supported browsers offer multilingual speech input and answer playback.

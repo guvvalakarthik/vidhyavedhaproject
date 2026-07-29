@@ -7,6 +7,7 @@ const services = [
   ["government", "Government services"],
   ["education", "Education"],
   ["finance", "Money and banking"],
+  ["farming", "Farming"],
   ["healthcare", "Healthcare"],
   ["emergency", "Roadside assistance"],
 ];

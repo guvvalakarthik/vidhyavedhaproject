@@ -10,6 +10,7 @@ import notificationRoutes from "./routes/notificationRoutes.js";
 import emergencyRoutes from "./routes/emergencyRoutes.js";
 import educationRoutes from "./routes/educationRoutes.js";
 import financialRoutes from "./routes/financialRoutes.js";
+import farmingRoutes from "./routes/farmingRoutes.js";
 import aiRoutes from "./routes/aiRoutes.js";
 import { sanitizePayload } from "./middleware/sanitizePayload.js";
 import { optionalSession, requireCsrf } from "./services/authSessionService.js";
@@ -64,6 +65,7 @@ app.use("/api/healthcare", apiLimiter, healthcareRoutes);
 app.use("/api/emergency", apiLimiter, emergencyRoutes);
 app.use("/api/education", apiLimiter, educationRoutes);
 app.use("/api/finance", apiLimiter, financialRoutes);
+app.use("/api/farming", apiLimiter, farmingRoutes);
 app.use("/api/notifications", apiLimiter, notificationRoutes);
 app.use("/api", apiLimiter, applicationRoutes);
 
