@@ -14,6 +14,7 @@ import { COMPANION_DOMAINS, COMPANION_GOALS, COMPANION_LANGUAGES, COMPANION_LIFE
 import { READINESS_ITEM_STATUSES } from "../data/readinessTemplates.js";
 import { DRAFT_TYPES } from "../data/draftTemplates.js";
 import { REMINDER_CADENCES, REMINDER_SOURCE_TYPES } from "../models/Reminder.js";
+import { STATUS_PROVIDER_CODES } from "../data/statusProviders.js";
 
 export const roles = ["citizen", "provider", "dispatcher", "admin"];
 export const categories = [
@@ -232,6 +233,9 @@ export const reminderSchema = z.object({
   if (pattern && !pattern.test(value.sourceId)) context.addIssue({ code: "custom", path: ["sourceId"], message: "Enter the owned task ID for this source." });
 }).transform(({ consent: _consent, ...reminder }) => reminder);
 export const reminderStatusSchema = z.object({ status: z.enum(["active", "paused", "completed", "archived"]) }).strict();
+export const statusTrackerParamsSchema = z.object({ trackerId: z.string().trim().regex(/^TRK-[A-Z0-9]{8}$/i).transform((value) => value.toUpperCase()) });
+export const statusTrackerSchema = z.object({ providerCode: z.enum(STATUS_PROVIDER_CODES), targetId: z.string().trim().min(3).max(80) }).strict();
+
 export const aiAskSchema = z.object({
   message: z.string().trim().min(2).max(1200),
   service: z.enum(["all", "government", "education", "finance", "farming", "utilities", "ecommerce", "home-maintenance", "healthcare", "emergency"]).default("all"),

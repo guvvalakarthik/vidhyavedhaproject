@@ -156,3 +156,7 @@ See [`docs/service-drafts-and-pdf.md`](docs/service-drafts-and-pdf.md).
 Residents can explicitly enable in-app reminders for incomplete readiness checklists, unfinalized drafts, or a custom task. A bounded server worker evaluates due reminders, stops when linked work is complete, and never submits or changes the underlying service record.
 
 See [`docs/agentic-reminders.md`](docs/agentic-reminders.md).
+
+## Status connectors
+
+Residents can track owned Vidhya records through working internal connectors. External authorities are shown as not connected until a reviewed official API adapter is registered, preventing fabricated status claims.
