@@ -1,0 +1,13 @@
+import express from "express";
+import { createUtilityIssue, getUtilityGuide, listMyUtilityIssues, listUtilityGuides, setUtilityIssueStatus, updateUtilityTask } from "../controllers/utilityIssueController.js";
+import { protect } from "../middleware/authMiddleware.js";
+import { validateRequest } from "../middleware/validateRequest.js";
+import { utilityGuideParamsSchema, utilityIssueParamsSchema, utilityIssueSchema, utilityIssueStatusSchema, utilityIssueTaskParamsSchema, utilityTaskUpdateSchema } from "../validation/schemas.js";
+const router = express.Router();
+router.get("/guides", listUtilityGuides);
+router.get("/guides/:guideCode", validateRequest({ params: utilityGuideParamsSchema }), getUtilityGuide);
+router.get("/issues/mine", protect, listMyUtilityIssues);
+router.post("/issues", protect, validateRequest({ body: utilityIssueSchema }), createUtilityIssue);
+router.patch("/issues/:issueId/tasks/:taskId", protect, validateRequest({ params: utilityIssueTaskParamsSchema, body: utilityTaskUpdateSchema }), updateUtilityTask);
+router.patch("/issues/:issueId/status", protect, validateRequest({ params: utilityIssueParamsSchema, body: utilityIssueStatusSchema }), setUtilityIssueStatus);
+export default router;
