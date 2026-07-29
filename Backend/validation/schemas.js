@@ -240,6 +240,8 @@ export const statusTrackerSchema = z.object({ providerCode: z.enum(STATUS_PROVID
 export const handoffParamsSchema=z.object({handoffId:z.string().trim().regex(/^HOF-[A-Z0-9]{8}$/i)});
 export const handoffSchema=z.object({centreCode:z.enum(ASSISTANCE_CENTRE_CODES),serviceCode:z.enum(COMPANION_SERVICE_CODES),supportMode:z.enum(["phone","centre-visit"]),preferredLanguage:z.string().trim().min(2).max(40),phone,summary:z.string().trim().min(10).max(600),consent:z.literal(true)}).strict().transform(({consent:_consent,...x})=>x);
 export const handoffUpdateSchema=z.object({status:z.enum(["assigned","contacted","resolved","cancelled"]),statusNote:z.string().trim().max(500).optional().default("")}).strict();
+export const vaultDocumentParamsSchema=z.object({documentId:z.string().trim().regex(/^DOC-[A-Z0-9]{8}$/i).transform(v=>v.toUpperCase())});
+export const vaultMetadataSchema=z.object({label:z.string().trim().min(2).max(120),category:z.enum(["identity","address","income","education","health","service-evidence","other"]),consent:z.preprocess(v=>v===true||v==="true",z.literal(true))}).strict().transform(({consent:_consent,...x})=>x);
 export const aiAskSchema = z.object({
   message: z.string().trim().min(2).max(1200),
   service: z.enum(["all", "government", "education", "finance", "farming", "utilities", "ecommerce", "home-maintenance", "healthcare", "emergency"]).default("all"),

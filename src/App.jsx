@@ -32,6 +32,7 @@ const Reminders = lazy(() => import("./pages/Reminders.jsx"));
 const Notifications = lazy(() => import("./pages/Notifications.jsx"));
 const StatusTracking = lazy(() => import("./pages/StatusTracking.jsx"));
 const AssistedHandoff = lazy(() => import("./pages/AssistedHandoff.jsx"));
+const DocumentVault = lazy(() => import("./pages/DocumentVault.jsx"));
 
 const authenticated = (element) => <ProtectedRoute>{element}</ProtectedRoute>;
 const adminOnly = (element) => <ProtectedRoute roles={["admin"]}>{element}</ProtectedRoute>;
@@ -69,6 +70,7 @@ function App() {
             <Route path="/reminders" element={authenticated(<Suspense fallback={<p>Loading reminders...</p>}><Reminders /></Suspense>)} />
             <Route path="/tracking" element={authenticated(<Suspense fallback={<p>Loading status trackers...</p>}><StatusTracking /></Suspense>)} />
             <Route path="/assistance" element={authenticated(<Suspense fallback={<p>Loading assistance...</p>}><AssistedHandoff /></Suspense>)} />
+            <Route path="/vault" element={authenticated(<Suspense fallback={<p>Loading document vault...</p>}><DocumentVault /></Suspense>)} />
             <Route path="/admin" element={adminOnly(<AdminPanel />)} />
             <Route path="/analytics" element={adminOnly(<Analytics />)} />
           </Routes>

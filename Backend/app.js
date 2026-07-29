@@ -21,6 +21,7 @@ import draftRoutes from "./routes/draftRoutes.js";
 import reminderRoutes from "./routes/reminderRoutes.js";
 import statusTrackerRoutes from "./routes/statusTrackerRoutes.js";
 import handoffRoutes from "./routes/handoffRoutes.js";
+import documentVaultRoutes from "./routes/documentVaultRoutes.js";
 import { sanitizePayload } from "./middleware/sanitizePayload.js";
 import { optionalSession, requireCsrf } from "./services/authSessionService.js";
 
@@ -75,6 +76,7 @@ app.use("/api/drafts", aiLimiter, draftRoutes);
 app.use("/api/reminders", apiLimiter, reminderRoutes);
 app.use("/api/status-trackers", apiLimiter, statusTrackerRoutes);
 app.use("/api/handoffs", apiLimiter, handoffRoutes);
+app.use("/api/vault", apiLimiter, documentVaultRoutes);
 app.use("/api/government", apiLimiter, governmentRoutes);
 app.use("/api/healthcare", apiLimiter, healthcareRoutes);
 app.use("/api/emergency", apiLimiter, emergencyRoutes);
@@ -89,6 +91,7 @@ app.use("/api", apiLimiter, applicationRoutes);
 
 app.use((_req, res) => res.status(404).json({ error: "Route not found." }));
 app.use((err, _req, res, _next) => {
+  if (err?.code === "LIMIT_FILE_SIZE") return res.status(413).json({ error: "Document must be 5 MB or smaller." });
   if (err.message === "Origin is not allowed by CORS.") {
     return res.status(403).json({ error: err.message });
   }

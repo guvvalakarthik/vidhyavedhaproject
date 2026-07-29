@@ -164,3 +164,9 @@ Residents can track owned Vidhya records through working internal connectors. Ex
 ## Verified human handoff
 
 Residents can request consent-based phone or centre guidance from the reviewed assisted-service directory. Provider and admin roles manage a separate assignment queue.
+
+## Encrypted document vault
+
+Owner-only PDF and image uploads are encrypted with AES-256-GCM before local storage. Upload/download requires explicit consent; revocation destroys ciphertext. Set DOCUMENT_ENCRYPTION_KEY to a base64-encoded 32-byte key.
+
+See [`docs/encrypted-document-vault.md`](docs/encrypted-document-vault.md).
