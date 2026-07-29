@@ -2,6 +2,7 @@ import "dotenv/config";
 import app from "./app.js";
 import connectDB from "./config.js";
 import { ensureDefaultHealthcareProviders } from "./services/ensureHealthcareProviders.js";
+import { startReminderWorker } from "./services/reminderAgentService.js";
 
 const PORT = process.env.PORT || 5000;
 const sessionSecret = process.env.SESSION_SECRET || process.env.JWT_SECRET;
@@ -14,6 +15,7 @@ if (!sessionSecret || sessionSecret.length < 32) {
 connectDB()
   .then(async () => {
     await ensureDefaultHealthcareProviders();
+    startReminderWorker();
     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
   })
   .catch((err) => {

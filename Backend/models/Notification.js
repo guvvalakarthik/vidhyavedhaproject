@@ -9,6 +9,8 @@ const notificationSchema = new mongoose.Schema(
     oldStatus: { type: String, required: true },
     newStatus: { type: String, required: true },
     message: { type: String, required: true },
+    kind: { type: String, enum: ["status", "reminder"], default: "status", index: true },
+    reminderId: { type: String, default: "", index: true },
     read: { type: Boolean, default: false },
   },
   { timestamps: true }

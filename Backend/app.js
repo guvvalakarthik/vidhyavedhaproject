@@ -18,6 +18,7 @@ import aiRoutes from "./routes/aiRoutes.js";
 import companionRoutes from "./routes/companionRoutes.js";
 import readinessRoutes from "./routes/readinessRoutes.js";
 import draftRoutes from "./routes/draftRoutes.js";
+import reminderRoutes from "./routes/reminderRoutes.js";
 import { sanitizePayload } from "./middleware/sanitizePayload.js";
 import { optionalSession, requireCsrf } from "./services/authSessionService.js";
 
@@ -69,6 +70,7 @@ app.use("/api/ai", aiLimiter, aiRoutes);
 app.use("/api/companion", aiLimiter, companionRoutes);
 app.use("/api/readiness", apiLimiter, readinessRoutes);
 app.use("/api/drafts", aiLimiter, draftRoutes);
+app.use("/api/reminders", apiLimiter, reminderRoutes);
 app.use("/api/government", apiLimiter, governmentRoutes);
 app.use("/api/healthcare", apiLimiter, healthcareRoutes);
 app.use("/api/emergency", apiLimiter, emergencyRoutes);
