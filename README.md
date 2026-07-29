@@ -91,6 +91,12 @@ See [Education pathway planning](docs/education-planning.md) for supported offic
 Money and banking now uses verified official handoffs, a browser-only loan-cost calculator and owner-scoped preparation plans instead of collecting generic loan and insurance applications. It covers government credit, education finance, basic bank accounts, banking complaints, insurer checks and insurance grievances while keeping application, KYC, payment and evidence data with the responsible organisation.
 
 See [Financial guidance and preparation plans](docs/financial-guidance.md) for the supported routes, calculator assumptions, API endpoints, data boundary and official references.
+
+## Grounded AI assistant
+
+Signed-in residents can use Ask Vidhya for read-only guidance across government, education, finance, healthcare and roadside services. The assistant retrieves matching entries from the reviewed local catalogue, shows official sources and uses the OpenAI Responses API when a key is configured. Without a key it remains usable in verified catalogue mode.
+
+See [Grounded AI assistant](docs/ai-assistant.md) for architecture, safety boundaries and configuration.
 ## Environment variables
 
 Frontend (`.env`):
@@ -103,7 +109,9 @@ Backend (`Backend/.env`):
 - `SESSION_SECRET`: server-side session secret with at least 32 characters.
 - `SESSION_IDLE_MINUTES`: inactivity timeout, defaulting to `30`.
 - `SESSION_ABSOLUTE_HOURS`: maximum session lifetime, defaulting to `168`.
-- `MAX_SESSIONS_PER_USER`: active device limit, defaulting to `5`.
+- MAX_SESSIONS_PER_USER: active device limit, defaulting to 5.
+- OPENAI_API_KEY: optional API key that enables generated multilingual answers.
+- OPENAI_MODEL: Responses API model, defaulting to gpt-5.6-sol.
 - `PORT`: API port, defaulting to `5000`.
 
 Never commit real credentials or personal service data.

@@ -13,6 +13,7 @@ function Navbar() {
       <div className="shell-container primary-nav__inner">
         <a href="/#services" className="primary-nav__link">Services</a>
         <NavLink to="/dashboard" className={navClass}>My applications</NavLink>
+        {user && <NavLink to="/assistant" className={navClass}>Ask Vidhya</NavLink>}
         <NavLink to="/about" className={navClass}>About</NavLink>
         <NavLink to="/contact" className={navClass}>Help and contact</NavLink>
         {user && <NavLink to="/account/sessions" className={navClass}>Security</NavLink>}
