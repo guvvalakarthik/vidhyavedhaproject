@@ -24,6 +24,7 @@ function Navbar() {
         <NavLink to="/about" className={navClass}>About</NavLink>
         <NavLink to="/contact" className={navClass}>Help and contact</NavLink>
         {user && <NavLink to="/account/sessions" className={navClass}>Security</NavLink>}
+        {["provider","admin"].includes(user?.role) && <NavLink to="/provider/operations" className={navClass}>Operations</NavLink>}
         {user?.role === "admin" && <NavLink to="/admin" className={navClass}>Administration</NavLink>}
       </div>
     </nav>

@@ -170,3 +170,7 @@ Residents can request consent-based phone or centre guidance from the reviewed a
 Owner-only PDF and image uploads are encrypted with AES-256-GCM before local storage. Upload/download requires explicit consent; revocation destroys ciphertext. Set DOCUMENT_ENCRYPTION_KEY to a base64-encoded 32-byte key.
 
 See [`docs/encrypted-document-vault.md`](docs/encrypted-document-vault.md).
+
+## Provider operations
+
+Provider and admin roles receive a redacted, read-only dashboard for healthcare, roadside, home-service, and assisted-handoff operations. See [the dashboard notes](docs/provider-operations-dashboard.md).

@@ -22,6 +22,7 @@ import reminderRoutes from "./routes/reminderRoutes.js";
 import statusTrackerRoutes from "./routes/statusTrackerRoutes.js";
 import handoffRoutes from "./routes/handoffRoutes.js";
 import documentVaultRoutes from "./routes/documentVaultRoutes.js";
+import providerOperationsRoutes from "./routes/providerOperationsRoutes.js";
 import { sanitizePayload } from "./middleware/sanitizePayload.js";
 import { optionalSession, requireCsrf } from "./services/authSessionService.js";
 
@@ -77,6 +78,7 @@ app.use("/api/reminders", apiLimiter, reminderRoutes);
 app.use("/api/status-trackers", apiLimiter, statusTrackerRoutes);
 app.use("/api/handoffs", apiLimiter, handoffRoutes);
 app.use("/api/vault", apiLimiter, documentVaultRoutes);
+app.use("/api/provider-operations", apiLimiter, providerOperationsRoutes);
 app.use("/api/government", apiLimiter, governmentRoutes);
 app.use("/api/healthcare", apiLimiter, healthcareRoutes);
 app.use("/api/emergency", apiLimiter, emergencyRoutes);
