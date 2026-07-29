@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import HealthcareAppointment from "../models/HealthcareAppointment.js";
 import EmergencyRequest from "../models/EmergencyRequest.js";
 import HomeServiceBooking from "../models/HomeServiceBooking.js";
@@ -13,10 +14,10 @@ export const operationalRecord = (kind, item) => {
 export const getProviderOperations = async () => {
   const now = new Date();
   const [healthcare, emergency, home, handoffs, healthcareCounts, emergencyCounts, homeCounts, handoffCounts] = await Promise.all([
-    HealthcareAppointment.find({ status: "booked", startTime: { $gte: now } }).sort({ startTime: 1 }).limit(20),
-    EmergencyRequest.find({ status: { $in: ["requested", "assigned", "en-route", "arrived"] } }).sort({ priority: -1, createdAt: 1 }).limit(20),
-    HomeServiceBooking.find({ status: "booked", startTime: { $gte: now } }).sort({ startTime: 1 }).limit(20),
-    HandoffRequest.find({ status: { $in: ["requested", "assigned", "contacted"] } }).sort({ createdAt: 1 }).limit(20),
+    HealthcareAppointment.find({ status: "booked", startTime: mongoose.trusted({ $gte: now }) }).sort({ startTime: 1 }).limit(20),
+    EmergencyRequest.find({ status: mongoose.trusted({ $in: ["requested", "assigned", "en-route", "arrived"] }) }).sort({ priority: -1, createdAt: 1 }).limit(20),
+    HomeServiceBooking.find({ status: "booked", startTime: mongoose.trusted({ $gte: now }) }).sort({ startTime: 1 }).limit(20),
+    HandoffRequest.find({ status: mongoose.trusted({ $in: ["requested", "assigned", "contacted"] }) }).sort({ createdAt: 1 }).limit(20),
     HealthcareAppointment.aggregate([{ $group: { _id: "$status", count: { $sum: 1 } } }]),
     EmergencyRequest.aggregate([{ $group: { _id: "$status", count: { $sum: 1 } } }]),
     HomeServiceBooking.aggregate([{ $group: { _id: "$status", count: { $sum: 1 } } }]),

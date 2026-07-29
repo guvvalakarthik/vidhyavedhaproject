@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { COMPANION_SERVICES } from "../data/companionServices.js";
 import { DRAFT_TEMPLATES, draftTemplate } from "../data/draftTemplates.js";
 import ReadinessChecklist from "../models/ReadinessChecklist.js";
@@ -32,7 +33,7 @@ const output = (item) => ({
 
 const verifyReadiness = async ({ readinessId, serviceCode, userId }) => {
   if (!readinessId) return null;
-  return ReadinessChecklist.findOne({ checklistId: readinessId, userId, serviceCode, status: { $ne: "archived" } });
+  return ReadinessChecklist.findOne({ checklistId: readinessId, userId, serviceCode, status: mongoose.trusted({ $ne: "archived" }) });
 };
 
 export const listDraftTemplates = (_req, res) => res.json({
@@ -111,7 +112,7 @@ export const archiveDraft = async (req, res) => {
 };
 
 export const downloadDraftPdf = async (req, res) => {
-  const item = await ServiceDraft.findOne({ draftId: req.params.draftId, userId: req.user.userId, status: { $ne: "archived" } });
+  const item = await ServiceDraft.findOne({ draftId: req.params.draftId, userId: req.user.userId, status: mongoose.trusted({ $ne: "archived" }) });
   if (!item) return res.status(404).json({ error: "Active draft not found." });
   const pdf = await renderDraftPdf(item);
   res.set({

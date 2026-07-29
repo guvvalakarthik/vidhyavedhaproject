@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Reminder from "../models/Reminder.js";
 import ReadinessChecklist from "../models/ReadinessChecklist.js";
 import ServiceDraft from "../models/ServiceDraft.js";
@@ -53,8 +54,10 @@ export const evaluateReminder = async (reminder, now = new Date()) => {
   return { outcome: "notified", reminder };
 };
 
+export const dueReminderFilter = (now, userId = null) => ({ status: "active", nextRunAt: mongoose.trusted({ $lte: now }), ...(userId ? { userId } : {}) });
+
 export const runDueReminders = async (now = new Date(), userId = null) => {
-  const filter = { status: "active", nextRunAt: { $lte: now }, ...(userId ? { userId } : {}) };
+  const filter = dueReminderFilter(now, userId);
   const reminders = await Reminder.find(filter).sort({ nextRunAt: 1 }).limit(100);
   const outcomes = [];
   for (const reminder of reminders) outcomes.push(await evaluateReminder(reminder, now));
