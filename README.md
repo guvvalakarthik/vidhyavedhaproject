@@ -146,3 +146,8 @@ Backend (`Backend/.env`):
 - `PORT`: API port, defaulting to `5000`.
 
 Never commit real credentials or personal service data.
+## Service drafts and PDF
+
+Authenticated residents can turn their own facts into application, complaint, service-request, or follow-up drafts, review a clearly marked preview, lock the reviewed version, and download an A4 PDF. Drafts are never submitted automatically, work without an AI key through reviewed templates, and can optionally use structured OpenAI rewriting.
+
+See [`docs/service-drafts-and-pdf.md`](docs/service-drafts-and-pdf.md).
