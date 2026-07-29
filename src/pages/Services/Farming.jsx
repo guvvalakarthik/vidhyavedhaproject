@@ -1,264 +1,149 @@
-import React, { useState } from "react";
-import "./Farming.css";
+import React, { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext.jsx";
 import api from "../../services/api.js";
+import "./Farming.css";
 
-const services = [
-  {
-    id: 1,
-    title: "Soil Testing",
-    inputs: [
-      "Location",
-      "Type of Crop",
-      "Soil Sample ID",
-      "Preferred Testing Date",
-    ],
-    updates: [
-      {
-        update: "New testing lab opened",
-        date: "2024-06-15",
-        details: "A new testing lab has been opened in Kottayam.",
-      },
-      {
-        update: "Discount on bulk tests",
-        date: "2024-05-10",
-        details:
-          "Farmers testing more than 5 samples will receive a 20% discount.",
-      },
-    ],
-  },
-  {
-    id: 2,
-    title: "Fertilizer Distribution",
-    inputs: [
-      "Farmer ID",
-      "Crop Type",
-      "Fertilizer Type",
-      "Quantity Needed",
-      "Preferred Pickup Date",
-    ],
-    updates: [
-      {
-        update: "New stock of organic fertilizers",
-        date: "2024-07-01",
-        details: "Organic fertilizers now available at all centers.",
-      },
-    ],
-  },
-  {
-    id: 3,
-    title: "Irrigation Support",
-    inputs: ["Location", "Type of Irrigation", "Land Area", "Water Source"],
-    updates: [
-      {
-        update: "Drip irrigation subsidy launched",
-        date: "2024-06-10",
-        details: "Apply now for 40% government subsidy on drip systems.",
-      },
-    ],
-  },
-  {
-    id: 4,
-    title: "Pest Advisory",
-    inputs: [
-      "Crop Type",
-      "Symptoms Observed",
-      "Photo Upload",
-      "Preferred Contact Method",
-    ],
-    updates: [
-      {
-        update: "New pest alert for rice",
-        date: "2024-07-05",
-        details: "Brown Plant Hopper infestation in southern zones.",
-      },
-    ],
-  },
-  {
-    id: 5,
-    title: "Crop Insurance",
-    inputs: [
-      "Farmer ID",
-      "Crop Type",
-      "Insurance Plan",
-      "Acreage",
-      "Contact Number",
-    ],
-    updates: [
-      {
-        update: "Kharif insurance open",
-        date: "2024-06-20",
-        details: "Enrollment for Kharif 2024 is now open until July 31.",
-      },
-    ],
-  },
-  {
-    id: 6,
-    title: "Market Price Info",
-    inputs: ["Crop Name", "District", "Preferred Market", "Mobile Number"],
-    updates: [
-      {
-        update: "Live mandi prices",
-        date: "2024-07-10",
-        details: "You can now track mandi prices for 20+ crops in real time.",
-      },
-    ],
-  },
-  {
-    id: 7,
-    title: "Tractor & Equipment Rental",
-    inputs: ["Location", "Tractor Type", "Rental Hours", "License Number"],
-    updates: [
-      {
-        update: "New tractors added",
-        date: "2024-07-15",
-        details: "50+ new tractors added to the rental pool.",
-      },
-    ],
-  },
-  {
-    id: 8,
-    title: "Cold Storage Booking",
-    inputs: [
-      "Farmer ID",
-      "Product to Store",
-      "Storage Duration",
-      "Preferred Location",
-    ],
-    updates: [
-      {
-        update: "Cold storage available in Alappuzha",
-        date: "2024-07-08",
-        details: "Book early due to high demand.",
-      },
-    ],
-  },
-  {
-    id: 9,
-    title: "Seed Distribution",
-    inputs: ["Farmer Name", "Seed Type", "Quantity", "Collection Date"],
-    updates: [
-      {
-        update: "New high-yield variety",
-        date: "2024-06-25",
-        details: "Try our new HYV rice seeds for better output.",
-      },
-    ],
-  },
-];
+const seasonLabels = { kharif: "Kharif", rabi: "Rabi", zaid: "Zaid", perennial: "Perennial / year-round", exploring: "Still exploring" };
 
 function Farming() {
-  const [activeService, setActiveService] = useState(null);
-  const [expanded, setExpanded] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const { user } = useAuth();
+  const [pathways, setPathways] = useState([]);
+  const [plans, setPlans] = useState([]);
+  const [selectedCode, setSelectedCode] = useState("");
+  const [view, setView] = useState("explore");
+  const [query, setQuery] = useState("");
+  const [crop, setCrop] = useState("");
+  const [district, setDistrict] = useState("");
+  const [season, setSeason] = useState("exploring");
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [archiveTarget, setArchiveTarget] = useState("");
+  const [notice, setNotice] = useState("");
+  const [error, setError] = useState("");
 
-  const toggleForm = (id) => {
-    setActiveService(activeService === id ? null : id);
-    setExpanded(null);
-  };
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const requests = [api.get("/farming/pathways")];
+        if (user) requests.push(api.get("/farming/plans/mine"));
+        const [pathwayResponse, planResponse] = await Promise.all(requests);
+        setPathways(pathwayResponse.data.pathways);
+        setSelectedCode(pathwayResponse.data.pathways[0]?.pathwayCode || "");
+        setPlans(planResponse?.data?.plans || []);
+      } catch (requestError) {
+        setError(requestError.response?.data?.error || "Farming guidance could not be loaded.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, [user]);
 
-  const toggleUpdate = (index) => {
-    setExpanded(expanded === index ? null : index);
-  };
+  const selected = pathways.find(({ pathwayCode }) => pathwayCode === selectedCode);
+  const filtered = useMemo(() => {
+    const text = query.trim().toLowerCase();
+    if (!text) return pathways;
+    return pathways.filter((item) => JSON.stringify(item).toLowerCase().includes(text));
+  }, [pathways, query]);
+  const activePlans = plans.filter(({ status }) => status !== "archived");
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    const formData = new FormData(e.target);
-    const payload = {};
-    formData.forEach((value, key) => {
-      payload[key] = value;
-    });
-    const service = services.find((s) => s.id === activeService);
-    payload.serviceType = service ? service.title : "";
-    payload.name = payload.location || payload.farmer_name || payload.farmer_id || "N/A";
-    payload.phone = payload.contact_number || payload.mobile_number || "N/A";
-
+  const savePlan = async () => {
+    if (!selected) return;
+    setSubmitting(true);
+    setError("");
     try {
-      const { data } = await api.post("/farming/submit", payload);
-      alert(
-        `Request submitted! Application ID: ${data.applicationId}`
-      );
-      e.target.reset();
-      setActiveService(null);
-    } catch (err) {
-      alert(
-        err.response?.data?.error ||
-          "Submission failed. Please try again."
-      );
+      const { data } = await api.post("/farming/plans", { pathwayCode: selected.pathwayCode, crop, district, season });
+      setPlans((current) => [data.plan, ...current]);
+      setNotice(`Saved ${data.plan.planId}. Your checklist is ready.`);
+      setView("plans");
+    } catch (requestError) {
+      setError(requestError.response?.data?.error || "The farming plan could not be saved.");
     } finally {
-      setLoading(false);
+      setSubmitting(false);
+    }
+  };
+
+  const updateTask = async (plan, task, completed) => {
+    setSubmitting(true);
+    try {
+      const { data } = await api.patch(`/farming/plans/${plan.planId}/tasks/${task.taskId}`, { completed });
+      setPlans((current) => current.map((item) => item.planId === data.plan.planId ? data.plan : item));
+    } catch (requestError) {
+      setError(requestError.response?.data?.error || "Plan progress could not be updated.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const archivePlan = async (planId) => {
+    setSubmitting(true);
+    try {
+      const { data } = await api.patch(`/farming/plans/${planId}/archive`);
+      setPlans((current) => current.map((item) => item.planId === planId ? data.plan : item));
+      setArchiveTarget("");
+    } catch (requestError) {
+      setError(requestError.response?.data?.error || "The plan could not be archived.");
+    } finally {
+      setSubmitting(false);
     }
   };
 
   return (
-    <div className="farming-page animated-background">
-      <div className="farming-header">
-        <h2>Farming Services</h2>
-        <p>Select a service to proceed with your request.</p>
+    <main className="farm-page">
+      <header className="farm-hero"><div className="shell-container"><p className="farm-eyebrow">Official agricultural pathways</p><h1>Plan the next farm task, not another generic request</h1><p>Use verified government routes for soil health, crop insurance, market access and PM-KISAN. Save only a practical checklist here; sensitive records stay with the responsible authority.</p></div></header>
+      <div className="farm-tabs shell-container" role="tablist" aria-label="Farming workspace">
+        <button type="button" role="tab" aria-selected={view === "explore"} onClick={() => setView("explore")}>Explore official pathways</button>
+        <button type="button" role="tab" aria-selected={view === "plans"} onClick={() => setView("plans")}>My farming plans {user && activePlans.length ? `(${activePlans.length})` : ""}</button>
       </div>
+      {error && <p className="farm-alert farm-alert--error shell-container" role="alert">{error}</p>}
+      {notice && <p className="farm-alert shell-container" role="status">{notice}</p>}
 
-      <div className="farming-content">
-        {services.map((service) => (
-          <div key={service.id} className="farming-service-wrapper">
-            <div
-              className="farming-service"
-              onClick={() => toggleForm(service.id)}
-            >
-              <h3>
-                {service.id}. {service.title}
-              </h3>
-            </div>
-
-            {activeService === service.id && (
-              <div className="form-with-info">
-                <div className="form-info">
-                  <p>
-                    Fill out the form to request{" "}
-                    <strong>{service.title}</strong>.
-                  </p>
-
-                  <div className="whats-new-section">
-                    <h4>📌 What's New in {service.title}</h4>
-                    {service.updates.map((item, idx) => (
-                      <div key={idx} className="update-item">
-                        <div
-                          className="update-header"
-                          onClick={() => toggleUpdate(idx)}
-                        >
-                          <span>
-                            {item.update} ({item.date})
-                          </span>
-                          <span className="update-toggle-icon">
-                            {expanded === idx ? "×" : "+"}
-                          </span>
-                        </div>
-                        {expanded === idx && (
-                          <div className="update-details">{item.details}</div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
+      {view === "explore" ? (
+        <section className="farm-workspace shell-container">
+          <aside className="farm-directory">
+            <label htmlFor="farm-search">What do you need to do?</label>
+            <input id="farm-search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Soil, insurance, mandi, PM-KISAN..." />
+            {loading ? <p>Loading verified pathways...</p> : filtered.map((pathway) => (
+              <button type="button" className={selectedCode === pathway.pathwayCode ? "is-active" : ""} onClick={() => setSelectedCode(pathway.pathwayCode)} key={pathway.pathwayCode}><span>{pathway.category}</span><strong>{pathway.title}</strong></button>
+            ))}
+          </aside>
+          {selected && (
+            <article className="farm-pathway">
+              <p className="farm-eyebrow">{selected.category}</p><h2>{selected.title}</h2><p className="farm-summary">{selected.summary}</p>
+              <div className="farm-authority"><span>Responsible authority</span><strong>{selected.authority}</strong></div>
+              <div className="farm-boundary"><strong>Important boundary</strong><p>{selected.boundary}</p></div>
+              <h3>Your preparation checklist</h3>
+              <ol className="farm-task-preview">{selected.tasks.map((task) => <li key={task.taskId}><strong>{task.title}</strong><span>{task.description}</span></li>)}</ol>
+              <a className="farm-official-link" href={selected.officialUrl} target="_blank" rel="noreferrer">Open official {selected.authority} route</a>
+              <div className="farm-plan-builder">
+                <h3>Save this as a private action plan</h3><p>Crop and district are optional labels for your own list. Do not enter land-record, Aadhaar, bank or beneficiary numbers.</p>
+                <div className="farm-fields">
+                  <label>Crop label (optional)<input value={crop} onChange={(event) => setCrop(event.target.value)} maxLength={80} placeholder="For example, paddy" /></label>
+                  <label>District label (optional)<input value={district} onChange={(event) => setDistrict(event.target.value)} maxLength={100} placeholder="For example, Kottayam" /></label>
+                  <label>Season<select value={season} onChange={(event) => setSeason(event.target.value)}>{Object.entries(seasonLabels).map(([value, label]) => <option value={value} key={value}>{label}</option>)}</select></label>
                 </div>
-
-                <form onSubmit={handleSubmit} className="farming-form">
-                  <h3>{service.title} Form</h3>
-                  {service.inputs.map((label, index) => (
-                    <label key={index}>
-                      {label}:
-                      <input
-                        name={label.toLowerCase().replace(/ /g, "_")}
-                        required
-                      />
-                    </label>
-                  ))}
-                  <button type="submit">Submit Request</button>
-                </form>
+                {!user ? <div className="farm-signin"><span>Sign in to save and track this checklist.</span><Link to="/login" state={{ from: { pathname: "/services/farming" } }}>Sign in to continue</Link></div> : <button type="button" className="farm-save" onClick={savePlan} disabled={submitting}>{submitting ? "Saving..." : "Save farming action plan"}</button>}
               </div>
-            )}
-          </div>
-        ))}
-      </div>
-    </div>
+            </article>
+          )}
+        </section>
+      ) : (
+        <section className="farm-plans shell-container">
+          <div><p className="farm-eyebrow">Owner-scoped progress</p><h2>My farming plans</h2><p>Check off preparation steps here and complete the real transaction only on the linked authority platform.</p></div>
+          {!user ? <div className="farm-empty"><h3>Sign in to view plans</h3><Link to="/login">Sign in</Link></div> : loading ? <p>Loading plans...</p> : activePlans.length ? activePlans.map((plan) => {
+            const completed = plan.tasks.filter((task) => task.status === "completed").length;
+            const progress = Math.round((completed / plan.tasks.length) * 100);
+            return <article className="farm-plan" key={plan.planId}>
+              <header><div><span>{seasonLabels[plan.season]}</span><h3>{plan.pathwayTitle}</h3><p>{plan.planId}{plan.crop ? ` | ${plan.crop}` : ""}{plan.district ? ` | ${plan.district}` : ""}</p></div><strong>{progress}%</strong></header>
+              <div className="farm-progress"><span style={{ width: `${progress}%` }} /></div>
+              <div className="farm-checklist">{plan.tasks.map((task) => <label className={task.status === "completed" ? "is-complete" : ""} key={task.taskId}><input type="checkbox" checked={task.status === "completed"} disabled={submitting} onChange={(event) => updateTask(plan, task, event.target.checked)} /><span><strong>{task.title}</strong><small>{task.description}</small></span></label>)}</div>
+              <footer><a href={plan.officialUrl} target="_blank" rel="noreferrer">Continue on official portal</a>{archiveTarget === plan.planId ? <div><span>Archive this plan?</span><button type="button" onClick={() => archivePlan(plan.planId)}>Yes, archive</button><button type="button" onClick={() => setArchiveTarget("")}>Keep plan</button></div> : <button type="button" onClick={() => setArchiveTarget(plan.planId)}>Archive</button>}</footer>
+            </article>;
+          }) : <div className="farm-empty"><h3>No active farming plans</h3><button type="button" onClick={() => setView("explore")}>Explore pathways</button></div>}
+        </section>
+      )}
+    </main>
   );
 }
 

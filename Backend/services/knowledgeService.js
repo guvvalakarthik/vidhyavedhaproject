@@ -1,6 +1,8 @@
 import { GOVERNMENT_SERVICE_CATALOG } from "../data/governmentServices.js";
 import { EDUCATION_PATHWAYS } from "../data/educationPathways.js";
 import { FINANCIAL_PATHWAYS } from "../data/financialPathways.js";
+import { FARMING_PATHWAYS } from "../data/farmingPathways.js";
+import { UTILITY_GUIDES } from "../data/utilityGuides.js";
 import { EMERGENCY_SERVICES } from "../data/emergencyServices.js";
 import { DEFAULT_HEALTHCARE_PROVIDERS } from "../data/healthcareProviders.js";
 
@@ -64,7 +66,26 @@ export const KNOWLEDGE_SOURCES = [
     boundary: item.boundary,
     details: [item.category, item.needCodes, item.preparationItems, item.watchFor, item.tasks],
   })),
-  ...EMERGENCY_SERVICES.map((item) => sourceFrom({
+  ...FARMING_PATHWAYS.map((item) => sourceFrom({
+    service: "farming",
+    code: item.pathwayCode,
+    title: item.title,
+    authority: item.authority,
+    officialUrl: item.officialUrl,
+    summary: item.summary,
+    boundary: item.boundary,
+    details: [item.category, item.goalCodes, item.seasons, item.tasks],
+  })),
+  ...UTILITY_GUIDES.map((item) => sourceFrom({
+    service: "utilities",
+    code: item.guideCode,
+    title: item.title,
+    authority: item.authority,
+    officialUrl: item.officialUrl,
+    summary: item.summary,
+    boundary: item.boundary,
+    details: [item.category, item.tasks],
+  })),  ...EMERGENCY_SERVICES.map((item) => sourceFrom({
     service: "emergency",
     code: item.code,
     title: item.name,
@@ -75,7 +96,7 @@ export const KNOWLEDGE_SOURCES = [
   ...DEFAULT_HEALTHCARE_PROVIDERS.map((item) => sourceFrom({
     service: "healthcare",
     code: item.providerCode,
-    title: `${item.name} ? ${item.specialty}`,
+    title: `${item.name} - ${item.specialty}`,
     authority: item.location.name,
     summary: `${item.qualifications}; ${item.experienceYears} years of experience.`,
     boundary: "Provider information supports appointment discovery and is not medical diagnosis or treatment advice.",

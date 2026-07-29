@@ -6,6 +6,8 @@ import {
   EDUCATION_PATHWAY_CODES,
 } from "../data/educationPathways.js";
 import { FINANCIAL_PATHWAY_CODES } from "../data/financialPathways.js";
+import { FARMING_PATHWAY_CODES, FARMING_SEASONS } from "../data/farmingPathways.js";
+import { UTILITY_GUIDE_CODES } from "../data/utilityGuides.js";
 
 export const roles = ["citizen", "provider", "dispatcher", "admin"];
 export const categories = [
@@ -150,15 +152,47 @@ export const financialTaskUpdateSchema = z.object({
   completed: z.boolean(),
 }).strict();
 
+
+export const farmingPathwayParamsSchema = z.object({ pathwayCode: z.enum(FARMING_PATHWAY_CODES) });
+export const farmingPlanParamsSchema = z.object({
+  planId: z.string().trim().regex(/^FRM-[A-Z0-9]{8}$/i).transform((value) => value.toUpperCase()),
+});
+export const farmingPlanTaskParamsSchema = farmingPlanParamsSchema.extend({
+  taskId: z.string().trim().min(3).max(80).regex(/^[a-z0-9-]+$/),
+});
+export const farmingPlanSchema = z.object({
+  pathwayCode: z.enum(FARMING_PATHWAY_CODES),
+  crop: z.string().trim().max(80).optional().default(""),
+  district: z.string().trim().max(100).optional().default(""),
+  season: z.enum(FARMING_SEASONS),
+}).strict();
+export const farmingTaskUpdateSchema = z.object({
+  completed: z.boolean(),
+}).strict();
+export const utilityGuideParamsSchema = z.object({ guideCode: z.enum(UTILITY_GUIDE_CODES) });
+export const utilityIssueParamsSchema = z.object({
+  issueId: z.string().trim().regex(/^UTL-[A-Z0-9]{8}$/i).transform((value) => value.toUpperCase()),
+});
+export const utilityIssueTaskParamsSchema = utilityIssueParamsSchema.extend({
+  taskId: z.string().trim().min(3).max(80).regex(/^[a-z0-9-]+$/),
+});
+export const utilityIssueSchema = z.object({
+  guideCode: z.enum(UTILITY_GUIDE_CODES),
+  providerLabel: z.string().trim().max(80).optional().default(""),
+  referenceLabel: z.string().trim().max(60).optional().default(""),
+  issueDate: dateText,
+}).strict();
+export const utilityTaskUpdateSchema = z.object({ completed: z.boolean() }).strict();
+export const utilityIssueStatusSchema = z.object({ status: z.enum(["tracking", "resolved", "archived"]) }).strict();
 export const aiAskSchema = z.object({
   message: z.string().trim().min(2).max(1200),
-  service: z.enum(["all", "government", "education", "finance", "healthcare", "emergency"]).default("all"),
+  service: z.enum(["all", "government", "education", "finance", "farming", "utilities", "healthcare", "emergency"]).default("all"),
   language: z.enum(["English", "Hindi", "Telugu", "Tamil", "Kannada", "Malayalam", "Marathi"]).default("English"),
 }).strict();
 
 export const aiConversationSchema = z.object({
   title: z.string().trim().min(2).max(100).optional(),
-  service: z.enum(["all", "government", "education", "finance", "healthcare", "emergency"]).default("all"),
+  service: z.enum(["all", "government", "education", "finance", "farming", "utilities", "healthcare", "emergency"]).default("all"),
   language: z.enum(["English", "Hindi", "Telugu", "Tamil", "Kannada", "Malayalam", "Marathi"]).default("English"),
 }).strict();
 
