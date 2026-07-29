@@ -97,6 +97,11 @@ See [Financial guidance and preparation plans](docs/financial-guidance.md) for t
 Farming now provides reviewed official pathways and private, owner-scoped preparation plans instead of generic benefit and market forms. Residents can explore Soil Health Card, PMFBY, e-NAM and PM-KISAN routes, save only optional crop and district labels plus a season, track checklist steps and archive finished plans. Identity, land, beneficiary, bank, claim and payment data stay with the responsible authority.
 
 See [Farming pathway planning](docs/farming-planning.md) for the supported official routes, API endpoints, ownership controls and data boundary.
+## Utility issue guidance
+
+Utilities now replaces generic bill-payment, net-banking and recharge forms with reviewed electricity, telecom, LPG and consumer complaint routes. Signed-in residents can create an owner-scoped tracker using only safe labels, complete escalation steps, mark the issue resolved and archive it without sharing full account numbers, payments, passwords, PINs or OTPs.
+
+See [Utility issue guidance and tracking](docs/utility-issue-tracking.md) for the official-route model, API and data boundary.
 ## Grounded AI assistant
 
 Signed-in residents can use Ask Vidhya for grounded guidance across government, education, finance, healthcare and roadside services. The assistant retrieves matching entries from the reviewed local catalogue, shows official sources and uses the OpenAI Responses API when a key is configured. Without a key it remains usable in verified catalogue mode. Owner-scoped conversation history preserves context across secure sessions, tightly scoped plan-task actions require explicit approval, and supported browsers offer multilingual speech input and answer playback.
