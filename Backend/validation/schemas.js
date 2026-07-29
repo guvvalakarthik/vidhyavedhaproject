@@ -10,7 +10,8 @@ import { FARMING_PATHWAY_CODES, FARMING_SEASONS } from "../data/farmingPathways.
 import { UTILITY_GUIDE_CODES } from "../data/utilityGuides.js";
 import { COMMERCE_GUIDE_CODES, COMMERCE_OUTCOMES } from "../data/commerceGuides.js";
 import { HOME_PROVIDER_CODES } from "../data/homeServiceProviders.js";
-import { COMPANION_DOMAINS, COMPANION_GOALS, COMPANION_LANGUAGES, COMPANION_LIFE_STAGES, COMPANION_URGENCY } from "../data/companionServices.js";
+import { COMPANION_DOMAINS, COMPANION_GOALS, COMPANION_LANGUAGES, COMPANION_LIFE_STAGES, COMPANION_SERVICE_CODES, COMPANION_URGENCY } from "../data/companionServices.js";
+import { READINESS_ITEM_STATUSES } from "../data/readinessTemplates.js";
 
 export const roles = ["citizen", "provider", "dispatcher", "admin"];
 export const categories = [
@@ -200,6 +201,10 @@ export const companionAssessmentSchema = z.object({
   goal: z.enum(COMPANION_GOALS), domain: z.enum(COMPANION_DOMAINS), lifeStage: z.enum(COMPANION_LIFE_STAGES), urgency: z.enum(COMPANION_URGENCY), language: z.enum(COMPANION_LANGUAGES),
   district: z.string().trim().max(100).optional().default(""), description: z.string().trim().max(500).optional().default(""),
 }).strict();
+export const readinessChecklistParamsSchema = z.object({ checklistId: z.string().trim().regex(/^RDY-[A-Z0-9]{8}$/i).transform((value) => value.toUpperCase()) });
+export const readinessItemParamsSchema = readinessChecklistParamsSchema.extend({ itemId: z.string().trim().min(3).max(80).regex(/^[a-z0-9-]+$/) });
+export const readinessChecklistSchema = z.object({ serviceCode: z.enum(COMPANION_SERVICE_CODES), assessmentId: z.string().trim().regex(/^CMP-[A-Z0-9]{8}$/i).optional().default("") }).strict();
+export const readinessItemUpdateSchema = z.object({ status: z.enum(READINESS_ITEM_STATUSES) }).strict();
 export const aiAskSchema = z.object({
   message: z.string().trim().min(2).max(1200),
   service: z.enum(["all", "government", "education", "finance", "farming", "utilities", "ecommerce", "home-maintenance", "healthcare", "emergency"]).default("all"),

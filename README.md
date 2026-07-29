@@ -117,6 +117,11 @@ See [Home Maintenance booking](docs/home-maintenance-booking.md) for scheduling 
 Signed-in residents can now start with a goal, topic, life stage and urgency instead of guessing a department. The Companion ranks only the nine reviewed task-specific journeys, explains why each one fits, preserves service boundaries and saves owner-scoped guidance history. It works in reviewed rule-based mode without an API key and uses strict OpenAI structured output only to refine reviewed candidates when a key is configured.
 
 See [AI-guided service selection](docs/digital-companion-selection.md) for the intake boundary, recommendation modes, API and safety controls.
+## Personalized document readiness
+
+Residents can create preparation checklists for every service journey, optionally personalized from a Digital Companion assessment. The app records only whether common, conditional or helpful items are ready; it does not upload documents or represent checklist items as official requirements.
+
+See [Personalized document readiness](docs/document-readiness.md) for coverage, personalization, privacy boundaries, lifecycle and API routes.
 ## Grounded AI assistant
 
 Signed-in residents can use Ask Vidhya for grounded guidance across government, education, finance, healthcare and roadside services. The assistant retrieves matching entries from the reviewed local catalogue, shows official sources and uses the OpenAI Responses API when a key is configured. Without a key it remains usable in verified catalogue mode. Owner-scoped conversation history preserves context across secure sessions, tightly scoped plan-task actions require explicit approval, and supported browsers offer multilingual speech input and answer playback.
