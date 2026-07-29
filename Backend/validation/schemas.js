@@ -12,6 +12,7 @@ import { COMMERCE_GUIDE_CODES, COMMERCE_OUTCOMES } from "../data/commerceGuides.
 import { HOME_PROVIDER_CODES } from "../data/homeServiceProviders.js";
 import { COMPANION_DOMAINS, COMPANION_GOALS, COMPANION_LANGUAGES, COMPANION_LIFE_STAGES, COMPANION_SERVICE_CODES, COMPANION_URGENCY } from "../data/companionServices.js";
 import { READINESS_ITEM_STATUSES } from "../data/readinessTemplates.js";
+import { DRAFT_TYPES } from "../data/draftTemplates.js";
 
 export const roles = ["citizen", "provider", "dispatcher", "admin"];
 export const categories = [
@@ -205,6 +206,21 @@ export const readinessChecklistParamsSchema = z.object({ checklistId: z.string()
 export const readinessItemParamsSchema = readinessChecklistParamsSchema.extend({ itemId: z.string().trim().min(3).max(80).regex(/^[a-z0-9-]+$/) });
 export const readinessChecklistSchema = z.object({ serviceCode: z.enum(COMPANION_SERVICE_CODES), assessmentId: z.string().trim().regex(/^CMP-[A-Z0-9]{8}$/i).optional().default("") }).strict();
 export const readinessItemUpdateSchema = z.object({ status: z.enum(READINESS_ITEM_STATUSES) }).strict();
+export const draftIdParamsSchema = z.object({
+  draftId: z.string().trim().regex(/^DRF-[A-Z0-9]{8}$/i).transform((value) => value.toUpperCase()),
+});
+export const serviceDraftSchema = z.object({
+  serviceCode: z.enum(COMPANION_SERVICE_CODES), draftType: z.enum(DRAFT_TYPES),
+  readinessId: z.union([z.string().trim().regex(/^RDY-[A-Z0-9]{8}$/i), z.literal("")]).default(""),
+  recipient: z.string().trim().max(160).optional().default(""),
+  subject: z.string().trim().min(4).max(180),
+  facts: z.string().trim().min(20).max(1800),
+  chronology: z.string().trim().max(1200).optional().default(""),
+  requestedOutcome: z.string().trim().min(10).max(800),
+  referenceLabel: z.string().trim().max(100).optional().default(""),
+  signerName: z.string().trim().max(120).optional().default(""),
+  privacyAcknowledged: z.literal(true),
+}).strict().transform(({ privacyAcknowledged: _privacyAcknowledged, ...draft }) => draft);
 export const aiAskSchema = z.object({
   message: z.string().trim().min(2).max(1200),
   service: z.enum(["all", "government", "education", "finance", "farming", "utilities", "ecommerce", "home-maintenance", "healthcare", "emergency"]).default("all"),

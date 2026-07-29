@@ -28,6 +28,7 @@ import SessionManagement from "./pages/SessionManagement.jsx";
 import Assistant from "./pages/Assistant.jsx";
 const Companion = lazy(() => import("./pages/Companion.jsx"));
 const Readiness = lazy(() => import("./pages/Readiness.jsx"));
+const Drafts = lazy(() => import("./pages/Drafts.jsx"));
 
 const authenticated = (element) => <ProtectedRoute>{element}</ProtectedRoute>;
 const adminOnly = (element) => <ProtectedRoute roles={["admin"]}>{element}</ProtectedRoute>;
@@ -61,6 +62,7 @@ function App() {
             <Route path="/assistant" element={authenticated(<Assistant />)} />
             <Route path="/companion" element={authenticated(<Suspense fallback={<p>Loading digital companion...</p>}><Companion /></Suspense>)} />
             <Route path="/readiness" element={authenticated(<Suspense fallback={<p>Loading readiness checklists...</p>}><Readiness /></Suspense>)} />
+            <Route path="/drafts" element={authenticated(<Suspense fallback={<p>Loading draft workspace...</p>}><Drafts /></Suspense>)} />
             <Route path="/admin" element={adminOnly(<AdminPanel />)} />
             <Route path="/analytics" element={adminOnly(<Analytics />)} />
           </Routes>
