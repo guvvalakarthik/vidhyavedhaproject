@@ -174,3 +174,7 @@ See [`docs/encrypted-document-vault.md`](docs/encrypted-document-vault.md).
 ## Provider operations
 
 Provider and admin roles receive a redacted, read-only dashboard for healthcare, roadside, home-service, and assisted-handoff operations. See [the dashboard notes](docs/provider-operations-dashboard.md).
+
+## Privacy-safe blocker analytics
+
+Residents report structured friction without free text or stored user IDs. Raw signals expire after 180 days and admin reports suppress groups below three events. See [the privacy design](docs/privacy-safe-blocker-analytics.md).

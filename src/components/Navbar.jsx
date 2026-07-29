@@ -20,11 +20,13 @@ function Navbar() {
         {user && <NavLink to="/tracking" className={navClass}>Status</NavLink>}
         {user && <NavLink to="/assistance" className={navClass}>Human help</NavLink>}
         {user && <NavLink to="/vault" className={navClass}>Document vault</NavLink>}
+        {user && <NavLink to="/report-blocker" className={navClass}>Report a blocker</NavLink>}
         {user && <NavLink to="/assistant" className={navClass}>Ask Vidhya</NavLink>}
         <NavLink to="/about" className={navClass}>About</NavLink>
         <NavLink to="/contact" className={navClass}>Help and contact</NavLink>
         {user && <NavLink to="/account/sessions" className={navClass}>Security</NavLink>}
         {["provider","admin"].includes(user?.role) && <NavLink to="/provider/operations" className={navClass}>Operations</NavLink>}
+        {user?.role === "admin" && <NavLink to="/analytics/blockers" className={navClass}>Blocker analytics</NavLink>}
         {user?.role === "admin" && <NavLink to="/admin" className={navClass}>Administration</NavLink>}
       </div>
     </nav>

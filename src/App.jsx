@@ -34,6 +34,8 @@ const StatusTracking = lazy(() => import("./pages/StatusTracking.jsx"));
 const AssistedHandoff = lazy(() => import("./pages/AssistedHandoff.jsx"));
 const DocumentVault = lazy(() => import("./pages/DocumentVault.jsx"));
 const ProviderOperations = lazy(() => import("./pages/ProviderOperations.jsx"));
+const ReportBlocker = lazy(() => import("./pages/ReportBlocker.jsx"));
+const BlockerAnalytics = lazy(() => import("./pages/BlockerAnalytics.jsx"));
 
 const authenticated = (element) => <ProtectedRoute>{element}</ProtectedRoute>;
 const adminOnly = (element) => <ProtectedRoute roles={["admin"]}>{element}</ProtectedRoute>;
@@ -73,6 +75,8 @@ function App() {
             <Route path="/assistance" element={authenticated(<Suspense fallback={<p>Loading assistance...</p>}><AssistedHandoff /></Suspense>)} />
             <Route path="/vault" element={authenticated(<Suspense fallback={<p>Loading document vault...</p>}><DocumentVault /></Suspense>)} />
             <Route path="/provider/operations" element={<ProtectedRoute roles={["provider","admin"]}><Suspense fallback={<p>Loading provider operations...</p>}><ProviderOperations /></Suspense></ProtectedRoute>} />
+            <Route path="/report-blocker" element={authenticated(<Suspense fallback={<p>Loading feedback...</p>}><ReportBlocker /></Suspense>)} />
+            <Route path="/analytics/blockers" element={adminOnly(<Suspense fallback={<p>Loading blocker analytics...</p>}><BlockerAnalytics /></Suspense>)} />
             <Route path="/admin" element={adminOnly(<AdminPanel />)} />
             <Route path="/analytics" element={adminOnly(<Analytics />)} />
           </Routes>
