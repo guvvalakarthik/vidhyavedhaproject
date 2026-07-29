@@ -17,6 +17,7 @@ function Navbar() {
         {user && <NavLink to="/readiness" className={navClass}>Readiness</NavLink>}
         {user && <NavLink to="/drafts" className={navClass}>Drafts</NavLink>}
         {user && <NavLink to="/reminders" className={navClass}>Reminders</NavLink>}
+        {user && <NavLink to="/tracking" className={navClass}>Status</NavLink>}
         {user && <NavLink to="/assistant" className={navClass}>Ask Vidhya</NavLink>}
         <NavLink to="/about" className={navClass}>About</NavLink>
         <NavLink to="/contact" className={navClass}>Help and contact</NavLink>
