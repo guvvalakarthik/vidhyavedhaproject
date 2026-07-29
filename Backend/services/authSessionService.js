@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { createHash, createHmac, randomBytes, timingSafeEqual } from "node:crypto";
 import AuthSession from "../models/AuthSession.js";
 
@@ -65,11 +66,11 @@ export const createAuthSession = async ({ user, req, res }) => {
   const overflow = await AuthSession.find({
     userId: user._id,
     revokedAt: null,
-    _id: { $ne: session._id },
+    _id: mongoose.trusted({ $ne: session._id }),
   }).sort({ lastSeenAt: -1 }).skip(Math.max(0, maxSessionsPerUser - 1)).select("_id");
   if (overflow.length) {
     await AuthSession.updateMany(
-      { _id: { $in: overflow.map(({ _id }) => _id) } },
+      { _id: mongoose.trusted({ $in: overflow.map(({ _id }) => _id) }) },
       { $set: { revokedAt: now } },
     );
   }
@@ -100,8 +101,8 @@ export const optionalSession = async (req, res, next) => {
     const session = await AuthSession.findOne({
       tokenHash: sha256(rawToken),
       revokedAt: null,
-      expiresAt: { $gt: now },
-      idleExpiresAt: { $gt: now },
+      expiresAt: mongoose.trusted({ $gt: now }),
+      idleExpiresAt: mongoose.trusted({ $gt: now }),
     }).populate("userId");
 
     if (!session?.userId) {

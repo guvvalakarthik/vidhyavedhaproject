@@ -67,7 +67,7 @@ export const listSessions = async (req, res) => {
   const sessions = await AuthSession.find({
     userId: req.user.userId,
     revokedAt: null,
-    expiresAt: { $gt: new Date() },
+    expiresAt: mongoose.trusted({ $gt: new Date() }),
   }).sort({ lastSeenAt: -1 });
   return res.json({
     sessions: sessions.map((session) => publicSession(session, req.authSession._id)),
@@ -93,7 +93,7 @@ export const revokeSessionById = async (req, res) => {
 export const revokeOtherSessions = async (req, res) => {
   await AuthSession.updateMany({
     userId: req.user.userId,
-    _id: { $ne: req.authSession._id },
+    _id: mongoose.trusted({ $ne: req.authSession._id }),
     revokedAt: null,
   }, { $set: { revokedAt: new Date() } });
   return res.json({ message: "Other sessions signed out." });
