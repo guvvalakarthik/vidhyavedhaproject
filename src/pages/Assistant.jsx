@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import api from "../services/api.js";
 import "./Assistant.css";
 
@@ -11,19 +11,70 @@ const services = [
   ["emergency", "Roadside assistance"],
 ];
 const languages = ["English", "Hindi", "Telugu", "Tamil", "Kannada", "Malayalam", "Marathi"];
+const welcomeMessage = {
+  messageId: "welcome",
+  role: "assistant",
+  content: "Tell me what you need help with. I will use Vidhya Vedha's trusted service catalogue and show the official sources behind the answer.",
+  citations: [],
+};
 
 function Assistant() {
   const [service, setService] = useState("all");
   const [language, setLanguage] = useState("English");
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState([{
-    id: "welcome",
-    role: "assistant",
-    text: "Tell me what you need help with. I will use Vidhya Vedha?s trusted service catalogue and show the official sources behind the answer.",
-    citations: [],
-  }]);
+  const [messages, setMessages] = useState([welcomeMessage]);
+  const [conversations, setConversations] = useState([]);
+  const [conversation, setConversation] = useState(null);
+  const [loadingHistory, setLoadingHistory] = useState(true);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
+
+  const openConversation = useCallback(async (conversationId) => {
+    setLoadingHistory(true);
+    setError("");
+    try {
+      const { data } = await api.get(`/ai/conversations/${conversationId}`);
+      setConversation(data.conversation);
+      setService(data.conversation.service);
+      setLanguage(data.conversation.language);
+      setMessages(data.messages.length ? data.messages : [welcomeMessage]);
+    } catch (requestError) {
+      setError(requestError.response?.data?.error || "Could not open that conversation.");
+    } finally {
+      setLoadingHistory(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const { data } = await api.get("/ai/conversations");
+        setConversations(data.conversations);
+        if (data.conversations[0]) await openConversation(data.conversations[0].conversationId);
+        else setLoadingHistory(false);
+      } catch (requestError) {
+        setError(requestError.response?.data?.error || "Could not load conversation history.");
+        setLoadingHistory(false);
+      }
+    };
+    load();
+  }, [openConversation]);
+
+  const startNew = () => {
+    setConversation(null);
+    setMessages([welcomeMessage]);
+    setMessage("");
+    setService("all");
+    setLanguage("English");
+    setError("");
+  };
+
+  const upsertConversation = (nextConversation) => {
+    setConversations((current) => [
+      nextConversation,
+      ...current.filter(({ conversationId }) => conversationId !== nextConversation.conversationId),
+    ]);
+  };
 
   const submit = async (event) => {
     event.preventDefault();
@@ -32,20 +83,51 @@ function Assistant() {
     setMessage("");
     setError("");
     setSending(true);
-    setMessages((current) => [...current, { id: `user-${Date.now()}`, role: "user", text: question, citations: [] }]);
+    const optimisticId = `user-${Date.now()}`;
+    setMessages((current) => [...current.filter(({ messageId }) => messageId !== "welcome"), {
+      messageId: optimisticId,
+      role: "user",
+      content: question,
+      citations: [],
+    }]);
+
     try {
-      const { data } = await api.post("/ai/ask", { message: question, service, language });
-      setMessages((current) => [...current, {
-        id: `assistant-${Date.now()}`,
-        role: "assistant",
-        text: data.answer,
-        citations: data.citations || [],
-        mode: data.mode,
-      }]);
+      let activeConversation = conversation;
+      if (!activeConversation) {
+        const { data } = await api.post("/ai/conversations", { service, language });
+        activeConversation = data.conversation;
+        setConversation(activeConversation);
+        upsertConversation(activeConversation);
+      }
+      const { data } = await api.post(
+        `/ai/conversations/${activeConversation.conversationId}/messages`,
+        { message: question },
+      );
+      setConversation(data.conversation);
+      upsertConversation(data.conversation);
+      setMessages((current) => [
+        ...current.filter(({ messageId }) => messageId !== optimisticId),
+        data.userMessage,
+        data.assistantMessage,
+      ]);
     } catch (requestError) {
+      setMessages((current) => current.filter(({ messageId }) => messageId !== optimisticId));
       setError(requestError.response?.data?.error || "The assistant could not answer right now. Please try again.");
     } finally {
       setSending(false);
+    }
+  };
+
+  const removeConversation = async () => {
+    if (!conversation || !window.confirm("Delete this conversation and all of its messages?")) return;
+    try {
+      await api.delete(`/ai/conversations/${conversation.conversationId}`);
+      const remaining = conversations.filter(({ conversationId }) => conversationId !== conversation.conversationId);
+      setConversations(remaining);
+      if (remaining[0]) await openConversation(remaining[0].conversationId);
+      else startNew();
+    } catch (requestError) {
+      setError(requestError.response?.data?.error || "Could not delete this conversation.");
     }
   };
 
@@ -57,41 +139,63 @@ function Assistant() {
           <h1>Ask Vidhya</h1>
           <p>Plain-language help grounded in the official service routes already reviewed for this platform.</p>
         </div>
-        <div className="assistant-hero__badge"><span aria-hidden="true">?</span> Sources shown with every answer</div>
+        <div className="assistant-hero__badge"><span aria-hidden="true">&#10003;</span> Sources shown with every answer</div>
       </header>
 
       <div className="assistant-layout shell-container">
-        <aside className="assistant-controls" aria-label="Assistant preferences">
-          <label htmlFor="assistant-service">Service area</label>
-          <select id="assistant-service" value={service} onChange={(event) => setService(event.target.value)}>
-            {services.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
-          </select>
-          <label htmlFor="assistant-language">Answer language</label>
-          <select id="assistant-language" value={language} onChange={(event) => setLanguage(event.target.value)}>
-            {languages.map((item) => <option key={item}>{item}</option>)}
-          </select>
-          <div className="assistant-controls__boundary">
-            <strong>What this assistant will not do</strong>
-            <p>It will not diagnose illness, approve credit, decide emergency priority, or ask for passwords, OTPs, identity numbers, or document uploads.</p>
-          </div>
-        </aside>
+        <div className="assistant-rail">
+          <aside className="assistant-history" aria-label="Conversation history">
+            <div className="assistant-history__heading">
+              <strong>Conversations</strong>
+              <button type="button" onClick={startNew}>New</button>
+            </div>
+            {conversations.length ? (
+              <div className="assistant-history__list">
+                {conversations.map((item) => (
+                  <button
+                    type="button"
+                    className={item.conversationId === conversation?.conversationId ? "is-active" : ""}
+                    onClick={() => openConversation(item.conversationId)}
+                    key={item.conversationId}
+                  >
+                    <span>{item.title}</span>
+                    <small>{item.language}</small>
+                  </button>
+                ))}
+              </div>
+            ) : <p>No saved conversations yet.</p>}
+          </aside>
+          <aside className="assistant-controls" aria-label="Assistant preferences">
+            <label htmlFor="assistant-service">Service area</label>
+            <select id="assistant-service" value={service} onChange={(event) => setService(event.target.value)} disabled={Boolean(conversation)}>
+              {services.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+            </select>
+            <label htmlFor="assistant-language">Answer language</label>
+            <select id="assistant-language" value={language} onChange={(event) => setLanguage(event.target.value)} disabled={Boolean(conversation)}>
+              {languages.map((item) => <option key={item}>{item}</option>)}
+            </select>
+            {conversation && <button type="button" className="assistant-controls__delete" onClick={removeConversation}>Delete conversation</button>}
+            <div className="assistant-controls__boundary">
+              <strong>What this assistant will not do</strong>
+              <p>It will not diagnose illness, approve credit, decide emergency priority, or ask for passwords, OTPs, identity numbers, or document uploads.</p>
+            </div>
+          </aside>
+        </div>
 
         <div className="assistant-chat">
           <div className="assistant-messages" aria-live="polite">
-            {messages.map((item) => (
-              <article className={`assistant-message assistant-message--${item.role}`} key={item.id}>
+            {loadingHistory ? <p className="assistant-loading">Loading conversation...</p> : messages.map((item) => (
+              <article className={`assistant-message assistant-message--${item.role}`} key={item.messageId}>
                 <span className="assistant-message__role">{item.role === "assistant" ? "Vidhya" : "You"}</span>
-                <p>{item.text}</p>
+                <p>{item.content}</p>
                 {item.mode === "grounded-fallback" && <small className="assistant-message__mode">Verified catalogue mode</small>}
-                {item.citations.length > 0 && (
+                {item.citations?.length > 0 && (
                   <div className="assistant-sources">
                     <strong>Official sources</strong>
                     <ol>
                       {item.citations.map((citation) => (
                         <li key={citation.sourceId}>
-                          {citation.officialUrl ? (
-                            <a href={citation.officialUrl} target="_blank" rel="noreferrer">{citation.title}</a>
-                          ) : citation.title}
+                          {citation.officialUrl ? <a href={citation.officialUrl} target="_blank" rel="noreferrer">{citation.title}</a> : citation.title}
                           <span>{citation.authority}</span>
                         </li>
                       ))}
@@ -100,25 +204,18 @@ function Assistant() {
                 )}
               </article>
             ))}
-            {sending && <div className="assistant-typing" role="status"><span /><span /><span /> Checking trusted guidance?</div>}
+            {sending && <div className="assistant-typing" role="status"><span /><span /><span /> Checking trusted guidance...</div>}
           </div>
           {error && <p className="assistant-error" role="alert">{error}</p>}
           <form className="assistant-composer" onSubmit={submit}>
             <label htmlFor="assistant-message" className="sr-only">Your question</label>
-            <textarea
-              id="assistant-message"
-              value={message}
-              onChange={(event) => setMessage(event.target.value)}
-              placeholder="For example: How do I renew my passport?"
-              maxLength={1200}
-              rows={3}
-            />
+            <textarea id="assistant-message" value={message} onChange={(event) => setMessage(event.target.value)} placeholder="For example: How do I renew my passport?" maxLength={1200} rows={3} />
             <div>
               <small>{message.length}/1200</small>
-              <button type="submit" disabled={sending || message.trim().length < 2}>{sending ? "Checking?" : "Ask Vidhya"}</button>
+              <button type="submit" disabled={sending || message.trim().length < 2}>{sending ? "Checking..." : "Ask Vidhya"}</button>
             </div>
           </form>
-          <p className="assistant-disclaimer">Confirm deadlines, fees, eligibility, and required documents on the linked official website before acting.</p>
+          <p className="assistant-disclaimer">Conversations are private to your account and expire automatically. Confirm changing details on the linked official website.</p>
         </div>
       </div>
     </section>

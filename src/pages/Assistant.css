@@ -45,7 +45,8 @@
   box-shadow: 0 16px 45px rgba(19, 46, 63, 0.07);
 }
 
-.assistant-controls { align-self: start; padding: 22px; }
+.assistant-rail { display: flex; align-self: start; flex-direction: column; gap: 14px; }
+.assistant-controls { padding: 22px; }
 .assistant-controls label { display: block; margin: 0 0 7px; color: #294653; font-size: 0.82rem; font-weight: 800; }
 .assistant-controls select { width: 100%; margin-bottom: 18px; padding: 11px 12px; border: 1px solid #cbd9d5; border-radius: 9px; background: #fff; color: #1d303b; }
 .assistant-controls__boundary { margin-top: 8px; padding: 15px; border-radius: 12px; background: #fff9eb; color: #5d4a17; }
@@ -96,3 +97,17 @@
   .assistant-hero__badge { white-space: normal; }
   .assistant-messages { padding: 16px; }
 }
+.assistant-history { padding: 16px; border: 1px solid #dce7e3; border-radius: 18px; background: #fff; box-shadow: 0 16px 45px rgba(19, 46, 63, 0.07); }
+.assistant-history__heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; color: #203d49; }
+.assistant-history__heading button { border: 0; border-radius: 8px; padding: 7px 10px; background: #e7f5ef; color: #176b4d; cursor: pointer; font-weight: 800; }
+.assistant-history > p { margin: 0; color: #71838b; font-size: 0.82rem; }
+.assistant-history__list { display: flex; max-height: 240px; flex-direction: column; gap: 5px; overflow-y: auto; }
+.assistant-history__list button { width: 100%; border: 0; border-radius: 9px; padding: 10px; background: transparent; color: #314d59; cursor: pointer; text-align: left; }
+.assistant-history__list button:hover,
+.assistant-history__list button.is-active { background: #eaf7f2; color: #0c6548; }
+.assistant-history__list span { display: block; overflow: hidden; font-weight: 750; text-overflow: ellipsis; white-space: nowrap; }
+.assistant-history__list small { color: #788991; }
+.assistant-controls select:disabled { background: #f1f4f3; color: #687b83; }
+.assistant-controls__delete { width: 100%; margin-bottom: 14px; border: 1px solid #d92d20; border-radius: 9px; padding: 9px; background: #fff; color: #b42318; cursor: pointer; font-weight: 800; }
+.assistant-controls__delete:hover { background: #fff1f0; }
+.assistant-loading { color: #657982; }

@@ -155,3 +155,13 @@ export const aiAskSchema = z.object({
   service: z.enum(["all", "government", "education", "finance", "healthcare", "emergency"]).default("all"),
   language: z.enum(["English", "Hindi", "Telugu", "Tamil", "Kannada", "Malayalam", "Marathi"]).default("English"),
 }).strict();
+
+export const aiConversationSchema = z.object({
+  title: z.string().trim().min(2).max(100).optional(),
+  service: z.enum(["all", "government", "education", "finance", "healthcare", "emergency"]).default("all"),
+  language: z.enum(["English", "Hindi", "Telugu", "Tamil", "Kannada", "Malayalam", "Marathi"]).default("English"),
+}).strict();
+
+export const aiMessageSchema = z.object({
+  message: z.string().trim().min(2).max(1200),
+}).strict();
