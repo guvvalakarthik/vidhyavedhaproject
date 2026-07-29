@@ -16,6 +16,7 @@ import { DRAFT_TYPES } from "../data/draftTemplates.js";
 import { REMINDER_CADENCES, REMINDER_SOURCE_TYPES } from "../models/Reminder.js";
 import { STATUS_PROVIDER_CODES } from "../data/statusProviders.js";
 import { ASSISTANCE_CENTRE_CODES } from "../data/assistanceCentres.js";
+import { BLOCKER_REASONS, BLOCKER_ROUTES, BLOCKER_STAGES } from "../data/blockerTaxonomy.js";
 
 export const roles = ["citizen", "provider", "dispatcher", "admin"];
 export const categories = [
@@ -242,6 +243,8 @@ export const handoffSchema=z.object({centreCode:z.enum(ASSISTANCE_CENTRE_CODES),
 export const handoffUpdateSchema=z.object({status:z.enum(["assigned","contacted","resolved","cancelled"]),statusNote:z.string().trim().max(500).optional().default("")}).strict();
 export const vaultDocumentParamsSchema=z.object({documentId:z.string().trim().regex(/^DOC-[A-Z0-9]{8}$/i).transform(v=>v.toUpperCase())});
 export const vaultMetadataSchema=z.object({label:z.string().trim().min(2).max(120),category:z.enum(["identity","address","income","education","health","service-evidence","other"]),consent:z.preprocess(v=>v===true||v==="true",z.literal(true))}).strict().transform(({consent:_consent,...x})=>x);
+export const blockerEventSchema=z.object({serviceCode:z.enum(COMPANION_SERVICE_CODES),stage:z.enum(BLOCKER_STAGES),reason:z.enum(BLOCKER_REASONS),route:z.enum(BLOCKER_ROUTES)}).strict();
+export const blockerReportQuerySchema=z.object({days:z.coerce.number().int().min(1).max(180).default(30)}).strict();
 export const aiAskSchema = z.object({
   message: z.string().trim().min(2).max(1200),
   service: z.enum(["all", "government", "education", "finance", "farming", "utilities", "ecommerce", "home-maintenance", "healthcare", "emergency"]).default("all"),

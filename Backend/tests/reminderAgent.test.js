@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 import Reminder, { REMINDER_CADENCES, REMINDER_SOURCE_TYPES } from "../models/Reminder.js";
 import Notification from "../models/Notification.js";
 import { reminderSchema } from "../validation/schemas.js";
+import mongoose from "mongoose";
+import { dueReminderFilter } from "../services/reminderAgentService.js";
 
 describe("consent-controlled reminder agent", () => {
   it("supports owned task sources and explicit cadences", () => {
@@ -15,6 +17,10 @@ describe("consent-controlled reminder agent", () => {
     expect(parsed.success).toBe(true);
     expect(parsed.data.consent).toBeUndefined();
     expect(reminderSchema.safeParse({ ...input, consent: false }).success).toBe(false);
+  });
+  it("marks the due-date operator as trusted under global filter sanitization", () => {
+    const now = new Date(); const filter = dueReminderFilter(now, "user-1");
+    mongoose.sanitizeFilter(filter); expect(filter.nextRunAt.$lte).toEqual(now);
   });
   it("extends notifications without exposing a delivery channel", () => {
     expect(Notification.schema.path("kind").enumValues).toEqual(["status", "reminder"]);
