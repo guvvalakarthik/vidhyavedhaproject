@@ -112,6 +112,11 @@ See [Commerce consumer-resolution cases](docs/commerce-resolution.md) for the ro
 Home Maintenance now supports demonstration-provider discovery, current slot loading, authenticated booking, owner-only visit history and confirmed cancellation. Active provider slots are protected by a database uniqueness constraint so concurrent users cannot reserve the same visit. The bundled Vidhya Partner records are clearly labelled product fixtures and must be replaced with contracted, verified local providers before production.
 
 See [Home Maintenance booking](docs/home-maintenance-booking.md) for scheduling rules, API routes, collision handling and production requirements.
+## Digital Companion service selection
+
+Signed-in residents can now start with a goal, topic, life stage and urgency instead of guessing a department. The Companion ranks only the nine reviewed task-specific journeys, explains why each one fits, preserves service boundaries and saves owner-scoped guidance history. It works in reviewed rule-based mode without an API key and uses strict OpenAI structured output only to refine reviewed candidates when a key is configured.
+
+See [AI-guided service selection](docs/digital-companion-selection.md) for the intake boundary, recommendation modes, API and safety controls.
 ## Grounded AI assistant
 
 Signed-in residents can use Ask Vidhya for grounded guidance across government, education, finance, healthcare and roadside services. The assistant retrieves matching entries from the reviewed local catalogue, shows official sources and uses the OpenAI Responses API when a key is configured. Without a key it remains usable in verified catalogue mode. Owner-scoped conversation history preserves context across secure sessions, tightly scoped plan-task actions require explicit approval, and supported browsers offer multilingual speech input and answer playback.

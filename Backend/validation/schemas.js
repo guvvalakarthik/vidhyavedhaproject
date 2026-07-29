@@ -10,6 +10,7 @@ import { FARMING_PATHWAY_CODES, FARMING_SEASONS } from "../data/farmingPathways.
 import { UTILITY_GUIDE_CODES } from "../data/utilityGuides.js";
 import { COMMERCE_GUIDE_CODES, COMMERCE_OUTCOMES } from "../data/commerceGuides.js";
 import { HOME_PROVIDER_CODES } from "../data/homeServiceProviders.js";
+import { COMPANION_DOMAINS, COMPANION_GOALS, COMPANION_LANGUAGES, COMPANION_LIFE_STAGES, COMPANION_URGENCY } from "../data/companionServices.js";
 
 export const roles = ["citizen", "provider", "dispatcher", "admin"];
 export const categories = [
@@ -194,6 +195,11 @@ export const commerceTaskUpdateSchema = z.object({ completed: z.boolean() }).str
 export const commerceCaseStatusSchema = z.object({ status: z.enum(["open", "resolved", "archived"]) }).strict();
 export const homeBookingCodeParamsSchema = z.object({ bookingCode: z.string().trim().regex(/^HOM-[A-Z0-9]{8}$/i).transform((value) => value.toUpperCase()) });
 export const homeBookingSchema = z.object({ providerCode: z.enum(HOME_PROVIDER_CODES), startTime: z.string().datetime({ offset: true }), serviceArea: z.string().trim().min(2).max(100), contactPhone: phone, issueSummary: z.string().trim().min(5).max(400) }).strict();
+export const companionAssessmentParamsSchema = z.object({ assessmentId: z.string().trim().regex(/^CMP-[A-Z0-9]{8}$/i).transform((value) => value.toUpperCase()) });
+export const companionAssessmentSchema = z.object({
+  goal: z.enum(COMPANION_GOALS), domain: z.enum(COMPANION_DOMAINS), lifeStage: z.enum(COMPANION_LIFE_STAGES), urgency: z.enum(COMPANION_URGENCY), language: z.enum(COMPANION_LANGUAGES),
+  district: z.string().trim().max(100).optional().default(""), description: z.string().trim().max(500).optional().default(""),
+}).strict();
 export const aiAskSchema = z.object({
   message: z.string().trim().min(2).max(1200),
   service: z.enum(["all", "government", "education", "finance", "farming", "utilities", "ecommerce", "home-maintenance", "healthcare", "emergency"]).default("all"),
