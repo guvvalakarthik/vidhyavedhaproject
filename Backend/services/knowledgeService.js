@@ -4,6 +4,7 @@ import { FINANCIAL_PATHWAYS } from "../data/financialPathways.js";
 import { FARMING_PATHWAYS } from "../data/farmingPathways.js";
 import { UTILITY_GUIDES } from "../data/utilityGuides.js";
 import { COMMERCE_GUIDES } from "../data/commerceGuides.js";
+import { HOME_SERVICE_PROVIDERS } from "../data/homeServiceProviders.js";
 import { EMERGENCY_SERVICES } from "../data/emergencyServices.js";
 import { DEFAULT_HEALTHCARE_PROVIDERS } from "../data/healthcareProviders.js";
 
@@ -90,6 +91,11 @@ export const KNOWLEDGE_SOURCES = [
     service: "ecommerce", code: item.guideCode, title: item.title, authority: item.authority,
     officialUrl: item.officialUrl, summary: item.summary, boundary: item.boundary,
     details: [item.category, item.tasks],
+  })),  ...HOME_SERVICE_PROVIDERS.map((item) => sourceFrom({
+    service: "home-maintenance", code: item.providerCode, title: `${item.service} - ${item.name}`,
+    authority: "Vidhya Vedha demonstration partner catalogue", summary: item.description,
+    boundary: "This is a demonstration provider catalogue and must be replaced with verified local providers before production.",
+    details: [item.serviceAreas, item.slotHours, item.workingDays],
   })),  ...EMERGENCY_SERVICES.map((item) => sourceFrom({
     service: "emergency",
     code: item.code,

@@ -10,6 +10,7 @@ const services = [
   ["farming", "Farming"],
   ["utilities", "Utilities"],
   ["ecommerce", "Ecommerce"],
+  ["home-maintenance", "Home maintenance"],
   ["healthcare", "Healthcare"],
   ["emergency", "Roadside assistance"],
 ];

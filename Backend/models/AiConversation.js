@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-export const AI_SERVICES = ["all", "government", "education", "finance", "farming", "utilities", "ecommerce", "healthcare", "emergency"];
+export const AI_SERVICES = ["all", "government", "education", "finance", "farming", "utilities", "ecommerce", "home-maintenance", "healthcare", "emergency"];
 export const AI_LANGUAGES = ["English", "Hindi", "Telugu", "Tamil", "Kannada", "Malayalam", "Marathi"];
 
 const aiConversationSchema = new mongoose.Schema({
