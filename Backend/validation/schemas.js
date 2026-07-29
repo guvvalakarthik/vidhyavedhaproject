@@ -149,3 +149,9 @@ export const financialPlanSchema = z.object({
 export const financialTaskUpdateSchema = z.object({
   completed: z.boolean(),
 }).strict();
+
+export const aiAskSchema = z.object({
+  message: z.string().trim().min(2).max(1200),
+  service: z.enum(["all", "government", "education", "finance", "healthcare", "emergency"]).default("all"),
+  language: z.enum(["English", "Hindi", "Telugu", "Tamil", "Kannada", "Malayalam", "Marathi"]).default("English"),
+}).strict();

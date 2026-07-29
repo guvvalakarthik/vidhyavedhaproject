@@ -25,6 +25,7 @@ import AdminPanel from "./pages/AdminPanel.jsx";
 import Analytics from "./pages/Analytics.jsx";
 import Notifications from "./pages/Notifications.jsx";
 import SessionManagement from "./pages/SessionManagement.jsx";
+import Assistant from "./pages/Assistant.jsx";
 
 const authenticated = (element) => <ProtectedRoute>{element}</ProtectedRoute>;
 const adminOnly = (element) => <ProtectedRoute roles={["admin"]}>{element}</ProtectedRoute>;
@@ -55,6 +56,7 @@ function App() {
             <Route path="/dashboard" element={authenticated(<UserDashboard />)} />
             <Route path="/notifications" element={authenticated(<Notifications />)} />
             <Route path="/account/sessions" element={authenticated(<SessionManagement />)} />
+            <Route path="/assistant" element={authenticated(<Assistant />)} />
             <Route path="/admin" element={adminOnly(<AdminPanel />)} />
             <Route path="/analytics" element={adminOnly(<Analytics />)} />
           </Routes>

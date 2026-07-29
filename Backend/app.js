@@ -10,6 +10,7 @@ import notificationRoutes from "./routes/notificationRoutes.js";
 import emergencyRoutes from "./routes/emergencyRoutes.js";
 import educationRoutes from "./routes/educationRoutes.js";
 import financialRoutes from "./routes/financialRoutes.js";
+import aiRoutes from "./routes/aiRoutes.js";
 import { sanitizePayload } from "./middleware/sanitizePayload.js";
 import { optionalSession, requireCsrf } from "./services/authSessionService.js";
 
@@ -40,6 +41,12 @@ const apiLimiter = rateLimit({
   standardHeaders: "draft-8",
   legacyHeaders: false,
 });
+const aiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 30,
+  standardHeaders: "draft-8",
+  legacyHeaders: false,
+});
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   limit: 20,
@@ -51,6 +58,7 @@ app.get("/", (_req, res) => {
   res.json({ message: "Vidhya Vedha API Running", version: "2.5.0" });
 });
 app.use("/api/auth", authLimiter, authRoutes);
+app.use("/api/ai", aiLimiter, aiRoutes);
 app.use("/api/government", apiLimiter, governmentRoutes);
 app.use("/api/healthcare", apiLimiter, healthcareRoutes);
 app.use("/api/emergency", apiLimiter, emergencyRoutes);
