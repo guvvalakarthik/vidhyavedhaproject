@@ -151,3 +151,8 @@ Never commit real credentials or personal service data.
 Authenticated residents can turn their own facts into application, complaint, service-request, or follow-up drafts, review a clearly marked preview, lock the reviewed version, and download an A4 PDF. Drafts are never submitted automatically, work without an AI key through reviewed templates, and can optionally use structured OpenAI rewriting.
 
 See [`docs/service-drafts-and-pdf.md`](docs/service-drafts-and-pdf.md).
+## Agentic reminders
+
+Residents can explicitly enable in-app reminders for incomplete readiness checklists, unfinalized drafts, or a custom task. A bounded server worker evaluates due reminders, stops when linked work is complete, and never submits or changes the underlying service record.
+
+See [`docs/agentic-reminders.md`](docs/agentic-reminders.md).
