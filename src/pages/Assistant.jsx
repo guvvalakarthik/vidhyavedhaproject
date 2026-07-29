@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import api from "../services/api.js";
 import "./Assistant.css";
 
@@ -11,6 +11,15 @@ const services = [
   ["emergency", "Roadside assistance"],
 ];
 const languages = ["English", "Hindi", "Telugu", "Tamil", "Kannada", "Malayalam", "Marathi"];
+const speechLanguageCodes = {
+  English: "en-IN",
+  Hindi: "hi-IN",
+  Telugu: "te-IN",
+  Tamil: "ta-IN",
+  Kannada: "kn-IN",
+  Malayalam: "ml-IN",
+  Marathi: "mr-IN",
+};
 const welcomeMessage = {
   messageId: "welcome",
   role: "assistant",
@@ -19,8 +28,13 @@ const welcomeMessage = {
 };
 
 function Assistant() {
+  const recognitionRef = useRef(null);
   const [service, setService] = useState("all");
   const [language, setLanguage] = useState("English");
+  const [isListening, setIsListening] = useState(false);
+  const [voiceError, setVoiceError] = useState("");
+  const recognitionSupported = typeof window !== "undefined" && Boolean(window.SpeechRecognition || window.webkitSpeechRecognition);
+  const playbackSupported = typeof window !== "undefined" && Boolean(window.speechSynthesis && window.SpeechSynthesisUtterance);
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([welcomeMessage]);
   const [actions, setActions] = useState([]);
@@ -62,6 +76,67 @@ function Assistant() {
     };
     load();
   }, [openConversation]);
+
+  useEffect(() => () => {
+    recognitionRef.current?.abort();
+    window.speechSynthesis?.cancel();
+  }, []);
+
+  const stopListening = () => {
+    recognitionRef.current?.stop();
+    setIsListening(false);
+  };
+
+  const startListening = () => {
+    if (isListening) {
+      stopListening();
+      return;
+    }
+    const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!Recognition) {
+      setVoiceError("Speech input is not supported by this browser.");
+      return;
+    }
+
+    const recognition = new Recognition();
+    recognition.lang = speechLanguageCodes[language];
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+    recognition.onresult = (event) => {
+      const transcript = event.results?.[0]?.[0]?.transcript?.trim();
+      if (transcript) setMessage((current) => `${current} ${transcript}`.trim().slice(0, 1200));
+      setVoiceError("");
+    };
+    recognition.onerror = (event) => {
+      setVoiceError(event.error === "not-allowed"
+        ? "Microphone permission was denied. You can continue by typing."
+        : "Speech could not be recognised. Please try again or type your question.");
+    };
+    recognition.onend = () => {
+      setIsListening(false);
+      recognitionRef.current = null;
+    };
+    recognitionRef.current = recognition;
+    setVoiceError("");
+    setIsListening(true);
+    try {
+      recognition.start();
+    } catch {
+      recognitionRef.current = null;
+      setIsListening(false);
+      setVoiceError("The microphone could not be started. You can continue by typing.");
+    }
+  };
+
+  const listenToAnswer = (content) => {
+    if (!playbackSupported) return;
+    window.speechSynthesis.cancel();
+    const utterance = new window.SpeechSynthesisUtterance(content);
+    utterance.lang = speechLanguageCodes[language];
+
+    window.speechSynthesis.speak(utterance);
+  };
 
   const startNew = () => {
     setConversation(null);
@@ -213,6 +288,11 @@ function Assistant() {
               <article className={`assistant-message assistant-message--${item.role}`} key={item.messageId}>
                 <span className="assistant-message__role">{item.role === "assistant" ? "Vidhya" : "You"}</span>
                 <p>{item.content}</p>
+                {item.role === "assistant" && playbackSupported && (
+                  <button type="button" className="assistant-message__listen" onClick={() => listenToAnswer(item.content)}>
+                    Listen to answer
+                  </button>
+                )}
                 {item.mode === "grounded-fallback" && <small className="assistant-message__mode">Verified catalogue mode</small>}
                 {item.citations?.length > 0 && (
                   <div className="assistant-sources">
@@ -231,9 +311,9 @@ function Assistant() {
             ))}
             {actions.map((action) => (
               <section className={`assistant-action assistant-action--${action.status}`} key={action.actionId} aria-label="Proposed assistant action">
-                <span>Plan action ? {action.planType}</span>
+                <span>Plan action | {action.planType}</span>
                 <strong>{action.summary}</strong>
-                <small>{action.planId} ? {action.taskId}</small>
+                <small>{action.planId} | {action.taskId}</small>
                 {action.status === "pending" ? (
                   <div>
                     <button type="button" onClick={() => resolveAction(action.actionId, "confirm")} disabled={resolvingAction === action.actionId}>Approve exact change</button>
@@ -248,12 +328,18 @@ function Assistant() {
           <form className="assistant-composer" onSubmit={submit}>
             <label htmlFor="assistant-message" className="sr-only">Your question</label>
             <textarea id="assistant-message" value={message} onChange={(event) => setMessage(event.target.value)} placeholder="For example: How do I renew my passport?" maxLength={1200} rows={3} />
+            {voiceError && <p className="assistant-voice-error" role="status">{voiceError}</p>}
             <div>
               <small>{message.length}/1200</small>
+              {recognitionSupported && (
+                <button type="button" className="assistant-composer__voice" onClick={startListening} aria-pressed={isListening}>
+                  {isListening ? "Stop listening" : "Speak question"}
+                </button>
+              )}
               <button type="submit" disabled={sending || message.trim().length < 2}>{sending ? "Checking..." : "Ask Vidhya"}</button>
             </div>
           </form>
-          <p className="assistant-disclaimer">Conversations are private to your account and expire automatically. Confirm changing details on the linked official website.</p>
+          <p className="assistant-disclaimer">Conversations are private to your account and expire automatically. Voice processing uses your browser or device speech service; this application does not upload or store audio. Confirm changing details on the linked official website.</p>
         </div>
       </div>
     </section>
