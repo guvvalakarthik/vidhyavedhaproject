@@ -94,7 +94,7 @@ See [Financial guidance and preparation plans](docs/financial-guidance.md) for t
 
 ## Grounded AI assistant
 
-Signed-in residents can use Ask Vidhya for grounded guidance across government, education, finance, healthcare and roadside services. The assistant retrieves matching entries from the reviewed local catalogue, shows official sources and uses the OpenAI Responses API when a key is configured. Without a key it remains usable in verified catalogue mode. Owner-scoped conversation history preserves context across secure sessions, and tightly scoped plan-task actions require explicit user approval before execution.
+Signed-in residents can use Ask Vidhya for grounded guidance across government, education, finance, healthcare and roadside services. The assistant retrieves matching entries from the reviewed local catalogue, shows official sources and uses the OpenAI Responses API when a key is configured. Without a key it remains usable in verified catalogue mode. Owner-scoped conversation history preserves context across secure sessions, tightly scoped plan-task actions require explicit approval, and supported browsers offer multilingual speech input and answer playback.
 
 See [Grounded AI assistant](docs/ai-assistant.md) for architecture, safety boundaries and configuration.
 ## Environment variables

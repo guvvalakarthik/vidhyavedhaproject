@@ -124,3 +124,9 @@
 .assistant-action--expired,
 .assistant-action--failed { border-color: #d7dee1; background: #f5f7f8; color: #53646c; }
 .assistant-action__result { margin: 9px 0 0; font-size: .86rem; }
+.assistant-message__listen { margin-top: 10px; border: 1px solid #7fb7a4; border-radius: 8px; padding: 7px 10px; background: #fff; color: #176b4d; cursor: pointer; font-size: .76rem; font-weight: 800; }
+.assistant-message__listen:hover { background: #eaf7f2; }
+.assistant-composer .assistant-composer__voice { margin-left: auto; border: 1px solid #176b4d; background: #fff; color: #176b4d; }
+.assistant-composer .assistant-composer__voice[aria-pressed="true"] { background: #fff1f0; color: #b42318; border-color: #d92d20; }
+.assistant-voice-error { margin: 8px 0 0; color: #9c3d10; font-size: .8rem; }
+@media (max-width: 520px) { .assistant-composer > div { align-items: stretch; flex-direction: column; } .assistant-composer .assistant-composer__voice { margin-left: 0; } }

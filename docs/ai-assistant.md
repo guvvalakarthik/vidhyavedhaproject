@@ -68,8 +68,14 @@ A proposal does not mutate a plan. The server validates the model arguments agai
 - `POST /api/ai/actions/:actionId/cancel` records the rejection without changing a plan.
 
 Approvals expire after 15 minutes. Execution rechecks ownership, active-plan status and task existence, and atomically moves the action out of `pending` before the update. Action audit records follow the conversation retention period. Deterministic matching can prepare the same bounded proposal when no API key is configured, but ambiguous requests are ignored.
-## Configuration
 
+## Multilingual voice UX
+
+The browser UI supports speech input and answer playback for English, Hindi, Telugu, Tamil, Kannada, Malayalam and Marathi. Each option maps to its Indian BCP 47 speech locale (for example, `te-IN`). Controls appear only when the relevant browser speech API is available, and typing remains the fallback.
+
+Microphone capture is initiated only after the user presses **Speak question** and stops after one utterance or when the user presses **Stop listening**. The application backend receives only the resulting text; it does not upload or store audio. Browser or operating-system speech services may process audio according to their own privacy settings and policies.
+
+## Configuration
 
 ```dotenv
 OPENAI_API_KEY=

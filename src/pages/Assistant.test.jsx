@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, expect, test, vi } from "vitest";
 import Assistant from "./Assistant.jsx";
 import api from "../services/api.js";
@@ -85,4 +85,45 @@ test("requires explicit approval before applying an agent action", async () => {
 
   await waitFor(() => expect(api.post).toHaveBeenCalledWith("/ai/actions/ACT-12345678/confirm", {}));
   expect(await screen.findByText(/is now completed/i)).toBeInTheDocument();
+});
+
+test("maps speech input and answer playback to the selected language", async () => {
+  let recognition;
+  class MockSpeechRecognition {
+    constructor() {
+      recognition = this;
+      this.start = vi.fn();
+      this.stop = vi.fn();
+      this.abort = vi.fn();
+    }
+  }
+  const speak = vi.fn();
+  const cancel = vi.fn();
+  class MockUtterance {
+    constructor(text) {
+      this.text = text;
+    }
+  }
+  Object.defineProperty(window, "SpeechRecognition", { value: MockSpeechRecognition, configurable: true });
+  Object.defineProperty(window, "SpeechSynthesisUtterance", { value: MockUtterance, configurable: true });
+  Object.defineProperty(window, "speechSynthesis", { value: { speak, cancel }, configurable: true });
+
+  render(<Assistant />);
+  await waitFor(() => expect(api.get).toHaveBeenCalledWith("/ai/conversations"));
+  fireEvent.change(screen.getByLabelText(/answer language/i), { target: { value: "Telugu" } });
+  fireEvent.click(screen.getByRole("button", { name: /speak question/i }));
+
+  expect(recognition.lang).toBe("te-IN");
+  expect(recognition.start).toHaveBeenCalledOnce();
+  act(() => recognition.onresult({ results: [[{ transcript: "passport renewal" }]] }));
+  expect(screen.getByLabelText(/your question/i)).toHaveValue("passport renewal");
+
+  fireEvent.click(screen.getByRole("button", { name: /listen to answer/i }));
+  expect(cancel).toHaveBeenCalled();
+  expect(speak).toHaveBeenCalledOnce();
+  expect(speak.mock.calls[0][0].lang).toBe("te-IN");
+
+  delete window.SpeechRecognition;
+  delete window.SpeechSynthesisUtterance;
+  delete window.speechSynthesis;
 });
