@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
+import mongoose from "mongoose";
 import { rateLimit } from "express-rate-limit";
 import authRoutes from "./routes/authRoutes.js";
 import applicationRoutes from "./routes/applicationRoutes.js";
@@ -28,6 +29,7 @@ import { sanitizePayload } from "./middleware/sanitizePayload.js";
 import { optionalSession, requireCsrf } from "./services/authSessionService.js";
 
 const app = express();
+const API_VERSION = "2.5.0";
 // Vercel terminates requests at one proxy hop and forwards the client IP.
 app.set("trust proxy", process.env.VERCEL === "1" ? 1 : false);
 const allowedOrigins = (process.env.CLIENT_ORIGINS || "http://localhost:3000,http://127.0.0.1:3000,http://localhost:3002,http://127.0.0.1:3002,http://localhost:5173,http://127.0.0.1:5173")
@@ -72,8 +74,19 @@ const authLimiter = rateLimit({
   validate: { forwardedHeader: false },
 });
 
+app.get("/api/health/live", (_req, res) => {
+  res.json({ status: "ok", version: API_VERSION });
+});
+app.get("/api/health/ready", (_req, res) => {
+  const databaseReady = mongoose.connection.readyState === 1;
+  return res.status(databaseReady ? 200 : 503).json({
+    status: databaseReady ? "ready" : "not_ready",
+    version: API_VERSION,
+    checks: { database: databaseReady ? "connected" : "disconnected" },
+  });
+});
 app.get("/", (_req, res) => {
-  res.json({ message: "Vidhya Vedha API Running", version: "2.5.0" });
+  res.json({ message: "Vidhya Vedha API Running", version: API_VERSION });
 });
 app.use("/api/auth", authLimiter, authRoutes);
 app.use("/api/ai", aiLimiter, aiRoutes);

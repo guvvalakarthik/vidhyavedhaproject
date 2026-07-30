@@ -43,6 +43,9 @@ export const restoreApiRequestUrl = (req) => {
 export const isPublicCatalogueRequest = (method, pathname) =>
   method === "GET" && PUBLIC_CATALOGUE_ROUTES.some((pattern) => pattern.test(pathname));
 
+export const isLivenessRequest = (method, pathname) =>
+  method === "GET" && pathname === "/api/health/live";
+
 const ensureDatabase = async () => {
   if (mongoose.connection.readyState === 1) return true;
   if (!process.env.MONGO_URI) return false;
@@ -60,6 +63,7 @@ const ensureDatabase = async () => {
 
 export default async function handler(req, res) {
   const pathname = restoreApiRequestUrl(req);
+  if (isLivenessRequest(req.method, pathname)) return app(req, res);
   const publicCatalogueRequest = isPublicCatalogueRequest(req.method, pathname);
   let databaseReady = mongoose.connection.readyState === 1;
 

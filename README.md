@@ -1,6 +1,17 @@
 # Vidhya Vedha
 
+[![CI](https://github.com/guvvalakarthik/vidhyavedhaproject/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/guvvalakarthik/vidhyavedhaproject/actions/workflows/ci.yml)
+[![Production smoke](https://github.com/guvvalakarthik/vidhyavedhaproject/actions/workflows/production-smoke.yml/badge.svg?branch=main)](https://github.com/guvvalakarthik/vidhyavedhaproject/actions/workflows/production-smoke.yml)
+
 Vidhya Vedha is a full-stack civic and local-services platform for rural communities. The current rebuild is moving the product from generic request forms toward task-specific journeys such as appointment scheduling, assisted government-service handoffs, bookings, dispatch, and status tracking.
+
+## Release evidence
+
+- **Live deployment:** [vidhyavedhaproject.vercel.app](https://vidhyavedhaproject.vercel.app)
+- **Continuous integration:** every pull request and `main` push runs frontend tests/build, backend tests, dependency policy, and repository-hygiene checks.
+- **Production verification:** a post-deployment and daily smoke workflow checks database readiness, authentication protection, Google sign-in configuration, and non-empty APIs for all nine service categories.
+- **Protected release branch:** `main` requires a pull request and green CI/Vercel checks; force pushes and branch deletion are disabled.
+- **Honest scope:** the hosted application is a production-style engineering demonstration. External government, hospital, emergency, marketplace, and provider integrations remain explicitly unconnected until the promotion criteria in the integration register are met.
 
 ## Portfolio focus
 
@@ -71,6 +82,7 @@ The API listens on `http://localhost:5000` by default.
 npm test
 npm run build
 npm audit --omit=dev
+npm run smoke:production
 ```
 
 Backend checks:
