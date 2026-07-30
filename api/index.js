@@ -29,11 +29,13 @@ const appendQueryValue = (params, key, value) => {
 export const restoreApiRequestUrl = (req) => {
   const query = req.query || {};
   const path = Array.isArray(query.path) ? query.path.join("/") : String(query.path || "");
+  if (!path) return new URL(req.url, "http://vercel.local").pathname;
+
   const params = new URLSearchParams();
   Object.entries(query).forEach(([key, value]) => {
     if (key !== "path") appendQueryValue(params, key, value);
   });
-  const pathname = path ? `/api/${path.replace(/^\/+/, "")}` : "/api";
+  const pathname = `/api/${path.replace(/^\/+/, "")}`;
   req.url = `${pathname}${params.size ? `?${params}` : ""}`;
   return pathname;
 };
