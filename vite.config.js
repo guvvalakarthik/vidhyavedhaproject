@@ -6,6 +6,7 @@ export default defineConfig({
   server: { port: 3000 },
   preview: { port: 4173 },
   test: {
+    include: ["src/**/*.{test,spec}.{js,jsx,ts,tsx}"],
     environment: "jsdom",
     globals: true,
     setupFiles: "./src/setupTests.js",
