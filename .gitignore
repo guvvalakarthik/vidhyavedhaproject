@@ -28,3 +28,6 @@ yarn-debug.log*
 yarn-error.log*
 .run/
 Backend/storage/documents/
+
+# local backend secrets
+Backend/.env
