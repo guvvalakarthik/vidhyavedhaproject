@@ -13,7 +13,7 @@
 .primary-nav__link {
   flex: 0 0 auto;
   padding: 15px 17px 13px;
-  border-bottom: 4px solid transparent;
+
   color: #243e4c;
   font-size: 0.94rem;
   font-weight: 700;
@@ -27,7 +27,8 @@
 }
 
 .primary-nav__link.is-active {
-  border-bottom-color: #176b55;
+  background: #e8f2ee;
+  border-radius: 6px;
   color: #132e3f;
 }
 

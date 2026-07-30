@@ -6,7 +6,7 @@
 .civic-hero {
   background: #173f50;
   color: #fff;
-  border-bottom: 6px solid #f4b942;
+
 }
 
 .civic-hero__grid {
@@ -169,7 +169,7 @@
 .popular-panel {
   background: #fff;
   color: #203642;
-  border-top: 6px solid #f4b942;
+
   box-shadow: 0 10px 28px rgba(5, 23, 31, 0.22);
 }
 
@@ -422,7 +422,7 @@
 .empty-results {
   padding: 34px;
   border: 1px solid #cfdadf;
-  border-left: 6px solid #f4b942;
+
   background: #f7f9fa;
 }
 
@@ -496,7 +496,7 @@
 
 .before-you-start {
   padding: 30px;
-  border-top: 6px solid #176b55;
+
   background: #fff;
   box-shadow: 0 5px 18px rgba(19, 46, 63, 0.08);
 }
@@ -534,7 +534,7 @@
 .tracking-card {
   padding: 28px;
   border: 1px solid #cdd8dd;
-  border-top: 6px solid #f4b942;
+
   background: #fff;
   box-shadow: 0 5px 18px rgba(19, 46, 63, 0.08);
 }
@@ -551,11 +551,10 @@
 .notice {
   margin-top: 16px;
   padding: 12px 14px;
-  border-left: 5px solid;
+
 }
 
 .notice--error {
-  border-color: #b42318;
   background: #fff0ee;
   color: #8f1d15;
 }
