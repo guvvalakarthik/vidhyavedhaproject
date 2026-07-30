@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import HealthcareAppointment from "../models/HealthcareAppointment.js";
 import HealthcareProvider from "../models/HealthcareProvider.js";
 import User from "../models/User.js";
+import { DEFAULT_HEALTHCARE_PROVIDERS } from "../data/healthcareProviders.js";
 import {
   buildAvailableSlots,
   canModifyAppointment,
@@ -49,14 +50,18 @@ const publicAppointment = (appointment) => ({
 });
 
 export const listHealthcareProviders = async (_req, res) => {
-  const providers = await HealthcareProvider.find({ active: true }).sort({ specialty: 1, name: 1 }).lean();
+  const providers = mongoose.connection.readyState === 1
+    ? await HealthcareProvider.find({ active: true }).sort({ specialty: 1, name: 1 }).lean()
+    : DEFAULT_HEALTHCARE_PROVIDERS;
   return res.json({ providers: providers.map(publicProvider), timeZone: HEALTHCARE_TIME_ZONE });
 };
 
 export const getProviderAvailability = async (req, res) => {
   const { providerCode } = req.params;
   const { from = dateInIndia(), days = 7 } = req.validated?.query || req.query;
-  const provider = await HealthcareProvider.findOne({ providerCode, active: true }).lean();
+  const provider = mongoose.connection.readyState === 1
+    ? await HealthcareProvider.findOne({ providerCode, active: true }).lean()
+    : DEFAULT_HEALTHCARE_PROVIDERS.find((item) => item.providerCode === providerCode);
   if (!provider) return res.status(404).json({ error: "Healthcare provider not found." });
 
   const candidateSlots = buildAvailableSlots({ provider, fromDate: from, days });
@@ -66,11 +71,13 @@ export const getProviderAvailability = async (req, res) => {
 
   const firstStart = new Date(candidateSlots[0].start);
   const lastStart = new Date(candidateSlots[candidateSlots.length - 1].start);
-  const booked = await HealthcareAppointment.find({
-    providerCode,
-    status: "booked",
-    startTime: trustedHealthcareDateRange(firstStart, lastStart),
-  }).select("startTime").lean();
+  const booked = mongoose.connection.readyState === 1
+    ? await HealthcareAppointment.find({
+      providerCode,
+      status: "booked",
+      startTime: trustedHealthcareDateRange(firstStart, lastStart),
+    }).select("startTime").lean()
+    : [];
   const bookedStarts = new Set(booked.map((appointment) => new Date(appointment.startTime).getTime()));
   const slots = buildAvailableSlots({ provider, fromDate: from, days, bookedStarts });
 

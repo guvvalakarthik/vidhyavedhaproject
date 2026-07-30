@@ -12,6 +12,7 @@ export default defineConfig({
     setupFiles: "./src/setupTests.js",
     css: true,
     restoreMocks: true,
+    maxWorkers: 4,
     testTimeout: 20000,
     hookTimeout: 20000,
   },
