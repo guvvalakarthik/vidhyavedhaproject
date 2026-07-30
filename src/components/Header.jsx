@@ -30,7 +30,7 @@ function Header() {
             {user ? (
               <>
                 <NotificationBell />
-                <Link to="/dashboard" className="account-link">
+                <Link to="/profile" className="account-link">
                   <span className="account-link__label">Your account</span>
                   <span className="account-link__name">{user.name}</span>
                 </Link>

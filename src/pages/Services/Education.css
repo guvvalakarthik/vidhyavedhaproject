@@ -100,7 +100,7 @@
   align-items: center;
   background: transparent;
   border: 0;
-  border-bottom: 3px solid transparent;
+
   color: #55666b;
   cursor: pointer;
   display: flex;
@@ -112,7 +112,7 @@
   white-space: nowrap;
 }
 
-.education-tabs button[aria-selected="true"] { border-bottom-color: var(--edu-green); color: var(--edu-green-dark); }
+.education-tabs button[aria-selected="true"] { background: #eaf2ef; color: var(--edu-green-dark); }
 
 .education-alert {
   border: 1px solid;
@@ -137,7 +137,7 @@
 .education-finder__heading > p:last-child,
 .education-plans__heading > p:last-child { color: var(--edu-muted); line-height: 1.65; margin: 0; }
 
-.education-stage-control { align-items: center; background: #fff; border-left: 4px solid var(--edu-green); display: grid; gap: 8px; grid-template-columns: 210px minmax(260px, 480px); margin: 29px 0 31px; padding: 18px 20px; }
+.education-stage-control { align-items: center; background: #fff; display: grid; gap: 8px; grid-template-columns: 210px minmax(260px, 480px); margin: 29px 0 31px; padding: 18px 20px; }
 .education-stage-control label { font-size: 0.9rem; font-weight: 800; }
 .education-stage-control select { background: #fff; border: 1px solid #aab8b5; border-radius: 3px; color: var(--edu-ink); font: inherit; min-height: 45px; padding: 0 12px; width: 100%; }
 .education-stage-control select:focus { border-color: var(--edu-green); box-shadow: 0 0 0 3px rgba(18, 100, 83, 0.14); outline: 0; }
@@ -161,7 +161,7 @@
 .education-results__heading > button { background: transparent; border: 0; color: var(--edu-green-dark); cursor: pointer; font: inherit; font-size: 0.86rem; font-weight: 800; padding: 8px 0; text-decoration: underline; }
 .education-pathway-grid { display: grid; gap: 15px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .education-pathway-card { background: #fff; border: 1px solid var(--edu-line); border-radius: 4px; display: flex; flex-direction: column; min-height: 315px; padding: 22px; }
-.education-pathway-card.is-selected { border-color: var(--edu-green); box-shadow: inset 0 4px 0 var(--edu-green); }
+.education-pathway-card.is-selected { border-color: var(--edu-green); background: #f2f7f5; }
 .education-pathway-card__icon { align-items: center; background: var(--edu-pale); color: var(--edu-green); display: flex; font-size: 1.2rem; height: 45px; justify-content: center; margin-bottom: 16px; width: 45px; }
 .education-pathway-card > p { color: #287968; font-size: 0.72rem; font-weight: 850; letter-spacing: 0.1em; margin: 0 0 7px; text-transform: uppercase; }
 .education-pathway-card h3 { font-size: 1.2rem; letter-spacing: -0.018em; line-height: 1.25; margin: 0 0 9px; }
@@ -185,7 +185,7 @@
 .education-detail__title { max-width: 800px; }
 .education-detail__title > span { color: var(--edu-green); font-size: 0.76rem; font-weight: 850; letter-spacing: 0.12em; text-transform: uppercase; }
 .education-detail__title p { color: var(--edu-muted); font-size: 1rem; line-height: 1.65; }
-.education-official-boundary { align-items: center; background: #f0f6f4; border-left: 4px solid var(--edu-green); display: grid; gap: 16px; grid-template-columns: auto 1fr auto; margin: 29px 0 38px; padding: 20px; }
+.education-official-boundary { align-items: center; background: #f0f6f4; display: grid; gap: 16px; grid-template-columns: auto 1fr auto; margin: 29px 0 38px; padding: 20px; }
 .education-official-boundary > svg { color: var(--edu-green); font-size: 1.25rem; }
 .education-official-boundary strong,
 .education-official-boundary span { display: block; }
@@ -212,7 +212,7 @@
 .education-requirements label > span { align-items: center; border: 1px solid #94a7a2; color: transparent; display: flex; height: 22px; justify-content: center; margin-top: 1px; width: 22px; }
 .education-requirements label.is-checked > span { background: var(--edu-green); border-color: var(--edu-green); color: #fff; }
 
-.education-plan-builder { background: #f4f7f6; border-top: 4px solid var(--edu-green); padding: 23px; position: sticky; top: 20px; }
+.education-plan-builder { background: #f4f7f6; padding: 23px; position: sticky; top: 20px; }
 .education-plan-builder > p:not(.education-section-label),
 .education-plan-confirmation > p:not(.education-section-label) { color: var(--edu-muted); font-size: 0.87rem; line-height: 1.55; }
 .education-plan-builder dl { border-bottom: 1px solid var(--edu-line); border-top: 1px solid var(--edu-line); margin: 19px 0; }

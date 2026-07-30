@@ -29,8 +29,8 @@ yarn-error.log*
 .run/
 Backend/storage/documents/
 
-# local backend secrets
-Backend/.env
+# backend dependencies are installed from Backend/package-lock.json
+Backend/node_modules/
 
 # local audit output and editor/OS artifacts
 .audit/

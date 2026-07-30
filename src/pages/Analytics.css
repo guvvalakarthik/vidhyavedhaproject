@@ -313,13 +313,13 @@
   align-items: center;
   gap: 14px;
   border: 1px solid #e2e8f0;
-  border-left: 4px solid;
+
 }
 
-.status-summary-card.pending { border-left-color: #f59e0b; }
-.status-summary-card.review { border-left-color: #3b82f6; }
-.status-summary-card.approved { border-left-color: #22c55e; }
-.status-summary-card.rejected { border-left-color: #ef4444; }
+.status-summary-card.pending { background: #fffbeb; }
+.status-summary-card.review { background: #eff6ff; }
+.status-summary-card.approved { background: #f0fdf4; }
+.status-summary-card.rejected { background: #fef2f2; }
 
 .status-summary-icon {
   font-size: 1.4rem;

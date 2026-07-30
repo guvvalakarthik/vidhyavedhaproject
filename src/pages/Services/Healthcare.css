@@ -3,27 +3,27 @@
 .health-service-intro__grid { display: grid; grid-template-columns: 1.35fr .65fr; gap: 60px; padding-block: 54px; align-items: end; }
 .health-service-intro h1 { max-width: 760px; margin: 0 0 16px; color: #132e3f; font: 700 3.2rem/1.04 Georgia,serif; letter-spacing: -.025em; }
 .health-service-intro p { max-width: 760px; margin: 0; color: #4c6571; font-size: 1.08rem; line-height: 1.65; }
-.health-service-intro__facts { display: grid; gap: 13px; padding: 23px; border-left: 5px solid #176b55; background: #fff; }
+.health-service-intro__facts { display: grid; gap: 13px; padding: 23px; background: #fff; }
 .health-service-intro__facts span { display: flex; align-items: center; gap: 10px; font-size: .9rem; font-weight: 700; }
 .health-service-intro__facts svg { color: #176b55; }
 .health-view-tabs { display: flex; gap: 0; padding-top: 28px; border-bottom: 1px solid #cbd6db; }
-.health-view-tabs button { padding: 15px 20px 12px; border: 0; border-bottom: 4px solid transparent; background: transparent; color: #36505d; font-weight: 800; cursor: pointer; }
-.health-view-tabs button[aria-selected="true"] { border-bottom-color: #176b55; color: #132e3f; background: #fff; }
-.health-alert { display: flex; align-items: center; gap: 13px; margin-top: 22px; padding: 15px 18px; border-left: 5px solid; }
-.health-alert--error { border-color: #b42318; background: #fff0ee; color: #841b14; }
-.health-alert--success { border-color: #176b55; background: #e5f3ed; }
+.health-view-tabs button { padding: 15px 20px 12px; border: 0; background: transparent; color: #36505d; font-weight: 800; cursor: pointer; }
+.health-view-tabs button[aria-selected="true"] { background: #edf6f2; color: #132e3f; }
+.health-alert { display: flex; align-items: center; gap: 13px; margin-top: 22px; padding: 15px 18px; }
+.health-alert--error { background: #fff0ee; color: #841b14; }
+.health-alert--success { background: #e5f3ed; }
 .health-alert--success > svg { color: #176b55; font-size: 1.3rem; }
 .health-alert strong,.health-alert span { display: block; }
 .health-alert span { margin-top: 3px; color: #526873; font-size: .85rem; }
 .health-alert button { margin-left: auto; border: 0; background: transparent; color: #075b8c; font-weight: 800; text-decoration: underline; cursor: pointer; }
 .health-booking,.manage-appointments { padding-block: 32px 76px; }
-.reschedule-banner { display: flex; justify-content: space-between; gap: 20px; margin-bottom: 22px; padding: 16px 18px; border-left: 5px solid #f4b942; background: #fff6dc; }
+.reschedule-banner { display: flex; justify-content: space-between; gap: 20px; margin-bottom: 22px; padding: 16px 18px; background: #fff6dc; }
 .reschedule-banner strong,.reschedule-banner span { display: block; }
 .reschedule-banner span { margin-top: 4px; color: #5b6570; font-size: .86rem; }
 .reschedule-banner button { border: 0; background: transparent; color: #075b8c; font-weight: 800; cursor: pointer; }
 .booking-progress { display: flex; margin: 0 0 26px; padding: 0; list-style: none; }
-.booking-progress li { flex: 1; display: flex; align-items: center; gap: 10px; padding: 11px 14px; border-top: 4px solid #cbd6db; color: #667c86; font-size: .84rem; font-weight: 800; }
-.booking-progress li.is-current { border-top-color: #176b55; color: #173f50; }
+.booking-progress li { flex: 1; display: flex; align-items: center; gap: 10px; padding: 11px 14px; color: #667c86; font-size: .84rem; font-weight: 800; }
+.booking-progress li.is-current { background: #edf6f2; color: #173f50; }
 .booking-progress span { width: 26px; height: 26px; display: grid; place-items: center; border-radius: 50%; background: #dce5e8; }
 .booking-progress .is-current span { background: #176b55; color: #fff; }
 .booking-section { margin-bottom: 28px; padding: 28px; border: 1px solid #ced9de; background: #fff; }
@@ -35,7 +35,7 @@
 .provider-list { border-top: 1px solid #ced9de; }
 .provider-row { width: 100%; display: grid; grid-template-columns: 50px minmax(0,1fr) minmax(200px,.5fr) 86px; gap: 16px; align-items: center; padding: 19px 14px; border: 0; border-bottom: 1px solid #ced9de; background: #fff; color: inherit; text-align: left; cursor: pointer; }
 .provider-row:hover { background: #f0f5f6; }
-.provider-row.is-selected { box-shadow: inset 5px 0 #176b55; background: #edf6f2; }
+.provider-row.is-selected { background: #edf6f2; }
 .provider-row__avatar { width: 44px; height: 44px; display: grid; place-items: center; background: #e3eef2; color: #17566e; font-size: 1.2rem; }
 .provider-row__details strong,.provider-row__details span,.provider-row__details small { display: block; }
 .provider-row__details strong { color: #075b8c; font: 700 1.12rem Georgia,serif; text-decoration: underline; text-underline-offset: 3px; }
@@ -63,7 +63,6 @@
 .slot-day__times button:hover,.slot-day__times button[aria-pressed="true"] { background: #173f50; color: #fff; }
 .no-slots strong,.no-slots span { display: block; }
 .no-slots span { margin-top: 5px; font-size: .84rem; }
-.booking-confirm { border-top: 6px solid #f4b942; }
 .appointment-summary { display: grid; grid-template-columns: 1.1fr .9fr; gap: 34px; margin-top: 22px; }
 .appointment-summary dl { margin: 0; }
 .appointment-summary dl div { display: grid; grid-template-columns: 135px 1fr; gap: 16px; padding: 12px 0; border-bottom: 1px solid #d9e1e4; }
@@ -89,7 +88,7 @@
 .manage-signin a,.no-appointments button { margin-left: auto; padding: 10px 15px; border: 0; background: #176b55; color: #fff; font-weight: 800; text-decoration: none; cursor: pointer; }
 .appointment-list-title { margin: 0 0 12px; color: #132e3f; }
 .appointment-list { display: grid; gap: 12px; }
-.appointment-record { display: grid; grid-template-columns: 140px minmax(0,1fr) auto; gap: 22px; align-items: center; padding: 22px; border: 1px solid #ced9de; border-left: 6px solid #176b55; background: #fff; }
+.appointment-record { display: grid; grid-template-columns: 140px minmax(0,1fr) auto; gap: 22px; align-items: center; padding: 22px; border: 1px solid #ced9de; background: #fff; }
 .appointment-record__date strong,.appointment-record__date span { display: block; }
 .appointment-record__date strong { color: #173f50; }
 .appointment-record__date span { margin-top: 5px; font-size: 1.15rem; font-weight: 800; }
