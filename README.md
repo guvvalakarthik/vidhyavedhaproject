@@ -9,6 +9,11 @@ Vidhya Vedha is a full-stack civic and local-services platform for rural communi
 - Backend: Express 5, MongoDB, Mongoose
 - Authentication: MongoDB-backed opaque cookie sessions with CSRF protection, role-based authorization, and ownership checks
 
+## Engineering documentation
+
+- [Architecture and trust boundaries](docs/architecture.md)
+- [Threat model](docs/security/threat-model.md)
+- [Deployment, verification and rollback](docs/deployment.md)
 ## Requirements
 
 - Node.js 22.12 or newer
