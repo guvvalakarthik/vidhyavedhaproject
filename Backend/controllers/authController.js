@@ -7,6 +7,13 @@ import {
   publicSession,
   revokeSession,
 } from "../services/authSessionService.js";
+import {
+  consumeGoogleLoginNonce,
+  findOrCreateGoogleUser,
+  GoogleIdentityError,
+  issueGoogleLoginConfig,
+  verifyGoogleCredential,
+} from "../services/googleIdentityService.js";
 
 const publicUser = (user) => ({
   id: user._id,
@@ -40,13 +47,52 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email }).select("+password");
-    if (!user || !(await user.matchPassword(password))) {
+    if (!user || !user.password || !(await user.matchPassword(password))) {
       return res.status(401).json({ error: "Invalid email or password." });
     }
 
     return await sessionResponse({ user, req, res, message: "Login successful" });
   } catch (err) {
     console.error("Login error:", err);
+    return res.status(500).json({ error: "Internal server error." });
+  }
+};
+
+export const getGoogleLoginConfig = (_req, res) => {
+  return res.json(issueGoogleLoginConfig(res));
+};
+
+export const googleLogin = async (req, res) => {
+  const expectedNonce = consumeGoogleLoginNonce(req, res);
+  try {
+    const profile = await verifyGoogleCredential({
+      credential: req.body.credential,
+      expectedNonce,
+    });
+    const { user, created, linked } = await findOrCreateGoogleUser(profile);
+    const message = created
+      ? "Google account created and signed in."
+      : linked
+        ? "Google sign-in linked to your account."
+        : "Google sign-in successful.";
+    return await sessionResponse({
+      user,
+      req,
+      res,
+      status: created ? 201 : 200,
+      message,
+    });
+  } catch (error) {
+    if (error instanceof GoogleIdentityError) {
+      return res.status(error.status).json({ error: error.message, code: error.code });
+    }
+    if (error?.code === 11000) {
+      return res.status(409).json({
+        error: "This Google account is already linked. Please try signing in again.",
+        code: "GOOGLE_ACCOUNT_CONFLICT",
+      });
+    }
+    console.error("Google login error:", error);
     return res.status(500).json({ error: "Internal server error." });
   }
 };
