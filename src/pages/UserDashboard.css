@@ -292,3 +292,222 @@
     gap: 12px;
   }
 }
+
+/* ===== Action Messages ===== */
+.dashboard-action-error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: 12px 16px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.dashboard-action-success {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #059669;
+  padding: 12px 16px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* ===== Controls (filters + view toggle) ===== */
+.dashboard-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.view-toggle {
+  display: flex;
+  gap: 4px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.view-btn {
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #94a3b8;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.view-btn.active {
+  background: #3b82f6;
+  color: #fff;
+}
+
+/* ===== Card Actions ===== */
+.app-card-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.app-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.app-action-btn.edit {
+  background: #eff6ff;
+  color: #3b82f6;
+}
+
+.app-action-btn.edit:hover {
+  background: #dbeafe;
+}
+
+.app-action-btn.delete {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.app-action-btn.delete:hover {
+  background: #fee2e2;
+}
+
+.app-action-btn.save {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.app-action-btn.save:hover {
+  background: #bbf7d0;
+}
+
+.app-action-btn.cancel-edit {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.app-action-btn.cancel-edit:hover {
+  background: #e2e8f0;
+}
+
+/* ===== Edit Fields ===== */
+.app-edit-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.app-edit-field label {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.app-edit-field input {
+  padding: 8px 12px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  transition: border 0.2s ease;
+}
+
+.app-edit-field input:focus {
+  border-color: #3b82f6;
+  outline: none;
+}
+
+/* ===== Timeline View ===== */
+.timeline-view {
+  display: flex;
+  flex-direction: column;
+  padding-left: 8px;
+}
+
+.timeline-item {
+  display: flex;
+  gap: 20px;
+  position: relative;
+  min-height: 80px;
+}
+
+.timeline-dot {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+.timeline-line {
+  position: absolute;
+  left: 19px;
+  top: 40px;
+  width: 2px;
+  height: calc(100% - 20px);
+  background: #e2e8f0;
+}
+
+.timeline-content {
+  flex: 1;
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px 20px;
+  border: 1px solid #e2e8f0;
+  margin-bottom: 16px;
+  transition: all 0.2s ease;
+}
+
+.timeline-content:hover {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+}
+
+.timeline-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.timeline-body {
+  display: flex;
+  gap: 20px;
+  font-size: 0.88rem;
+  color: #475569;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.timeline-body span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.timeline-actions {
+  display: flex;
+  gap: 10px;
+}

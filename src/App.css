@@ -1,18 +1,11 @@
-/* Reset and Base styles */
-body,
-html,
-#root {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-}
-
 .app-wrapper {
   min-height: 100vh;
-  background-color: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
 }
 
 .main-content {
   flex: 1;
-  padding: 0;
+  min-width: 0;
 }

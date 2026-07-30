@@ -1,12 +1,16 @@
 {
-  "name": "backend",
-  "version": "1.0.0",
+  "name": "vidhya-vedha-api",
+  "version": "2.5.0",
+  "private": true,
   "type": "module",
   "main": "Server.js",
   "scripts": {
     "start": "node Server.js",
     "dev": "node --watch Server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "set-role": "node scripts/setUserRole.js",
+    "seed:healthcare": "node scripts/seedHealthcareProviders.js"
   },
   "keywords": [],
   "author": "",
@@ -15,9 +19,19 @@
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
-    "express": "^5.1.0",
-    "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.17.0"
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.6.1",
+    "google-auth-library": "^10.9.1",
+    "helmet": "^8.3.0",
+    "mongoose": "^9.8.1",
+    "multer": "^2.2.0",
+    "openai": "^7.1.0",
+    "pdfkit": "^0.17.2",
+    "zod": "^4.4.3"
   },
-  "description": "Vidhya Vedha backend — auth + multi-service application API"
+  "description": "Vidhya Vedha civic guidance, healthcare scheduling, roadside dispatch, education planning, and financial guidance API",
+  "devDependencies": {
+    "supertest": "^7.2.2",
+    "vitest": "^4.1.10"
+  }
 }

@@ -1,54 +1,48 @@
-.navbar {
-  background-color: #e6f2ff;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1.2rem;
-  padding: 2vh 4vw;
-  font-family: "Segoe UI", sans-serif;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
-  z-index: 999;
+.primary-nav {
+  background: #fff;
+  border-bottom: 1px solid #cfd8dd;
 }
 
-.navbar a {
+.primary-nav__inner {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  align-items: stretch;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.primary-nav__link {
+  flex: 0 0 auto;
+  padding: 15px 17px 13px;
+  border-bottom: 4px solid transparent;
+  color: #243e4c;
+  font-size: 0.94rem;
+  font-weight: 700;
   text-decoration: none;
-  color: #004aad;
-  font-weight: 600;
-  padding: 0.6rem 1rem;
-  border-radius: 6px;
-  background-color: white;
-  transition: all 0.3s ease-in-out;
-  position: relative;
+  white-space: nowrap;
 }
 
-/* Hover underline animation */
-.navbar a::after {
-  content: "";
-  position: absolute;
-  bottom: 6px;
-  left: 50%;
-  transform: translateX(-50%) scaleX(0);
-  width: 80%;
-  height: 2px;
-  background-color: #004aad;
-  transition: transform 0.3s ease-in-out;
-  transform-origin: center;
+.primary-nav__link:hover {
+  background: #f3f6f7;
+  color: #0a5c92;
 }
 
-.navbar a:hover::after {
-  transform: translateX(-50%) scaleX(1);
+.primary-nav__link.is-active {
+  border-bottom-color: #176b55;
+  color: #132e3f;
 }
 
-.navbar a:hover {
-  background-color: #004aad;
-  color: white;
-  transform: scale(1.05);
-}
+@media (max-width: 680px) {
+  .primary-nav__inner {
+    width: 100%;
+    flex-wrap: wrap;
+    overflow-x: visible;
+    padding: 5px 7px;
+  }
 
-.navbar a.active {
-  background-color: #004aad;
-  color: white;
+  .primary-nav__link {
+    flex: 1 1 45%;
+    padding: 11px 10px 9px;
+    font-size: 0.88rem;
+    text-align: center;
+  }
 }

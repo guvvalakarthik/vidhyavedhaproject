@@ -1,41 +1,22 @@
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
+import "dotenv/config";
+import app from "./app.js";
 import connectDB from "./config.js";
-import authRoutes from "./routes/authRoutes.js";
-import applicationRoutes from "./routes/applicationRoutes.js";
-
-dotenv.config();
-
-const app = express();
-
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-app.get("/", (req, res) => {
-  res.json({ message: "Vidhya Vedha API Running", version: "1.0.0" });
-});
-
-app.use("/api/auth", authRoutes);
-app.use("/api", applicationRoutes);
-
-app.use((req, res) => {
-  res.status(404).json({ error: "Route not found" });
-});
-
-app.use((err, req, res, next) => {
-  console.error("Unhandled error:", err);
-  res.status(500).json({ error: "Internal server error" });
-});
+import { ensureDefaultHealthcareProviders } from "./services/ensureHealthcareProviders.js";
+import { startReminderWorker } from "./services/reminderAgentService.js";
 
 const PORT = process.env.PORT || 5000;
+const sessionSecret = process.env.SESSION_SECRET;
+
+if (!sessionSecret || sessionSecret.length < 32) {
+  console.error("SESSION_SECRET must be set and contain at least 32 characters.");
+  process.exit(1);
+}
 
 connectDB()
-  .then(() => {
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
-    });
+  .then(async () => {
+    await ensureDefaultHealthcareProviders();
+    startReminderWorker();
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
   })
   .catch((err) => {
     console.error("Failed to start server:", err);

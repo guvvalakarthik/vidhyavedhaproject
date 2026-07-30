@@ -1,16 +1,23 @@
 import axios from "axios";
 
-const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
+const browserHost = typeof window === "undefined" ? "localhost" : window.location.hostname;
+const API_URL = import.meta.env.VITE_API_URL || `http://${browserHost}:5000/api`;
+let csrfToken = null;
+
+export const setCsrfToken = (token) => {
+  csrfToken = token || null;
+};
 
 const api = axios.create({
   baseURL: API_URL,
+  withCredentials: true,
   headers: { "Content-Type": "application/json" },
 });
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+  const method = String(config.method || "get").toLowerCase();
+  if (csrfToken && !["get", "head", "options"].includes(method)) {
+    config.headers["X-CSRF-Token"] = csrfToken;
   }
   return config;
 });

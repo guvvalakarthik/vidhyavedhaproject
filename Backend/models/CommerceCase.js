@@ -1,0 +1,8 @@
+import { randomUUID } from "node:crypto";
+import mongoose from "mongoose";
+import { COMMERCE_GUIDE_CODES, COMMERCE_OUTCOMES } from "../data/commerceGuides.js";
+const taskSchema = new mongoose.Schema({ taskId: { type: String, required: true }, title: { type: String, required: true, maxlength: 180 }, description: { type: String, required: true, maxlength: 600 }, status: { type: String, enum: ["not-started", "completed"], default: "not-started" }, completedAt: Date }, { _id: false });
+const schema = new mongoose.Schema({ caseId: { type: String, unique: true, index: true }, userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true, index: true }, guideCode: { type: String, enum: COMMERCE_GUIDE_CODES, required: true }, guideTitle: { type: String, required: true }, authority: { type: String, required: true }, officialUrl: { type: String, required: true }, merchantLabel: { type: String, trim: true, maxlength: 80, default: "" }, orderLabel: { type: String, trim: true, maxlength: 60, default: "" }, incidentDate: { type: String, required: true }, desiredOutcome: { type: String, enum: COMMERCE_OUTCOMES, required: true }, tasks: { type: [taskSchema], required: true }, status: { type: String, enum: ["open", "resolved", "archived"], default: "open", index: true }, resolvedAt: Date, archivedAt: Date }, { timestamps: true, optimisticConcurrency: true });
+schema.pre("validate", function () { if (!this.caseId) this.caseId = `COM-${randomUUID().split("-")[0].toUpperCase()}`; });
+schema.index({ userId: 1, createdAt: -1 }); schema.index({ userId: 1, status: 1 });
+export default mongoose.model("CommerceCase", schema);
