@@ -17,6 +17,7 @@ import {
   FaTimesCircle,
   FaUniversity,
 } from "react-icons/fa";
+import { GOVERNMENT_SERVICE_CATALOG } from "../../../shared/governmentServices.js";
 import api from "../../services/api.js";
 import { useAuth } from "../../context/AuthContext.jsx";
 import "./GovernmentServices.css";
@@ -90,7 +91,8 @@ function GovernmentServices() {
         const { data } = await api.get("/government/services");
         setServices(data.services);
       } catch {
-        setError("Government service guidance could not be loaded. Please try again.");
+        setServices(GOVERNMENT_SERVICE_CATALOG);
+        setError("Showing reviewed service guidance. Live assistance requests are temporarily unavailable.");
       } finally {
         setServicesLoading(false);
       }
