@@ -28,3 +28,6 @@ yarn-debug.log*
 yarn-error.log*
 .run/
 Backend/storage/documents/
+
+# backend dependencies are installed from Backend/package-lock.json
+Backend/node_modules/
