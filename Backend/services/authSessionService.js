@@ -8,8 +8,13 @@ const idleMinutes = Number(process.env.SESSION_IDLE_MINUTES || 30);
 const absoluteHours = Number(process.env.SESSION_ABSOLUTE_HOURS || 168);
 const maxSessionsPerUser = Number(process.env.MAX_SESSIONS_PER_USER || 5);
 
-const sessionSecret = () =>
-  process.env.SESSION_SECRET || process.env.JWT_SECRET || "test-session-secret-at-least-32-characters";
+const sessionSecret = () => {
+  const value = process.env.SESSION_SECRET;
+  if (!value || value.length < 32) {
+    throw new Error("SESSION_SECRET must be set and contain at least 32 characters.");
+  }
+  return value;
+};
 
 const sha256 = (value) => createHash("sha256").update(value).digest("hex");
 const randomToken = () => randomBytes(32).toString("base64url");
