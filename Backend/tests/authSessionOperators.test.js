@@ -1,9 +1,12 @@
 import mongoose from "mongoose";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import AuthSession from "../models/AuthSession.js";
 import { createAuthSession } from "../services/authSessionService.js";
 
 describe("authentication session operator filters", () => {
+  beforeAll(() => {
+    process.env.SESSION_SECRET = "test-session-secret-at-least-32-characters";
+  });
   afterEach(() => vi.restoreAllMocks());
 
   it("keeps the session-overflow exclusion trusted under global filter sanitization", async () => {

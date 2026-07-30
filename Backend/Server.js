@@ -5,7 +5,7 @@ import { ensureDefaultHealthcareProviders } from "./services/ensureHealthcarePro
 import { startReminderWorker } from "./services/reminderAgentService.js";
 
 const PORT = process.env.PORT || 5000;
-const sessionSecret = process.env.SESSION_SECRET || process.env.JWT_SECRET;
+const sessionSecret = process.env.SESSION_SECRET;
 
 if (!sessionSecret || sessionSecret.length < 32) {
   console.error("SESSION_SECRET must be set and contain at least 32 characters.");

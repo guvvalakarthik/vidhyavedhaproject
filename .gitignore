@@ -31,3 +31,11 @@ Backend/storage/documents/
 
 # local backend secrets
 Backend/.env
+
+# local audit output and editor/OS artifacts
+.audit/
+*.lnk
+*.tmp
+playwright-report/
+test-results/
+.vite/
