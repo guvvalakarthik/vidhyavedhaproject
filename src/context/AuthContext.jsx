@@ -42,6 +42,11 @@ export const AuthProvider = ({ children }) => {
     return persistSession(data);
   };
 
+  const loginWithGoogle = async (credential) => {
+    const { data } = await api.post("/auth/google", { credential });
+    return persistSession(data);
+  };
+
   const register = async (name, email, password, confirmPassword) => {
     const { data } = await api.post("/auth/register", {
       name,
@@ -56,13 +61,14 @@ export const AuthProvider = ({ children }) => {
     try {
       await api.post("/auth/logout");
     } finally {
+      window.google?.accounts?.id?.disableAutoSelect?.();
       setCsrfToken(null);
       setUser(null);
     }
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, loginWithGoogle, register, logout }}>
       {children}
     </AuthContext.Provider>
   );

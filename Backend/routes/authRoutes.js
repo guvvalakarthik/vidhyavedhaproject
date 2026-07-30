@@ -1,6 +1,8 @@
 import express from "express";
 import {
   getMe,
+  getGoogleLoginConfig,
+  googleLogin,
   listSessions,
   login,
   logout,
@@ -10,12 +12,14 @@ import {
 } from "../controllers/authController.js";
 import { protect } from "../middleware/authMiddleware.js";
 import { validateRequest } from "../middleware/validateRequest.js";
-import { loginSchema, registerSchema } from "../validation/schemas.js";
+import { googleLoginSchema, loginSchema, registerSchema } from "../validation/schemas.js";
 
 const router = express.Router();
 
 router.post("/register", validateRequest({ body: registerSchema }), register);
 router.post("/login", validateRequest({ body: loginSchema }), login);
+router.get("/google/config", getGoogleLoginConfig);
+router.post("/google", validateRequest({ body: googleLoginSchema }), googleLogin);
 router.get("/me", protect, getMe);
 router.post("/logout", protect, logout);
 router.get("/sessions", protect, listSessions);

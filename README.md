@@ -140,12 +140,20 @@ Backend (`Backend/.env`):
 - `SESSION_IDLE_MINUTES`: inactivity timeout, defaulting to `30`.
 - `SESSION_ABSOLUTE_HOURS`: maximum session lifetime, defaulting to `168`.
 - MAX_SESSIONS_PER_USER: active device limit, defaulting to 5.
+- `GOOGLE_CLIENT_ID`: Google Identity Services web client ID; public to the browser but configured by the API.
 - OPENAI_API_KEY: optional API key that enables generated multilingual answers.
 - OPENAI_MODEL: Responses API model, defaulting to gpt-5.6-sol.
 - `AI_CONVERSATION_RETENTION_DAYS`: owner conversation retention, defaulting to `90` days.
 - `PORT`: API port, defaulting to `5000`.
 
 Never commit real credentials or personal service data.
+
+## Google sign-in
+
+Residents can sign in with Google's official button or keep using email/password. Google ID tokens are verified by the API and exchanged for the same HTTP-only, CSRF-protected Vidhya Vedha session.
+
+See [Google sign-in setup](docs/google-sign-in.md) for authorized origins, configuration, account-linking rules, and the nonce-protected security flow.
+
 ## Service drafts and PDF
 
 Authenticated residents can turn their own facts into application, complaint, service-request, or follow-up drafts, review a clearly marked preview, lock the reviewed version, and download an A4 PDF. Drafts are never submitted automatically, work without an AI key through reviewed templates, and can optionally use structured OpenAI rewriting.
