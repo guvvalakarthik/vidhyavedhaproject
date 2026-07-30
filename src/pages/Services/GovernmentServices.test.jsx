@@ -88,6 +88,17 @@ describe("Government service journeys", () => {
     expect(api.post).not.toHaveBeenCalled();
   });
 
+  it("shows the reviewed catalogue when the live API is unavailable", async () => {
+    useAuth.mockReturnValue({ user: null });
+    api.get.mockRejectedValue(new Error("API unavailable"));
+
+    renderPage();
+
+    expect(await screen.findByRole("button", { name: /aadhaar enrolment and updates/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /passport services/i })).toBeInTheDocument();
+    expect(screen.getByRole("alert")).toHaveTextContent(/showing reviewed service guidance/i);
+    expect(screen.getByText("6 services")).toBeInTheDocument();
+  });
   it("submits the reviewed minimum-data guidance request for a signed-in citizen", async () => {
     useAuth.mockReturnValue({ user: { name: "Anjali", role: "citizen" } });
     renderPage();
