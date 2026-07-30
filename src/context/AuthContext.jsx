@@ -57,6 +57,10 @@ export const AuthProvider = ({ children }) => {
     return persistSession(data);
   };
 
+  const updateProfile = async (changes) => {
+    const { data } = await api.put("/auth/profile", changes);
+    return persistSession(data);
+  };
   const logout = async () => {
     try {
       await api.post("/auth/logout");
@@ -68,7 +72,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, loginWithGoogle, register, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, loginWithGoogle, register, updateProfile, logout }}>
       {children}
     </AuthContext.Provider>
   );

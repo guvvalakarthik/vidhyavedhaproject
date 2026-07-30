@@ -20,6 +20,7 @@ const publicUser = (user) => ({
   name: user.name,
   email: user.email,
   role: user.role || "citizen",
+  createdAt: user.createdAt,
 });
 
 const sessionResponse = async ({ user, req, res, status = 200, message }) => {
@@ -103,6 +104,57 @@ export const getMe = async (req, res) => {
   return res.json({ user: publicUser(user), csrfToken: req.authSession.csrfToken });
 };
 
+export const updateProfile = async (req, res) => {
+  try {
+    const { name, email, currentPassword, newPassword } = req.body;
+    const user = await User.findById(req.user.userId).select("+password +googleSub");
+    if (!user) return res.status(404).json({ error: "User not found." });
+
+    const emailChanged = email !== undefined && email !== user.email;
+    const credentialChanged = emailChanged || Boolean(newPassword);
+    if (credentialChanged) {
+      if (!user.password) {
+        return res.status(400).json({
+          error: "This account uses Google sign-in. Manage its sign-in email and password with Google.",
+        });
+      }
+      if (!(await user.matchPassword(currentPassword))) {
+        return res.status(401).json({ error: "Current password is incorrect." });
+      }
+    }
+
+    if (emailChanged) {
+      const existing = await User.findOne({ email });
+      if (existing && String(existing._id) !== String(user._id)) {
+        return res.status(409).json({ error: "Email already in use." });
+      }
+      user.email = email;
+    }
+    if (name !== undefined) user.name = name;
+    if (newPassword) user.password = newPassword;
+
+    await user.save();
+    if (credentialChanged) {
+      await AuthSession.updateMany({
+        userId: req.user.userId,
+        _id: mongoose.trusted({ $ne: req.authSession._id }),
+        revokedAt: null,
+      }, { $set: { revokedAt: new Date() } });
+    }
+    req.user.email = user.email;
+    return res.json({
+      message: "Profile updated successfully.",
+      user: publicUser(user),
+      csrfToken: req.authSession.csrfToken,
+    });
+  } catch (error) {
+    if (error?.code === 11000) {
+      return res.status(409).json({ error: "Email already in use." });
+    }
+    console.error("Update profile error:", error);
+    return res.status(500).json({ error: "Internal server error." });
+  }
+};
 export const logout = async (req, res) => {
   await revokeSession(req.authSession);
   clearSessionCookie(res);

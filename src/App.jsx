@@ -22,6 +22,7 @@ import About from "./pages/About.jsx";
 import Contact from "./pages/Contact.jsx";
 import UserDashboard from "./pages/UserDashboard.jsx";
 import SessionManagement from "./pages/SessionManagement.jsx";
+import Profile from "./pages/Profile.jsx";
 import Assistant from "./pages/Assistant.jsx";
 const Companion = lazy(() => import("./pages/Companion.jsx"));
 const Readiness = lazy(() => import("./pages/Readiness.jsx"));
@@ -65,6 +66,7 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/dashboard" element={authenticated(<UserDashboard />)} />
             <Route path="/notifications" element={authenticated(<Suspense fallback={<p>Loading notifications...</p>}><Notifications /></Suspense>)} />
+            <Route path="/profile" element={authenticated(<Profile />)} />
             <Route path="/account/sessions" element={authenticated(<SessionManagement />)} />
             <Route path="/assistant" element={authenticated(<Assistant />)} />
             <Route path="/companion" element={authenticated(<Suspense fallback={<p>Loading digital companion...</p>}><Companion /></Suspense>)} />

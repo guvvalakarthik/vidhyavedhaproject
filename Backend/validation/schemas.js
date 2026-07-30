@@ -48,6 +48,23 @@ export const loginSchema = z.object({ email, password: z.string().min(1).max(128
 export const googleLoginSchema = z.object({
   credential: z.string().trim().min(100).max(8192),
 });
+export const profileUpdateSchema = z.object({
+  name: z.string().trim().min(2).max(120).optional(),
+  email: email.optional(),
+  currentPassword: z.string().min(1).max(128).optional(),
+  newPassword: password.optional(),
+  confirmPassword: z.string().max(128).optional(),
+}).strict().superRefine((data, context) => {
+  if (data.name === undefined && data.email === undefined && data.newPassword === undefined) {
+    context.addIssue({ code: "custom", message: "Provide a profile field to update." });
+  }
+  if ((data.email !== undefined || data.newPassword !== undefined) && !data.currentPassword) {
+    context.addIssue({ code: "custom", path: ["currentPassword"], message: "Current password is required for credential changes." });
+  }
+  if (data.newPassword !== undefined && data.newPassword !== data.confirmPassword) {
+    context.addIssue({ code: "custom", path: ["confirmPassword"], message: "New passwords do not match." });
+  }
+});
 
 export const applicationSchema = z.object({
   name: z.string().trim().min(2).max(120),
