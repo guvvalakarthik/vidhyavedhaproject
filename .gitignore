@@ -39,3 +39,4 @@ Backend/node_modules/
 playwright-report/
 test-results/
 .vite/
+.vercel/
