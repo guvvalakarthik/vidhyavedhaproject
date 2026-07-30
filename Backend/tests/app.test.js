@@ -1,10 +1,11 @@
 import request from "supertest";
-import { beforeAll, describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it, vi } from "vitest";
 
 let app;
 
 beforeAll(async () => {
   process.env.SESSION_SECRET = "test-secret-that-is-longer-than-thirty-two-characters";
+  process.env.VERCEL = "1";
   ({ default: app } = await import("../app.js"));
 }, 30_000);
 
@@ -13,8 +14,35 @@ describe("API shell", () => {
     const response = await request(app).get("/");
     expect(response.status).toBe(200);
     expect(response.body.version).toBe("2.5.0");
+    expect(app.get("trust proxy")).toBe(1);
     expect(response.headers["x-content-type-options"]).toBe("nosniff");
     expect(response.headers["x-powered-by"]).toBeUndefined();
+  });
+
+  it("reports malformed JSON as a client error", async () => {
+    const response = await request(app)
+      .post("/api/auth/login")
+      .set("Content-Type", "application/json")
+      .send('{"email":');
+
+    expect(response.status).toBe(400);
+    expect(response.body.error).toBe("Request body must contain valid JSON.");
+  });
+
+  it("accepts Vercel proxy headers without rate-limit validation errors", async () => {
+    const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      const response = await request(app)
+        .get("/api/auth/me")
+        .set("X-Forwarded-For", "203.0.113.10")
+        .set("Forwarded", "for=203.0.113.10");
+
+      expect(response.status).toBe(401);
+      expect(consoleError.mock.calls.flat().join(" ")).not.toContain("ERR_ERL_");
+    } finally {
+      consoleError.mockRestore();
+    }
   });
 
   it("returns a JSON 404 response", async () => {

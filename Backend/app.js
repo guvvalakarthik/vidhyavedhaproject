@@ -28,6 +28,8 @@ import { sanitizePayload } from "./middleware/sanitizePayload.js";
 import { optionalSession, requireCsrf } from "./services/authSessionService.js";
 
 const app = express();
+// Vercel terminates requests at one proxy hop and forwards the client IP.
+app.set("trust proxy", process.env.VERCEL === "1" ? 1 : false);
 const allowedOrigins = (process.env.CLIENT_ORIGINS || "http://localhost:3000,http://127.0.0.1:3000,http://localhost:3002,http://127.0.0.1:3002,http://localhost:5173,http://127.0.0.1:5173")
   .split(",")
   .map((origin) => origin.trim())
@@ -53,18 +55,21 @@ const apiLimiter = rateLimit({
   limit: 300,
   standardHeaders: "draft-8",
   legacyHeaders: false,
+  validate: { forwardedHeader: false },
 });
 const aiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   limit: 30,
   standardHeaders: "draft-8",
   legacyHeaders: false,
+  validate: { forwardedHeader: false },
 });
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   limit: 20,
   standardHeaders: "draft-8",
   legacyHeaders: false,
+  validate: { forwardedHeader: false },
 });
 
 app.get("/", (_req, res) => {
@@ -96,6 +101,9 @@ app.use("/api", apiLimiter, applicationRoutes);
 app.use((_req, res) => res.status(404).json({ error: "Route not found." }));
 app.use((err, _req, res, _next) => {
   if (err?.code === "LIMIT_FILE_SIZE") return res.status(413).json({ error: "Document must be 5 MB or smaller." });
+  if (err?.type === "entity.parse.failed") {
+    return res.status(400).json({ error: "Request body must contain valid JSON." });
+  }
   if (err.message === "Origin is not allowed by CORS.") {
     return res.status(403).json({ error: err.message });
   }
