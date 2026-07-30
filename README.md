@@ -2,6 +2,9 @@
 
 Vidhya Vedha is a full-stack civic and local-services platform for rural communities. The current rebuild is moving the product from generic request forms toward task-specific journeys such as appointment scheduling, assisted government-service handoffs, bookings, dispatch, and status tracking.
 
+## Integration truth
+
+Service cards identify **official-route guidance** versus **demonstration provider data**. No official application, hospital, marketplace, emergency network, or authority status API is implied. See the [integration and data status register](docs/integration-status.md).
 ## Technology
 
 - Frontend: React 19, Vite 8, React Router, Axios
@@ -9,6 +12,11 @@ Vidhya Vedha is a full-stack civic and local-services platform for rural communi
 - Backend: Express 5, MongoDB, Mongoose
 - Authentication: MongoDB-backed opaque cookie sessions with CSRF protection, role-based authorization, and ownership checks
 
+## Engineering documentation
+
+- [Architecture and trust boundaries](docs/architecture.md)
+- [Threat model](docs/security/threat-model.md)
+- [Deployment, verification and rollback](docs/deployment.md)
 ## Requirements
 
 - Node.js 22.12 or newer
