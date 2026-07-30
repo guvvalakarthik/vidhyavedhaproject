@@ -6,13 +6,17 @@ Vidhya Vedha is a full-stack civic and local-services platform for rural communi
 
 The portfolio story is intentionally limited to three end-to-end workflows:
 
-1. **Resident service companion** — guided eligibility and service selection → personalized document readiness → reviewed draft/PDF → consent-based reminders → honest status or verified human handoff.
-2. **Healthcare scheduling** — provider and slot discovery → collision-safe booking/rescheduling/cancellation → redacted provider operations queue.
-3. **Roadside emergency dispatch** — minimal-data request → dispatcher assignment → bounded status transitions → resident tracking and cancellation.
+1. **Resident service companion** - guided eligibility and service selection -> personalized document readiness -> reviewed draft/PDF -> consent-based reminders -> honest status or verified human handoff.
+2. **Healthcare scheduling** - provider and slot discovery -> collision-safe booking/rescheduling/cancellation -> redacted provider operations queue.
+3. **Roadside emergency dispatch** - minimal-data request -> dispatcher assignment -> bounded status transitions -> resident tracking and cancellation.
 
 These flows demonstrate the core engineering decisions: owner-scoped data, explicit consent, server-side sessions and CSRF, deterministic fallbacks around GenAI, approval gates around agent actions, and concurrency-safe operational state. Other service modules are supporting explorations, not claims of production integrations.
 
 See [Portfolio workflow scope](docs/portfolio-workflows.md) for demo scripts, ownership, evidence, and explicit non-goals.
+
+## Integration truth
+
+Service cards identify **official-route guidance** versus **demonstration provider data**. No official application, hospital, marketplace, emergency network, or authority status API is implied. See the [integration and data status register](docs/integration-status.md).
 ## Technology
 
 - Frontend: React 19, Vite 8, React Router, Axios
@@ -20,6 +24,11 @@ See [Portfolio workflow scope](docs/portfolio-workflows.md) for demo scripts, ow
 - Backend: Express 5, MongoDB, Mongoose
 - Authentication: MongoDB-backed opaque cookie sessions with CSRF protection, role-based authorization, and ownership checks
 
+## Engineering documentation
+
+- [Architecture and trust boundaries](docs/architecture.md)
+- [Threat model](docs/security/threat-model.md)
+- [Deployment, verification and rollback](docs/deployment.md)
 ## Requirements
 
 - Node.js 22.12 or newer

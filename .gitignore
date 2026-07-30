@@ -28,3 +28,10 @@ yarn-debug.log*
 yarn-error.log*
 .run/
 Backend/storage/documents/
+# local audit output and editor/OS artifacts
+.audit/
+*.lnk
+*.tmp
+playwright-report/
+test-results/
+.vite/

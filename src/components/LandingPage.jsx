@@ -94,6 +94,17 @@ const services = [
   },
 ];
 
+const integrationStatus = {
+  government: { label: "Official-route guidance", tone: "guidance" },
+  healthcare: { label: "Demo provider network", tone: "demo" },
+  farming: { label: "Official-route guidance", tone: "guidance" },
+  education: { label: "Official-route guidance", tone: "guidance" },
+  banking: { label: "Official-route guidance", tone: "guidance" },
+  utilities: { label: "Official-route guidance", tone: "guidance" },
+  "home-maintenance": { label: "Demo provider network", tone: "demo" },
+  ecommerce: { label: "Official-route guidance", tone: "guidance" },
+  emergency: { label: "Demo dispatch network", tone: "demo" },
+};
 const popularTasks = [
   { label: "Apply for government document support", route: "government" },
   { label: "Find healthcare services", route: "healthcare" },
@@ -223,6 +234,9 @@ function LandingPage() {
             <p className="eyebrow">Browse by topic</p>
             <h2 id="services-title">Services</h2>
             <p>Choose a topic to see the help available and what you will need.</p>
+            <p className="integration-disclosure">
+              Labels show whether a journey uses reviewed official links or demonstration provider data. Vidhya Vedha never claims an external API connection unless it is verified.
+            </p>
           </div>
 
           <p className="result-count" aria-live="polite">
@@ -240,6 +254,9 @@ function LandingPage() {
                     <Link to={`/services/${service.route}`} className="directory-card">
                       <span className="directory-card__icon" aria-hidden="true"><Icon /></span>
                       <span className="directory-card__body">
+                        <span className={`integration-badge integration-badge--${integrationStatus[service.route].tone}`}>
+                          {integrationStatus[service.route].label}
+                        </span>
                         <strong>{service.title}</strong>
                         <span>{service.description}</span>
                         <small>{service.examples}</small>

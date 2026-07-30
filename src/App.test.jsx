@@ -18,6 +18,8 @@ test("renders a task-focused public landing page", () => {
   expect(screen.getByRole("link", { name: /create an account/i })).toHaveAttribute("href", "/register");
   expect(within(screen.getByRole("banner")).getByRole("link", { name: /^sign in$/i })).toHaveAttribute("href", "/login");
   expect(screen.getByRole("link", { name: /skip to main content/i })).toHaveAttribute("href", "#main-content");
+  expect(screen.getAllByText("Official-route guidance")).toHaveLength(6);
+  expect(screen.getAllByText(/Demo (provider|dispatch) network/)).toHaveLength(3);
 });
 
 test("filters service topics using plain-language terms", () => {
