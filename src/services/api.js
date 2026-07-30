@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const browserHost = typeof window === "undefined" ? "localhost" : window.location.hostname;
-const API_URL = import.meta.env.VITE_API_URL || `http://${browserHost}:5000/api`;
+const API_URL = import.meta.env.VITE_API_URL
+  || (import.meta.env.PROD ? "/api" : `http://${browserHost}:5000/api`);
 let csrfToken = null;
 
 export const setCsrfToken = (token) => {
