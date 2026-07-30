@@ -9,8 +9,8 @@
       "destination": "/api/index?path="
     },
     {
-      "source": "^/api/(.*)$",
-      "destination": "/api/index?path=$1"
+      "source": "/api/:path*",
+      "destination": "/api/index"
     },
     {
       "source": "/(.*)",

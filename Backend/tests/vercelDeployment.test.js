@@ -47,5 +47,9 @@ describe("Vercel full-stack deployment", () => {
     expect(req.url).toBe("/api/healthcare/providers?days=7");
     expect(isPublicCatalogueRequest("GET", req.url.split("?")[0])).toBe(true);
     expect(isPublicCatalogueRequest("POST", req.url.split("?")[0])).toBe(false);
+
+    const transparentRewrite = { query: { days: "7" }, url: "/api/healthcare/providers?days=7" };
+    expect(restoreApiRequestUrl(transparentRewrite)).toBe("/api/healthcare/providers");
+    expect(transparentRewrite.url).toBe("/api/healthcare/providers?days=7");
   });
 });
