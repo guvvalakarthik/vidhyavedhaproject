@@ -1,0 +1,35 @@
+name: Production smoke
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 2 * * *"
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: production-smoke
+  cancel-in-progress: true
+
+jobs:
+  smoke:
+    name: Verify deployed services
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check production readiness, authentication, and service catalogues
+        run: node scripts/smoke-production.mjs
+        env:
+          PRODUCTION_URL: https://vidhyavedhaproject.vercel.app

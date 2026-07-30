@@ -1,6 +1,6 @@
 import request from "supertest";
 import { beforeAll, describe, expect, it } from "vitest";
-import { isPublicCatalogueRequest, restoreApiRequestUrl } from "../../api/index.js";
+import { isLivenessRequest, isPublicCatalogueRequest, restoreApiRequestUrl } from "../../api/index.js";
 
 let app;
 
@@ -51,5 +51,11 @@ describe("Vercel full-stack deployment", () => {
     const transparentRewrite = { query: { days: "7" }, url: "/api/healthcare/providers?days=7" };
     expect(restoreApiRequestUrl(transparentRewrite)).toBe("/api/healthcare/providers");
     expect(transparentRewrite.url).toBe("/api/healthcare/providers?days=7");
+  });
+
+  it("allows liveness checks without waiting for MongoDB", () => {
+    expect(isLivenessRequest("GET", "/api/health/live")).toBe(true);
+    expect(isLivenessRequest("POST", "/api/health/live")).toBe(false);
+    expect(isLivenessRequest("GET", "/api/health/ready")).toBe(false);
   });
 });

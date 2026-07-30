@@ -19,6 +19,19 @@ describe("API shell", () => {
     expect(response.headers["x-powered-by"]).toBeUndefined();
   });
 
+  it("separates process liveness from database readiness", async () => {
+    const live = await request(app).get("/api/health/live");
+    expect(live.status).toBe(200);
+    expect(live.body).toMatchObject({ status: "ok", version: "2.5.0" });
+
+    const ready = await request(app).get("/api/health/ready");
+    expect(ready.status).toBe(503);
+    expect(ready.body).toMatchObject({
+      status: "not_ready",
+      checks: { database: "disconnected" },
+    });
+  });
+
   it("reports malformed JSON as a client error", async () => {
     const response = await request(app)
       .post("/api/auth/login")

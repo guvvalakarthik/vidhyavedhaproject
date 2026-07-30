@@ -1,4 +1,27 @@
-﻿# Deployment guide
+# Deployment guide
+
+## Current hosted demonstration
+
+The reviewed `main` branch deploys through Vercel to
+[`https://vidhyavedhaproject.vercel.app`](https://vidhyavedhaproject.vercel.app).
+The Vite application and Express serverless function share that HTTPS origin, and the
+API uses MongoDB Atlas for persistent application data.
+
+Every pull request runs repository hygiene, frontend tests/build, backend tests,
+dependency policy and a Vercel preview. Protected `main` rejects direct/unchecked
+changes, force pushes and deletion. After a successful `main` CI run, and once daily,
+the production smoke workflow verifies liveness, MongoDB readiness, session
+protection, Google sign-in configuration and all nine public service catalogues.
+
+Run the same verification manually with:
+
+```powershell
+npm run smoke:production
+```
+
+These controls establish reproducible deployment evidence; they do not convert the
+demonstration integrations listed in `integration-status.md` into real authority or
+provider connections.
 
 ## Recommended topology
 

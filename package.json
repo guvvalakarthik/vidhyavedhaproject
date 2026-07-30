@@ -27,6 +27,7 @@
         "start": "vite",
         "build": "vite build",
         "preview": "vite preview",
+        "smoke:production": "node scripts/smoke-production.mjs",
         "test": "vitest run",
         "test:watch": "vitest"
     },
