@@ -298,6 +298,38 @@
   line-height: 1.6;
 }
 
+.integration-disclosure {
+  max-width: 760px;
+  margin-top: 10px;
+  color: #465e6a;
+  font-size: 0.86rem;
+  line-height: 1.55;
+}
+
+.integration-badge {
+  width: fit-content;
+  margin-bottom: 10px;
+  padding: 4px 7px;
+  border: 1px solid;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.035em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.integration-badge--guidance {
+  border-color: #9fc5b6;
+  color: #125947;
+  background: #eef8f4;
+}
+
+.integration-badge--demo {
+  border-color: #e5bd79;
+  color: #765019;
+  background: #fff8e8;
+}
 .result-count {
   margin: -8px 0 18px;
   color: #526873;
