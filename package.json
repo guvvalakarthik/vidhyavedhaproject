@@ -26,6 +26,7 @@
         "dev": "vite",
         "start": "vite",
         "build": "vite build",
+        "guide:pdf": "node scripts/generate-interview-guide-pdf.mjs",
         "preview": "vite preview",
         "smoke:production": "node scripts/smoke-production.mjs",
         "test": "vitest run",
