@@ -32,6 +32,6 @@
   "description": "Vidhya Vedha civic guidance, healthcare scheduling, roadside dispatch, education planning, and financial guidance API",
   "devDependencies": {
     "supertest": "^7.2.2",
-    "vitest": "^4.1.10"
+    "vitest": "^4.1.11"
   }
 }
